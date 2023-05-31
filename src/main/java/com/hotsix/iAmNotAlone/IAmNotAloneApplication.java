@@ -8,7 +8,6 @@ public class IAmNotAloneApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(IAmNotAloneApplication.class, args);
-
 	}
 
 }
