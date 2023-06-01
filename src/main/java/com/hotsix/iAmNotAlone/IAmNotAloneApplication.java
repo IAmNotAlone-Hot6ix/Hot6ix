@@ -10,8 +10,6 @@ public class IAmNotAloneApplication {
 		SpringApplication.run(IAmNotAloneApplication.class, args);
 		/**
 		 * git branch Test
-		 * The requested URL returned error: 403
-		 * Test
 		 */
 	}
 
