@@ -1,4 +1,4 @@
-package com.hotsix.iAmNotAlone.domain.dto;
+package com.hotsix.iAmNotAlone.signup.domain.dto;
 
 import lombok.Getter;
 

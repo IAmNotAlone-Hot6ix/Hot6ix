@@ -1,7 +1,7 @@
-package com.hotsix.iAmNotAlone.controller;
+package com.hotsix.iAmNotAlone.signup.controller;
 
-import com.hotsix.iAmNotAlone.domain.Region;
-import com.hotsix.iAmNotAlone.service.RegionService;
+import com.hotsix.iAmNotAlone.signup.domain.Region;
+import com.hotsix.iAmNotAlone.signup.service.RegionService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

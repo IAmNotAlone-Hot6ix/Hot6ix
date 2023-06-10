@@ -1,4 +1,4 @@
-package com.hotsix.iAmNotAlone.service;
+package com.hotsix.iAmNotAlone.signup.service;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;

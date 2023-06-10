@@ -1,8 +1,7 @@
-package com.hotsix.iAmNotAlone.domain.dto;
+package com.hotsix.iAmNotAlone.signup.domain.dto;
 
-import com.hotsix.iAmNotAlone.domain.Member;
-import com.hotsix.iAmNotAlone.domain.Personality;
-import com.hotsix.iAmNotAlone.domain.Region;
+import com.hotsix.iAmNotAlone.signup.domain.Member;
+import com.hotsix.iAmNotAlone.signup.domain.Region;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
@@ -18,9 +17,8 @@ public class MemberDto {
     private LocalDate birth;
     private String introduction;
     private int gender;
-    private Long regionId;
     private Region region;
-    private List<Personality> personalities;
+    private List<String> personalities;
 
     public static MemberDto from(Member member) {
         return MemberDto.builder()
@@ -30,9 +28,9 @@ public class MemberDto {
             .birth(member.getBirth())
             .introduction(member.getIntroduction())
             .gender(member.getGender())
-            .regionId(member.getRegion().getId())
             .region(member.getRegion())
             .personalities(member.getPersonalities())
             .build();
     }
+
 }

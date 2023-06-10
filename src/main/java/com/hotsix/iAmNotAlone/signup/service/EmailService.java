@@ -1,6 +1,6 @@
-package com.hotsix.iAmNotAlone.service;
+package com.hotsix.iAmNotAlone.signup.service;
 
-import com.hotsix.iAmNotAlone.domain.dto.EmailRequestDto;
+import com.hotsix.iAmNotAlone.signup.domain.dto.EmailRequestDto;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;

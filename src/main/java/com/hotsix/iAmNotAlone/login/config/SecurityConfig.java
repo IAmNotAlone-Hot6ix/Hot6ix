@@ -3,13 +3,15 @@ package com.hotsix.iAmNotAlone.login.config;
 import com.hotsix.iAmNotAlone.login.config.jwt.JwtAuthenticationFilter;
 import com.hotsix.iAmNotAlone.login.config.jwt.JwtAuthorizationFilter;
 import com.hotsix.iAmNotAlone.login.config.service.JwtService;
-import com.hotsix.iAmNotAlone.repository.MemberRepository;
+import com.hotsix.iAmNotAlone.signup.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,9 +39,18 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests(authorize -> authorize
-                        .antMatchers("/login", "/join").permitAll()
+                        .antMatchers("/login", "/join", "/api/**", "/swagger-ui/**", "/v3/api-docs/**"
+                            , "/swagger-resources/**").permitAll()
                         .anyRequest().authenticated())
                 .build();
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        // h2-console 사용 및 resources 접근 허용 설정
+        return (web) -> web.ignoring()
+            .requestMatchers(PathRequest.toH2Console())
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {

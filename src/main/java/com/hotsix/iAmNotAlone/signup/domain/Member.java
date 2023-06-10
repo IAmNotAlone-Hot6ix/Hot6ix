@@ -1,13 +1,27 @@
-package com.hotsix.iAmNotAlone.domain;
+package com.hotsix.iAmNotAlone.signup.domain;
 
-import com.hotsix.iAmNotAlone.domain.dto.AddMemberDto;
 import com.hotsix.iAmNotAlone.login.Role;
-import lombok.*;
-
-import javax.persistence.*;
+import com.hotsix.iAmNotAlone.signup.domain.dto.AddMemberDto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -33,24 +47,24 @@ public class Member {
     private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "region_id")
+    @JoinColumn(name = "region_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Region region;
 
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    private List<Personality> personalities = new ArrayList<>();
+    @Convert(converter = ListToStringConverter.class)
+    private List<String> personalities = new ArrayList<>();
 
-    public static Member from(AddMemberDto form, Region region) {
+    public static Member of(AddMemberDto form, Region region, String password) {
         return Member.builder()
             .email(form.getEmail())
             .nickname(form.getNickname())
-            .password(form.getPassword())
+            .password(password)
             .birth(form.getBirth())
             .gender(form.getGender())
             .introduction(form.getIntroduction())
             .path(form.getPath())
             .region(region)
             .personalities(form.getPersonalities())
+            .role(Role.USER)
             .build();
     }
 

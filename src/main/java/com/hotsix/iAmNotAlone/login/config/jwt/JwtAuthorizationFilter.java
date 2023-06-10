@@ -1,9 +1,9 @@
 package com.hotsix.iAmNotAlone.login.config.jwt;
 
-import com.hotsix.iAmNotAlone.domain.Member;
 import com.hotsix.iAmNotAlone.login.config.auth.PrincipalDetails;
 import com.hotsix.iAmNotAlone.login.config.service.JwtService;
-import com.hotsix.iAmNotAlone.repository.MemberRepository;
+import com.hotsix.iAmNotAlone.signup.domain.Member;
+import com.hotsix.iAmNotAlone.signup.repository.MemberRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
