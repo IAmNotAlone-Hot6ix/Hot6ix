@@ -1,7 +1,6 @@
 package com.hotsix.iAmNotAlone.login.config.auth;
 
 import com.hotsix.iAmNotAlone.domain.Member;
-import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

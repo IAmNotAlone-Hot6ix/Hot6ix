@@ -40,7 +40,6 @@ public class SecurityConfig {
                         .antMatchers("/login", "/join").permitAll()
                         .anyRequest().authenticated())
                 .build();
-
     }
 
     public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {

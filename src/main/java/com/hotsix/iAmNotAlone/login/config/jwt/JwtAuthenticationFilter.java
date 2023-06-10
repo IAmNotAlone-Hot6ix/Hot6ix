@@ -27,9 +27,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
+    //인증 체크
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        System.out.println("JwtAuthenticationFilter : 로그인 시도중");
+        log.info("JwtAuthenticationFilter : 로그인 시도중");
 
         ObjectMapper om = new ObjectMapper();
         LoginRequestDto loginRequestDto = null;
@@ -51,10 +52,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return authentication;
     }
 
+    // 로그인 성공시 메서드를 탐
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
-        System.out.println("로그인 성공");
+        log.info("로그인 성공");
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         String email = principalDetails.getMember().getEmail();
         System.out.println("email = " + email);
