@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
+import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -45,9 +46,8 @@ public class Member {
     @JoinColumn(name = "region_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Region region;
 
-    @ElementCollection
-    @Enumerated(EnumType.STRING)
-    private List<Personality> personalities = new ArrayList<>();
+    @Convert(converter = ListToStringConverter.class)
+    private List<String> personalities = new ArrayList<>();
 
     public static Member of(AddMemberDto form, Region region, String password) {
         return Member.builder()

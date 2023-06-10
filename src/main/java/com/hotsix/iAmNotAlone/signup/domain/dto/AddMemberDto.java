@@ -1,6 +1,5 @@
 package com.hotsix.iAmNotAlone.signup.domain.dto;
 
-import com.hotsix.iAmNotAlone.signup.domain.Personality;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.Builder;
@@ -20,6 +19,6 @@ public class AddMemberDto {
     private String introduction;
     private String path;
     private Long regionId;
-    private List<Personality> personalities;
+    private List<String> personalities;
 
 }

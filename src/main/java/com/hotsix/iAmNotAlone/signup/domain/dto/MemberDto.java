@@ -1,7 +1,6 @@
 package com.hotsix.iAmNotAlone.signup.domain.dto;
 
 import com.hotsix.iAmNotAlone.signup.domain.Member;
-import com.hotsix.iAmNotAlone.signup.domain.Personality;
 import com.hotsix.iAmNotAlone.signup.domain.Region;
 import java.time.LocalDate;
 import java.util.List;
@@ -19,7 +18,7 @@ public class MemberDto {
     private String introduction;
     private int gender;
     private Region region;
-    private List<Personality> personalities;
+    private List<String> personalities;
 
     public static MemberDto from(Member member) {
         return MemberDto.builder()
