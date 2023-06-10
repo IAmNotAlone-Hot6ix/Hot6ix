@@ -1,7 +1,7 @@
 package com.hotsix.iAmNotAlone.login.config.auth;
 
-import com.hotsix.iAmNotAlone.domain.Member;
-import com.hotsix.iAmNotAlone.repository.MemberRepository;
+import com.hotsix.iAmNotAlone.signup.domain.Member;
+import com.hotsix.iAmNotAlone.signup.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

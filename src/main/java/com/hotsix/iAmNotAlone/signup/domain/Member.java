@@ -1,13 +1,13 @@
-package com.hotsix.iAmNotAlone.domain;
+package com.hotsix.iAmNotAlone.signup.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.hotsix.iAmNotAlone.domain.dto.AddMemberDto;
+import com.hotsix.iAmNotAlone.login.Role;
+import com.hotsix.iAmNotAlone.signup.domain.dto.AddMemberDto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
-import javax.persistence.ElementCollection;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -64,6 +64,7 @@ public class Member {
             .path(form.getPath())
             .region(region)
             .personalities(form.getPersonalities())
+            .role(Role.USER)
             .build();
     }
 
