@@ -1,8 +1,8 @@
-package com.hotsix.iAmNotAlone.controller;
+package com.hotsix.iAmNotAlone.signup.controller;
 
-import com.hotsix.iAmNotAlone.domain.dto.AddMemberDto;
-import com.hotsix.iAmNotAlone.domain.dto.MemberDto;
-import com.hotsix.iAmNotAlone.service.SignUpService;
+import com.hotsix.iAmNotAlone.signup.domain.dto.AddMemberDto;
+import com.hotsix.iAmNotAlone.signup.domain.dto.MemberDto;
+import com.hotsix.iAmNotAlone.signup.service.SignUpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

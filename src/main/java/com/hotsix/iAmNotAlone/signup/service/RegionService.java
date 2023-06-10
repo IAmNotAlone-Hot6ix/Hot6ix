@@ -1,7 +1,7 @@
-package com.hotsix.iAmNotAlone.service;
+package com.hotsix.iAmNotAlone.signup.service;
 
-import com.hotsix.iAmNotAlone.domain.Region;
-import com.hotsix.iAmNotAlone.repository.RegionRepository;
+import com.hotsix.iAmNotAlone.signup.domain.Region;
+import com.hotsix.iAmNotAlone.signup.repository.RegionRepository;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;

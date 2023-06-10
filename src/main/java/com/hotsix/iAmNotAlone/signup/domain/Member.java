@@ -1,7 +1,6 @@
-package com.hotsix.iAmNotAlone.domain;
+package com.hotsix.iAmNotAlone.signup.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.hotsix.iAmNotAlone.domain.dto.AddMemberDto;
+import com.hotsix.iAmNotAlone.signup.domain.dto.AddMemberDto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,18 +42,18 @@ public class Member {
     private String path;
 
     @ManyToOne
-    @JoinColumn(name = "region_id")
+    @JoinColumn(name = "region_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Region region;
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<Personality> personalities = new ArrayList<>();
 
-    public static Member from(AddMemberDto form, Region region) {
+    public static Member of(AddMemberDto form, Region region, String password) {
         return Member.builder()
             .email(form.getEmail())
             .nickname(form.getNickname())
-            .password(form.getPassword())
+            .password(password)
             .birth(form.getBirth())
             .gender(form.getGender())
             .introduction(form.getIntroduction())

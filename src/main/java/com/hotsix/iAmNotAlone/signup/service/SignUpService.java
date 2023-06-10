@@ -1,10 +1,10 @@
-package com.hotsix.iAmNotAlone.service;
+package com.hotsix.iAmNotAlone.signup.service;
 
-import com.hotsix.iAmNotAlone.domain.Member;
-import com.hotsix.iAmNotAlone.domain.Region;
-import com.hotsix.iAmNotAlone.domain.dto.AddMemberDto;
-import com.hotsix.iAmNotAlone.repository.MemberRepository;
-import com.hotsix.iAmNotAlone.repository.RegionRepository;
+import com.hotsix.iAmNotAlone.signup.domain.Member;
+import com.hotsix.iAmNotAlone.signup.domain.Region;
+import com.hotsix.iAmNotAlone.signup.domain.dto.AddMemberDto;
+import com.hotsix.iAmNotAlone.signup.repository.MemberRepository;
+import com.hotsix.iAmNotAlone.signup.repository.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class SignUpService {
         Region region = regionRepository.findById(form.getRegionId()).orElseThrow(
             () -> new IllegalArgumentException("일치하는 지역이 없습니다. 지역을 선택해주세요.")
         );
-        form.setPassword(passwordEncoder.encode(form.getPassword()));
-        return memberRepository.save(Member.from(form, region));
+        String password = passwordEncoder.encode(form.getPassword());
+        return memberRepository.save(Member.of(form, region, password));
     }
 }

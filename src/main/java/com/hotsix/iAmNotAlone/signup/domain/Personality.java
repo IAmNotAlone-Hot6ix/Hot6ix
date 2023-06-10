@@ -1,4 +1,4 @@
-package com.hotsix.iAmNotAlone.domain;
+package com.hotsix.iAmNotAlone.signup.domain;
 
 public enum Personality {
     ENFP, ENFJ, ENTP, ENTJ,ESFP,ESFJ,ESTP, ESTJ,
