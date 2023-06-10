@@ -1,27 +1,13 @@
 package com.hotsix.iAmNotAlone.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.hotsix.iAmNotAlone.domain.dto.AddMemberDto;
+import com.hotsix.iAmNotAlone.login.Role;
+import lombok.*;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.ConstraintMode;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -41,6 +27,10 @@ public class Member {
     private int gender;
     private String introduction;
     private String path;
+    private String refreshToken;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @ManyToOne
     @JoinColumn(name = "region_id")
@@ -64,4 +54,19 @@ public class Member {
             .build();
     }
 
+    public void updateRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
+    }
+    public void destroyRefreshToken(){
+        this.refreshToken = null;
+    }
+
+    //추후삭제 메서드
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }
