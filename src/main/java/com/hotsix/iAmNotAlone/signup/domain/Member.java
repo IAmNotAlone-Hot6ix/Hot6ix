@@ -1,12 +1,12 @@
-package com.hotsix.iAmNotAlone.signup.domain;
+package com.hotsix.iAmNotAlone.domain;
 
-import com.hotsix.iAmNotAlone.signup.domain.dto.AddMemberDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.hotsix.iAmNotAlone.domain.dto.AddMemberDto;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
-import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -41,6 +41,10 @@ public class Member {
     private int gender;
     private String introduction;
     private String path;
+    private String refreshToken;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @ManyToOne
     @JoinColumn(name = "region_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -63,4 +67,19 @@ public class Member {
             .build();
     }
 
+    public void updateRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
+    }
+    public void destroyRefreshToken(){
+        this.refreshToken = null;
+    }
+
+    //추후삭제 메서드
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }

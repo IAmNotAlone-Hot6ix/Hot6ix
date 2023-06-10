@@ -8,11 +8,7 @@ public class IAmNotAloneApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(IAmNotAloneApplication.class, args);
-		/**
-		 * git branch Test
-		 * The requested URL returned error: 403
-		 * push test
-		 */
+
 	}
 
 }
