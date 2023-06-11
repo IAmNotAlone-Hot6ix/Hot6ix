@@ -90,15 +90,4 @@ public class Membership {
         this.refreshToken = null;
     }
 
-
-    //추후삭제 메서드
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
 }

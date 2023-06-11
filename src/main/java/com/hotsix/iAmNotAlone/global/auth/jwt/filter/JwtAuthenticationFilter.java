@@ -47,27 +47,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println(principalDetails.getMember().getEmail());
-
         return authentication;
     }
 
     // 로그인 성공시 메서드를 탐
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
-        HttpServletResponse response, FilterChain chain, Authentication authResult)
-        throws IOException, ServletException {
+        HttpServletResponse response, FilterChain chain, Authentication authResult) {
 
         log.info("로그인 성공");
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         String email = principalDetails.getMember().getEmail();
-        System.out.println("email = " + email);
+
         String accessToken = jwtService.createAccessToken(email);
         String refreshToken = jwtService.createRefreshToken();
 
-        System.out.println(accessToken);
-        System.out.println(refreshToken);
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
 
         jwtService.updateRefreshToken(email, refreshToken);

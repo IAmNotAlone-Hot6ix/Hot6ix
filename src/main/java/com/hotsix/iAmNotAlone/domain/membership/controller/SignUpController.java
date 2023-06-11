@@ -15,7 +15,7 @@ public class SignUpController {
 
     private final SignUpService signUpService;
 
-    @PostMapping("/api/user/signup")
+    @PostMapping("/signup")
     public ResponseEntity<MemberDto> signUp(@RequestBody AddMembershipForm form) {
         return ResponseEntity.ok(MemberDto.from(signUpService.signUp(form)));
     }

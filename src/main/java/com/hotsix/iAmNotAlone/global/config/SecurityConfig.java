@@ -1,9 +1,9 @@
 package com.hotsix.iAmNotAlone.global.config;
 
+import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
+import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
 import com.hotsix.iAmNotAlone.global.auth.jwt.filter.JwtAuthenticationFilter;
 import com.hotsix.iAmNotAlone.global.auth.jwt.filter.JwtAuthorizationFilter;
-import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
-import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -39,9 +39,9 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests(authorize -> authorize
-                        .antMatchers("/login", "/join", "/api/**", "/swagger-ui/**", "/v3/api-docs/**"
+                        .antMatchers("/login", "/signup", "/email/**", "/swagger-ui/**", "/v3/api-docs/**"
                             , "/swagger-resources/**").permitAll()
-                        .anyRequest().authenticated())
+                        .antMatchers("/api/**").access("hasRole('ROLE_USER')"))
                 .build();
     }
 
@@ -55,13 +55,13 @@ public class SecurityConfig {
 
     public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {
         @Override
-        public void configure(HttpSecurity http) throws Exception {
+        public void configure(HttpSecurity http) {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
             http
-                    .addFilter(corsConfig.corsFilter())
-                    .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtService))
-                    .addFilter(new JwtAuthorizationFilter(authenticationManager,
-                        membershipRepository, jwtService));
+                .addFilter(corsConfig.corsFilter())
+                .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtService))
+                .addFilter(new JwtAuthorizationFilter(authenticationManager,
+                    membershipRepository, jwtService));
         }
     }
 
