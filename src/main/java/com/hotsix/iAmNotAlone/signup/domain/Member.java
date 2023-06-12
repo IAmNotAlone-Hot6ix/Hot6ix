@@ -53,7 +53,7 @@ public class Member {
     @Convert(converter = ListToStringConverter.class)
     private List<String> personalities = new ArrayList<>();
 
-    public static Member of(AddMemberDto form, Region region, String password) {
+    public static Member of(AddMemberDto form, Region region, String password, String url) {
         return Member.builder()
             .email(form.getEmail())
             .nickname(form.getNickname())
@@ -61,7 +61,7 @@ public class Member {
             .birth(form.getBirth())
             .gender(form.getGender())
             .introduction(form.getIntroduction())
-            .path(form.getPath())
+            .path(url)
             .region(region)
             .personalities(form.getPersonalities())
             .role(Role.USER)

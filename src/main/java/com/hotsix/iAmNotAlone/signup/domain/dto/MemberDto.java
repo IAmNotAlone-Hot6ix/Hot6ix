@@ -17,6 +17,7 @@ public class MemberDto {
     private LocalDate birth;
     private String introduction;
     private int gender;
+    private String path;
     private Region region;
     private List<String> personalities;
 
@@ -28,9 +29,9 @@ public class MemberDto {
             .birth(member.getBirth())
             .introduction(member.getIntroduction())
             .gender(member.getGender())
+            .path(member.getPath())
             .region(member.getRegion())
             .personalities(member.getPersonalities())
             .build();
     }
-
 }

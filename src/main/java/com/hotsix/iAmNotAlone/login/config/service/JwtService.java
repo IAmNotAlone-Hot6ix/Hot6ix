@@ -40,7 +40,7 @@ public class JwtService {
         log.info("어세스 토큰 생성");
         String token = JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
+                .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME * 1000))
                 .withClaim("email", email)
                 .sign(Algorithm.HMAC512(SECRET));
 

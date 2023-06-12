@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +27,8 @@ public class MemberController {
 
     @PutMapping("/api/member/update/{id}")
     public ResponseEntity<MemberDto> updateMember(@PathVariable("id") Long id,
-        @RequestBody UpdateMemberDto updateMemberDto) {
-
+        @RequestBody UpdateMemberDto updateMemberDto,
+        @RequestPart(value = "files") List<MultipartFile> multipartFiles) {
         return ResponseEntity.ok().build();
     }
 }
