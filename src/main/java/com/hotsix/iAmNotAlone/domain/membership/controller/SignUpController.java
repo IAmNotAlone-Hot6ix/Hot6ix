@@ -3,6 +3,7 @@ package com.hotsix.iAmNotAlone.domain.membership.controller;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.MemberDto;
 import com.hotsix.iAmNotAlone.domain.membership.service.SignUpService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +18,9 @@ public class SignUpController {
 
     private final SignUpService signUpService;
 
-    @PostMapping(value = "/api/user/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<MemberDto> signUp(@RequestPart AddMemberDto form,
+    @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<MemberDto> signUp(@RequestPart AddMembershipForm form,
         @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles) {
         return ResponseEntity.ok(MemberDto.from(signUpService.signUp(form, multipartFiles)));
-    @PostMapping("/signup")
-    public ResponseEntity<MemberDto> signUp(@RequestBody AddMembershipForm form) {
-        return ResponseEntity.ok(MemberDto.from(signUpService.signUp(form)));
     }
 }

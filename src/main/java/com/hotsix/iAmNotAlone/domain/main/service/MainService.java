@@ -54,7 +54,7 @@ public class MainService {
         return MainResponse.of(
             regionList.stream().map(RegionMainDto::from).collect(Collectors.toList()),
             boardList.stream().map(BoardMainDto::from).collect(Collectors.toList()),
-            membership.getRegion_id());
+            membership.getRegion_id().getId());
     }
 
     /**

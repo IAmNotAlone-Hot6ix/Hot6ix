@@ -7,13 +7,17 @@ import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
 import java.time.LocalDate;
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,7 +36,9 @@ public class Membership {
     @Column(name = "member_id")
     private Long id;
 
-    private Long region_id;
+    @ManyToOne
+    @JoinColumn(name = "region_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Region region_id;
 
     private String email;
     private String nickname;
@@ -49,24 +55,16 @@ public class Membership {
     @Column(insertable = false, updatable = false)
     private List<String> likelist;
 
-
     private String refreshToken;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-
-    @Column(name = "personalitylist", length = 100)
-    private String personality;
-
     @Convert(converter = ListToStringConverter.class)
-    @Column(insertable = false, updatable = false)
-    private List<String> personalitylist;
+    private List<String> personality;
 
 
-    public static Membership of(AddMembershipForm form, Region region, String password) {
-        ListToStringConverter converter = new ListToStringConverter();
-
+    public static Membership of(AddMembershipForm form, Region region, String password, String url) {
         return Membership.builder()
             .email(form.getEmail())
             .nickname(form.getNickname())
@@ -74,13 +72,12 @@ public class Membership {
             .birth(form.getBirth())
             .gender(form.getGender())
             .introduction(form.getIntroduction())
-            .img_path(form.getPath())
-            .region_id(region.getId())
-            .personality(converter.convertToDatabaseColumn(form.getPersonalities()))
+            .img_path(url)
+            .region_id(region)
+            .personality(form.getPersonalities())
             .role(Role.USER)
             .build();
     }
-
 
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;

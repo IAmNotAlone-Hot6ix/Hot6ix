@@ -41,7 +41,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         FilterChain filterChain)
         throws IOException, ServletException {
 
-        String ALLOWED_PREFIX_REGEX = "^/email.*|/swagger-ui.*|/v3/api-docs.*|/swagger-resources.*$";
+        String ALLOWED_PREFIX_REGEX = "^/email.*|/swagger-ui.*|/v3/api-docs.*|/swagger-resources.*|/members.*|/region.*$";
 
         // if 문에 걸린 url 요청 그냥 return
         if (ALLOWEDPREFIXES.contains(request.getRequestURI())

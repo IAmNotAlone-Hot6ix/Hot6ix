@@ -7,11 +7,16 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/iAmNotAloneDB
     username: root
-    password: 1234
+    password: root
+#  datasource:
+#    driver-class-name: org.h2.Driver
+#    url: jdbc:h2:mem:test
+#    username: sa
+#    password:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: validate
     generate-ddl: true
     properties:
       hibernate:
