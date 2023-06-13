@@ -1,16 +1,25 @@
 package com.hotsix.iAmNotAlone.domain.membership.service;
 
+import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_EXIST_USER;
+import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_USER;
+import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_MATCH_PASSWORD;
+import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_MATCH_PASSWORD_VERIFY;
+
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.S3FileDto;
+import com.hotsix.iAmNotAlone.domain.membership.model.form.UpdateMembershipForm;
+import com.hotsix.iAmNotAlone.domain.membership.model.form.UpdatePasswordForm;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.MemberDto;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.domain.region.repository.RegionRepository;
+import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.util.S3UploadService;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class MembershipService {
 
     private final MembershipRepository membershipRepository;
@@ -26,6 +36,9 @@ public class MembershipService {
     private final PasswordEncoder passwordEncoder;
     private final S3UploadService s3UploadService;
 
+    /**
+     * 회원 리스트 조회
+     */
     public List<MemberDto> findAll() {
         List<MemberDto> memberDtos = new ArrayList<>();
         for (Membership m : membershipRepository.findAll()) {
@@ -34,21 +47,86 @@ public class MembershipService {
         return memberDtos;
     }
 
-
+    /**
+     * 회원 수정
+     */
     @Transactional
-    public Membership update(AddMembershipForm form, Long id, List<MultipartFile> multipartFiles) {
-        Membership member = membershipRepository.findById(id)
+    public MemberDto update(Long user_id, UpdateMembershipForm form, List<MultipartFile> multipartFiles) {
+        Membership member = membershipRepository.findById(user_id)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
-
         Region region = regionRepository.findById(form.getRegionId()).orElseThrow(
             () -> new IllegalArgumentException("일치하는 지역이 없습니다. 지역을 선택해주세요.")
         );
 
-        List<S3FileDto> s3FileDtos = s3UploadService.uploadFiles(multipartFiles);
-        s3FileDtos.get(0).getUploadFileUrl();
+        // 1. 기존에 파일이 있고, 새로 업로드하는 파일이 있으면 url 바꾸고 기존 파일은 삭제
+        // 2. 기존에 파일이 있고, 새로 업로드하는 파일이 없고, 기존파일 삭제
+        // 3. 새로 업로드하는 파일이 없고 기존파일 유지
 
-        String password = passwordEncoder.encode(form.getPassword());
-        return membershipRepository.save(Membership.of(form, region, password, s3FileDtos.get(0).getUploadFileUrl()));
+        // 1. 새로 업로든 하는 파일이 있다
+        if (multipartFiles.get(0).getSize() != 0) {
+            // 1-2. 기존에 파일이 있다. -> 기존 파일 s3 버킷에서 삭제
+            if (member.getImg_path().length() != 0) {
+                String[] split = member.getImg_path().split("/");
+                String filePath =
+                    split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
+                String fileName = split[split.length - 1];
+                log.info(filePath + " " + fileName);
+                s3UploadService.deleteFile(filePath, fileName);
+            }
+            // 1-1. 기존에 파일이 없다. -> 삭제 없이 s3 버킷에 업로드
+            List<S3FileDto> s3FileDtos = s3UploadService.uploadFiles(multipartFiles);
+            form.setPath(s3FileDtos.get(0).getUploadFileUrl());
+        } else { // 2. 새로 업로드하느 파일이 없다.
+            // 2-2. 기존 파일을 삭제한다.
+            if (!form.getPath().equals(member.getImg_path())) {
+                String[] split = member.getImg_path().split("/");
+                String filePath =
+                    split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
+                String fileName = split[split.length - 1];
+                log.info(filePath + " " + fileName);
+                s3UploadService.deleteFile(filePath, fileName);
+            }
+        }
+        // 2-1. 기존에 파일을 그대로 둔다.
+        member.updateMembership(form, region);
+
+        return MemberDto.from(member);
+    }
+
+    /**
+     * 비밀번호 변경
+     */
+    @Transactional
+    public void updatePassword(Long user_id, UpdatePasswordForm form) {
+        Membership membership = membershipRepository.findById(user_id).orElseThrow(
+            () -> new BusinessException(NOT_FOUND_USER)
+        );
+        // 비밀번호 검증
+        if (!passwordEncoder.encode(form.getPassword()).equals(membership.getPassword())) {
+            throw new BusinessException(NOT_MATCH_PASSWORD);
+        } else if (!form.getNewPassword().equals(form.getNewPasswordVerify())) {
+            throw new BusinessException(NOT_MATCH_PASSWORD_VERIFY);
+        }
+        membership.updatePassword(passwordEncoder.encode(form.getNewPassword()));
+    }
+
+    /**
+     * 임시 비밀번호 발급
+     */
+    @Transactional
+    public void createTemPassword(String email, String password) {
+        Membership membership = membershipRepository.findByEmail(email).orElseThrow(
+            () -> new BusinessException(NOT_EXIST_USER)
+        );
+        membership.updatePassword(passwordEncoder.encode(password));
+    }
+
+    /**
+     * 회원 삭제
+     */
+    @Transactional
+    public void delete(Long user_id) {
+        membershipRepository.deleteById(user_id);
     }
 
 }

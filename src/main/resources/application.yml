@@ -5,14 +5,9 @@ spring:
       path: /h2-console
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/iAmNotAloneDB
-    username: root
-    password: root
-#  datasource:
-#    driver-class-name: org.h2.Driver
-#    url: jdbc:h2:mem:test
-#    username: sa
-#    password:
+    url: ${MYSQL_DATABASE_URL}
+    username: ${MYSQL_DATABASE_USERNAME}
+    password: ${MYSQL_DATABASE_PASSWORD}
 
   jpa:
     hibernate:
@@ -30,8 +25,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${mail.username}
-    password: ${mail.password}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:

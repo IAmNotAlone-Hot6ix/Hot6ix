@@ -1,6 +1,7 @@
 package com.hotsix.iAmNotAlone.domain.membership.entity;
 
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
+import com.hotsix.iAmNotAlone.domain.membership.model.form.UpdateMembershipForm;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.global.auth.common.Role;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
@@ -38,7 +39,7 @@ public class Membership {
 
     @ManyToOne
     @JoinColumn(name = "region_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Region region_id;
+    private Region region;
 
     private String email;
     private String nickname;
@@ -73,7 +74,7 @@ public class Membership {
             .gender(form.getGender())
             .introduction(form.getIntroduction())
             .img_path(url)
-            .region_id(region)
+            .region(region)
             .personality(form.getPersonalities())
             .role(Role.USER)
             .build();
@@ -87,4 +88,15 @@ public class Membership {
         this.refreshToken = null;
     }
 
+    public void updateMembership(UpdateMembershipForm form, Region region) {
+        this.nickname = form.getNickname();
+        this.introduction = form.getIntroduction();
+        this.img_path = form.getPath();
+        this.region = region;
+        this.personality = form.getPersonalities();
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
 }

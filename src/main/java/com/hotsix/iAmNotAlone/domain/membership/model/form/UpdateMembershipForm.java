@@ -10,6 +10,7 @@ import lombok.Setter;
 @Builder
 public class UpdateMembershipForm {
 
+    private String nickname;
     private String introduction;
     private String path;
     private Long regionId;
