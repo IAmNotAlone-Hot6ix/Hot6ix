@@ -64,12 +64,13 @@ public class EmailService {
     /**
      * 이메일 인증 확인
      */
-    public void verifyMail(String email, String code) {
+    public boolean verifyMail(String email, String code) {
         String data = redisUtil.getData(email);
         if (data == null) {
             throw new IllegalArgumentException("인증시간이 만료되었습니다.");
         } else if (!data.equals(code)) {
             throw new IllegalArgumentException("인증 코드가 일치하지 않습니다.");
         }
+        return true;
     }
 }

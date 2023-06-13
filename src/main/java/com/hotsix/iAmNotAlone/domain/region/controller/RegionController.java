@@ -13,7 +13,7 @@ public class RegionController {
 
     private final RegionService regionService;
 
-    @GetMapping("api/regions")
+    @GetMapping("/regions")
     public List<Region> getRegions() {
         return regionService.findAll();
     }
