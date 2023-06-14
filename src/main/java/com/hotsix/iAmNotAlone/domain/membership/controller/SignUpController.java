@@ -18,7 +18,7 @@ public class SignUpController {
 
     private final SignUpService signUpService;
 
-    @PostMapping(value = "/signup", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<MemberDto> signUp(@RequestPart AddMembershipForm form,
         @RequestPart(value = "files", required = false) MultipartFile multipartFile) {
         return ResponseEntity.ok(MemberDto.from(signUpService.signUp(form, multipartFile)));

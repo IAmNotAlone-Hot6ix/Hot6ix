@@ -18,7 +18,7 @@ public class CorsConfig {
         config.addAllowedOrigin("http://127.0.0.1:5173");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/api/**",config);
+        source.registerCorsConfiguration("/**",config);
         return new CorsFilter(source);
     }
 }
