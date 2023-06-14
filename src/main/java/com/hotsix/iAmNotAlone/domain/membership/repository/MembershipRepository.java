@@ -12,5 +12,7 @@ public interface MembershipRepository extends JpaRepository<Membership, Long> {
 
     boolean existsByEmail(String email);
 
+    boolean existsByNickname(String nickname);
+
     Optional<Membership> findByRefreshToken(String refreshToken);
 }

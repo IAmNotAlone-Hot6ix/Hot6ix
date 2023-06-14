@@ -1,5 +1,6 @@
 package com.hotsix.iAmNotAlone.domain.membership.service;
 
+import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.ALREADY_EXIST_NICKNAME;
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.ALREADY_EXIST_USER;
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_REGION;
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_VERIFY_AUTH;
@@ -57,5 +58,15 @@ public class SignUpService {
         if (membershipRepository.existsByEmail(email)) {
             throw new BusinessException(ALREADY_EXIST_USER);
         }
+    }
+
+    /**
+     * 닉네임 중복 검사
+     */
+    public boolean validateNickname(String nickname) {
+        if (membershipRepository.existsByNickname(nickname)) {
+            throw new BusinessException(ALREADY_EXIST_NICKNAME);
+        }
+        return true;
     }
 }

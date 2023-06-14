@@ -13,8 +13,10 @@ public enum ErrorCode {
 
     // 회원가입
     ALREADY_EXIST_USER(HttpStatus.BAD_REQUEST, "해당 이메일이 존재합니다."),
+    ALREADY_EXIST_NICKNAME(HttpStatus.BAD_REQUEST, "해당 닉네임이 존재합니다."),
     NOT_FOUND_REGION(HttpStatus.BAD_REQUEST, "지역을 선택해주세요."),
     NOT_VERIFY_AUTH(HttpStatus.BAD_REQUEST, "이메일 인증을 진행해주세요."),
+
 
     // 이메일 인증 확인
     EXPIRE_CODE(HttpStatus.BAD_REQUEST, "인증시간이 만료되었습니다."),
