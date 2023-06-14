@@ -28,6 +28,11 @@ public class S3UploadService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    /**
+     * 파일 여러개 올릴때
+     * @param multipartFiles
+     * @return
+     */
     public List<S3FileDto> uploadFiles(List<MultipartFile> multipartFiles) {
 
         List<S3FileDto> s3files = new ArrayList<>();
@@ -71,6 +76,48 @@ public class S3UploadService {
         }
 
         return s3files;
+    }
+
+    /**
+     * 파일 하나 올릴때
+     * @param multipartFile
+     * @return
+     */
+    public S3FileDto uploadFile(MultipartFile multipartFile) {
+
+        String uploadFilePath = getFolderName();
+
+        String originalFileName = multipartFile.getOriginalFilename();
+        String uploadFileName = getUuidFileName(originalFileName);
+        String uploadFileUrl = "";
+
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(multipartFile.getSize());
+        objectMetadata.setContentType(multipartFile.getContentType());
+
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+
+            String keyName = uploadFilePath + "/" + uploadFileName; // ex) 구분/년/월/일/파일.확장자
+
+            // S3에 폴더 및 파일 업로드
+            amazonS3Client.putObject(
+                new PutObjectRequest(bucket, keyName, inputStream, objectMetadata));
+
+
+            // S3에 업로드한 폴더 및 파일 URL
+            uploadFileUrl = amazonS3Client.getUrl(bucket, keyName).toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("Filed upload failed", e);
+        }
+
+        return S3FileDto.builder()
+            .originalFileName(originalFileName)
+            .uploadFileName(uploadFileName)
+            .uploadFilePath(uploadFilePath)
+            .uploadFileUrl(uploadFileUrl)
+            .build();
     }
 
     public String deleteFile(String uploadFilePath, String uuidFileName) {
