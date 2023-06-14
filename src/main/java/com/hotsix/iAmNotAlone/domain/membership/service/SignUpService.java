@@ -32,7 +32,7 @@ public class SignUpService {
     private final S3UploadService s3UploadService;
 
     @Transactional
-    public Membership signUp(AddMembershipForm form, List<MultipartFile> multipartFiles) {
+    public Membership signUp(AddMembershipForm form, MultipartFile multipartFile) {
         Region region = regionRepository.findById(form.getRegionId()).orElseThrow(
             () -> new BusinessException(NOT_FOUND_REGION)
         );
@@ -41,10 +41,9 @@ public class SignUpService {
         }
 
         String url = "";
-        if (multipartFiles.get(0).getSize() != 0) {
-            List<S3FileDto> s3FileDtos = s3UploadService.uploadFiles(multipartFiles);
-            url = s3FileDtos.get(0).getUploadFileUrl();
-            log.info(s3FileDtos.get(0).toString());
+        if (multipartFile.getSize() != 0) {
+            url = s3UploadService.uploadFile(multipartFile).getUploadFileUrl();
+            log.info(s3UploadService.uploadFile(multipartFile).toString());
         }
 
         String password = passwordEncoder.encode(form.getPassword());
