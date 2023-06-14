@@ -46,7 +46,7 @@ public class EmailService {
             mimeMessageHelper.setSubject(emailMessage.getSubject());
             mimeMessageHelper.setText(setContext(authCode, type), true);
             javaMailSender.send(mimeMessage);
-            redisUtil.setDataExpire(emailMessage.getTo(), authCode, 60 * 3);
+            redisUtil.setDataExpire(emailMessage.getTo(), authCode, 60 * 5);
 
             log.info("mail send success");
         } catch (MessagingException e) {
