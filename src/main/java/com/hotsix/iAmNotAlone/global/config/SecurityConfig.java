@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests(authorize -> authorize
                         .antMatchers("/login", "/signup", "/email/**", "/swagger-ui/**", "/v3/api-docs/**"
-                            , "/swagger-resources/**", "/members").permitAll()
+                                , "/swagger-resources/**", "/refresh").permitAll()
                         .antMatchers("/api/**").access("hasRole('ROLE_USER')"))
                 .build();
     }
@@ -49,8 +49,8 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         // h2-console 사용 및 resources 접근 허용 설정
         return (web) -> web.ignoring()
-            .requestMatchers(PathRequest.toH2Console())
-            .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+                .requestMatchers(PathRequest.toH2Console())
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
     public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurity> {
@@ -58,10 +58,10 @@ public class SecurityConfig {
         public void configure(HttpSecurity http) {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
             http
-                .addFilter(corsConfig.corsFilter())
-                .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtService))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager,
-                    membershipRepository, jwtService));
+                    .addFilter(corsConfig.corsFilter())
+                    .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtService))
+                    .addFilter(new JwtAuthorizationFilter(authenticationManager,
+                            membershipRepository, jwtService));
         }
     }
 
