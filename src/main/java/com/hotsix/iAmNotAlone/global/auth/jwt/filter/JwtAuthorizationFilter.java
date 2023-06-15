@@ -4,13 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.global.auth.PrincipalDetails;
-import com.hotsix.iAmNotAlone.global.auth.jwt.JwtProperties;
 import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Pattern;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -97,5 +92,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+
 
 }
