@@ -20,12 +20,11 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping(value = "/post/{user_id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<PostDetailDto> addPost(
+    public ResponseEntity<Long> postAdd(
         @PathVariable(name = "user_id") Long id,
         @RequestPart AddPostForm form,
         @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles
     ) {
-        return ResponseEntity.ok(
-            PostDetailDto.from(postService.addPost(id, form, multipartFiles)));
+        return ResponseEntity.ok(postRegisterService.addPost(id, form, multipartFiles));
     }
 }

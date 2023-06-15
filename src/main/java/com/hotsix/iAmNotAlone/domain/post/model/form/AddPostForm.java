@@ -10,5 +10,4 @@ public class AddPostForm {
     private String address;
     private String content;
     private int gender;
-
 }

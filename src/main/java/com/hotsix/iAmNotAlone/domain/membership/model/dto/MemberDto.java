@@ -30,7 +30,7 @@ public class MemberDto {
             .birth(member.getBirth())
             .introduction(member.getIntroduction())
             .gender(member.getGender())
-            .path(member.getImg_path())
+            .path(member.getImgPath())
             .region(member.getRegion())
             .personalities(member.getPersonality())
             .build();

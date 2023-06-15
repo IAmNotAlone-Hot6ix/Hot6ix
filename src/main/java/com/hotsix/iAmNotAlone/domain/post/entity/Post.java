@@ -34,15 +34,15 @@ public class Post extends BaseEntity {
     @Column(name = "post_id")
     private Long id;
 
-    private Long board_id;
+    @Column(name = "board_id")
+    private Long boardId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Membership membership;
 
-    // 보류
-//    @ManyToOne(fetch = FetchType.LAZY)
-    private Long region_id;
+    @Column(name = "region_id")
+    private Long regionId;
 
     @Column(length = 50)
     private String address;
@@ -52,6 +52,8 @@ public class Post extends BaseEntity {
 
     @Column
     private Long likes;
+
+    @Column
     private int gender;
 
     @Convert(converter = ListToStringConverter.class)
@@ -60,9 +62,9 @@ public class Post extends BaseEntity {
 
     public static Post createPost(AddPostForm form, Membership membership, List<String> path) {
         return Post.builder()
-            .board_id(form.getBoardId())
+            .boardId(form.getBoardId())
             .membership(membership)
-            .region_id(form.getRegionId())
+            .regionId(form.getRegionId())
             .content(form.getContent())
             .address(form.getAddress())
             .likes(0L)

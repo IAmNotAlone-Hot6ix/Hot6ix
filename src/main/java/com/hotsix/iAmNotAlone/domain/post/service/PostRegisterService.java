@@ -25,14 +25,14 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @AuditOverride(forClass = BaseEntity.class)
-public class PostService extends BaseEntity {
+public class PostRegisterService extends BaseEntity {
 
     private final PostRepository postRepository;
     private final MembershipRepository membershipRepository;
     private final S3UploadService s3UploadService;
 
     @Transactional
-    public Post addPost(Long id, AddPostForm form, List<MultipartFile> multipartFiles) {
+    public Long addPost(Long id, AddPostForm form, List<MultipartFile> multipartFiles) {
 
         Membership membership = membershipRepository.findById(id).orElseThrow(
             () -> new BusinessException(NOT_FOUND_USER)
@@ -40,18 +40,18 @@ public class PostService extends BaseEntity {
         log.info("회원정보 조회");
 
         List<String> files = new ArrayList<>();
-        log.info("multipartfiles size: " + multipartFiles.size());
-        log.info("multipartfiles.get(0): " + multipartFiles.get(0));
-        log.info("multipartfiles.get(0) size: " + multipartFiles.get(0).getSize());
         if (multipartFiles.get(0).getSize() != 0) {
             List<S3FileDto> s3FileDtos = s3UploadService.uploadFiles(multipartFiles);
             for (S3FileDto file : s3FileDtos) {
                 files.add(file.getUploadFileUrl());
             }
         }
-        log.info("유저정보 저장");
-        return postRepository.save(Post.createPost(form, membership, files));
+        log.info("파일업로드 성공");
 
+        Post post = postRepository.save(Post.createPost(form, membership, files));
+        log.info("유저정보 저장");
+
+        return post.getId();
     }
 
 }
