@@ -59,8 +59,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         log.info("로그인 성공");
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         String email = principalDetails.getMember().getEmail();
-
-        String accessToken = jwtService.createAccessToken(email);
+        Long id = principalDetails.getMember().getId();
+        String accessToken = jwtService.createAccessToken(id,email);
         String refreshToken = jwtService.createRefreshToken();
 
         jwtService.updateRefreshToken(email, refreshToken);

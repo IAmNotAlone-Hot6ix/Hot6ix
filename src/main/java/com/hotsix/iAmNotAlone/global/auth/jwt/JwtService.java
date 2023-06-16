@@ -31,12 +31,13 @@ public class JwtService {
 
     private final MembershipRepository membershipRepository;
 
-    public String createAccessToken(String email) {
+    public String createAccessToken(Long id,String email) {
         log.info("어세스 토큰 생성");
         String token = JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME * 1000))
                 .withClaim("email", email)
+                .withClaim("id",id)
                 .sign(Algorithm.HMAC512(SECRET));
 
         return TOKEN_PREFIX + token;
@@ -126,7 +127,7 @@ public class JwtService {
             Optional<Membership> optionalToken = membershipRepository.findByRefreshToken(refreshToken);
             if (optionalToken.isPresent()) {
                 Membership member = optionalToken.get();
-                Map<String, String> map1 = sendAccessToken(response, createAccessToken(member.getEmail()));
+                Map<String, String> map1 = sendAccessToken(response, createAccessToken(member.getId(),member.getEmail()));
                 return om.writeValueAsString(map1);
             }
         } else {
