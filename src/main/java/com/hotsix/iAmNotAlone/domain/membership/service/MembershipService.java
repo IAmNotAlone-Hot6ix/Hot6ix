@@ -65,8 +65,8 @@ public class MembershipService {
         // 1. 새로 업로든 하는 파일이 있다
         if (multipartFiles.get(0).getSize() != 0) {
             // 1-2. 기존에 파일이 있다. -> 기존 파일 s3 버킷에서 삭제
-            if (member.getImg_path().length() != 0) {
-                String[] split = member.getImg_path().split("/");
+            if (member.getImgPath().length() != 0) {
+                String[] split = member.getImgPath().split("/");
                 String filePath =
                     split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
                 String fileName = split[split.length - 1];
@@ -78,8 +78,8 @@ public class MembershipService {
             form.setPath(s3FileDtos.get(0).getUploadFileUrl());
         } else { // 2. 새로 업로드하느 파일이 없다.
             // 2-2. 기존 파일을 삭제한다.
-            if (!form.getPath().equals(member.getImg_path())) {
-                String[] split = member.getImg_path().split("/");
+            if (!form.getPath().equals(member.getImgPath())) {
+                String[] split = member.getImgPath().split("/");
                 String filePath =
                     split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
                 String fileName = split[split.length - 1];

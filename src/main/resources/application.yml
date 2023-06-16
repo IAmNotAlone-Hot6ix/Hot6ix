@@ -35,6 +35,10 @@ spring:
           starttls:
             enable: true
 
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
 cloud:
   aws:
     credentials:

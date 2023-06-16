@@ -48,7 +48,9 @@ public class Membership {
     private LocalDate birth;
     private int gender;
     private String introduction;
-    private String img_path;
+
+    @Column(name = "img_path")
+    private String imgPath;
 
     @Column(name = "likelist", length = 100)
     private String likes;
@@ -74,7 +76,7 @@ public class Membership {
             .birth(form.getBirth())
             .gender(form.getGender())
             .introduction(form.getIntroduction())
-            .img_path(url)
+            .imgPath(url)
             .region(region)
             .personality(form.getPersonalities())
             .role(Role.USER)
@@ -92,7 +94,7 @@ public class Membership {
     public void updateMembership(UpdateMembershipForm form, Region region) {
         this.nickname = form.getNickname();
         this.introduction = form.getIntroduction();
-        this.img_path = form.getPath();
+        this.imgPath = form.getPath();
         this.region = region;
         this.personality = form.getPersonalities();
     }

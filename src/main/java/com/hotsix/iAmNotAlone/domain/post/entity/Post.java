@@ -3,7 +3,7 @@ package com.hotsix.iAmNotAlone.domain.post.entity;
 import com.hotsix.iAmNotAlone.domain.common.BaseEntity;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.post.model.form.AddPostForm;
-import com.hotsix.iAmNotAlone.domain.region.entity.Region;
+import com.hotsix.iAmNotAlone.domain.post.model.form.ModifyPostForm;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
 import java.util.List;
 import javax.persistence.Column;
@@ -21,12 +21,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.AuditOverride;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@AuditOverride(forClass = BaseEntity.class)
 public class Post extends BaseEntity {
 
     @Id
@@ -34,15 +36,15 @@ public class Post extends BaseEntity {
     @Column(name = "post_id")
     private Long id;
 
-    private Long board_id;
+    @Column(name = "board_id")
+    private Long boardId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Membership membership;
 
-    // 보류
-//    @ManyToOne(fetch = FetchType.LAZY)
-    private Long region_id;
+    @Column(name = "region_id")
+    private Long regionId;
 
     @Column(length = 50)
     private String address;
@@ -52,23 +54,34 @@ public class Post extends BaseEntity {
 
     @Column
     private Long likes;
+
+    @Column
     private int gender;
 
     @Convert(converter = ListToStringConverter.class)
-    private List<String> img_path;
+    @Column(name = "img_path")
+    private List<String> imgPath;
 
 
     public static Post createPost(AddPostForm form, Membership membership, List<String> path) {
         return Post.builder()
-            .board_id(form.getBoardId())
+            .boardId(form.getBoardId())
             .membership(membership)
-            .region_id(form.getRegionId())
+            .regionId(form.getRegionId())
             .content(form.getContent())
             .address(form.getAddress())
             .likes(0L)
-            .gender(form.getGender())
-            .img_path(path)
+            .gender(membership.getGender())
+            .imgPath(path)
             .build();
+    }
+
+    public void modifyPost(ModifyPostForm form) {
+        this.boardId = form.getBoardId();
+        this.regionId = form.getRegionId();
+        this.address = form.getAddress();
+        this.content = form.getContent();
+        this.imgPath = form.getImgPath();
     }
 
 

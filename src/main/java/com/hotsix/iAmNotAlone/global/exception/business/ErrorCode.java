@@ -27,6 +27,9 @@ public enum ErrorCode {
     NOT_MATCH_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다."),
     NOT_MATCH_PASSWORD_VERIFY(HttpStatus.BAD_REQUEST, "새비밀번호와 비밀번호 확인이 일치하지 않습니다."),
 
+    //게시글
+    NOT_FOUND_POST(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다."),
+
     ;
     private final HttpStatus httpStatus;
     private final String detail;

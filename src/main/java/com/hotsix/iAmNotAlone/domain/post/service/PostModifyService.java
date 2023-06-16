@@ -2,12 +2,9 @@ package com.hotsix.iAmNotAlone.domain.post.service;
 
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_USER;
 
-import com.hotsix.iAmNotAlone.domain.common.BaseEntity;
-import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.S3FileDto;
-import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
-import com.hotsix.iAmNotAlone.domain.post.model.form.AddPostForm;
+import com.hotsix.iAmNotAlone.domain.post.model.form.ModifyPostForm;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.util.S3UploadService;
@@ -15,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.envers.AuditOverride;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,34 +20,48 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-@AuditOverride(forClass = BaseEntity.class)
-public class PostService extends BaseEntity {
+public class PostModifyService {
 
     private final PostRepository postRepository;
-    private final MembershipRepository membershipRepository;
     private final S3UploadService s3UploadService;
 
     @Transactional
-    public Post addPost(Long id, AddPostForm form, List<MultipartFile> multipartFiles) {
+    public Long modifyPost(Long id, ModifyPostForm form, List<MultipartFile> multipartFiles) {
 
-        Membership membership = membershipRepository.findById(id).orElseThrow(
+        Post post = postRepository.findById(id).orElseThrow(
             () -> new BusinessException(NOT_FOUND_USER)
         );
-        log.info("회원정보 조회");
+        log.info("게시글 조회");
 
+        // 이미지가 존재하면 전제 삭제
+        if (form.getImgPath().get(0).length() != 0) {
+            for (String url : form.getImgPath()) {
+                String[] split = url.split("/");
+                String filePath =
+                    split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
+                String fileName = split[split.length - 1];
+                log.info(filePath + " " + fileName);
+                s3UploadService.deleteFile(filePath, fileName);
+            }
+            log.info("이미지 전체 삭제");
+        }
+
+        // 이미지 전체 업로드
         List<String> files = new ArrayList<>();
-        log.info("multipartfiles size: " + multipartFiles.size());
-        log.info("multipartfiles.get(0): " + multipartFiles.get(0));
-        log.info("multipartfiles.get(0) size: " + multipartFiles.get(0).getSize());
         if (multipartFiles.get(0).getSize() != 0) {
             List<S3FileDto> s3FileDtos = s3UploadService.uploadFiles(multipartFiles);
             for (S3FileDto file : s3FileDtos) {
                 files.add(file.getUploadFileUrl());
             }
+            log.info("이미지 업로드");
+            form.setImgPath(files);
         }
-        log.info("유저정보 저장");
-        return postRepository.save(Post.createPost(form, membership, files));
 
+
+        post.modifyPost(form);
+        log.info("게시글 수정");
+
+        return post.getId();
     }
 
 }
