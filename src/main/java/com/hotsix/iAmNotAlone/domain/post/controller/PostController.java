@@ -1,12 +1,15 @@
 package com.hotsix.iAmNotAlone.domain.post.controller;
 
+import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import com.hotsix.iAmNotAlone.domain.post.model.dto.PostDetailDto;
 import com.hotsix.iAmNotAlone.domain.post.model.form.AddPostForm;
-import com.hotsix.iAmNotAlone.domain.post.service.PostService;
+import com.hotsix.iAmNotAlone.domain.post.service.PostDetailService;
+import com.hotsix.iAmNotAlone.domain.post.service.PostRegisterService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -17,7 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostService postService;
+    private final PostRegisterService postRegisterService;
+    private final PostDetailService postDetailService;
 
     @PostMapping(value = "/post/{user_id}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Long> postAdd(
@@ -27,4 +31,10 @@ public class PostController {
     ) {
         return ResponseEntity.ok(postRegisterService.addPost(id, form, multipartFiles));
     }
+
+    @GetMapping("/post/{post_id}")
+    public ResponseEntity<PostDetailDto> postDetails(@PathVariable("post_id") Long id) {
+        return ResponseEntity.ok(postDetailService.findPost(id));
+    }
+
 }

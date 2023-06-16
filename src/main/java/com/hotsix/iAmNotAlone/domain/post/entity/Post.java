@@ -3,7 +3,6 @@ package com.hotsix.iAmNotAlone.domain.post.entity;
 import com.hotsix.iAmNotAlone.domain.common.BaseEntity;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.post.model.form.AddPostForm;
-import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
 import java.util.List;
 import javax.persistence.Column;
@@ -21,12 +20,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.envers.AuditOverride;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@AuditOverride(forClass = BaseEntity.class)
 public class Post extends BaseEntity {
 
     @Id

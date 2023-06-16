@@ -23,9 +23,9 @@ public class PostDetailDto {
     public static PostDetailDto from(Post post) {
         return PostDetailDto.builder()
             .postId(post.getId())
-            .boardId(post.getBoard_id())
+            .boardId(post.getBoardId())
             .membership(MembershipPostDto.from(post.getMembership()))
-            .region_id(post.getRegion_id())
+            .region_id(post.getRegionId())
             .address(post.getAddress())
             .content(post.getContent())
             .likes(post.getLikes())

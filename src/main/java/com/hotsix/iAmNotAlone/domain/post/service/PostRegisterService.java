@@ -24,8 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-@AuditOverride(forClass = BaseEntity.class)
-public class PostRegisterService extends BaseEntity {
+public class PostRegisterService{
 
     private final PostRepository postRepository;
     private final MembershipRepository membershipRepository;
