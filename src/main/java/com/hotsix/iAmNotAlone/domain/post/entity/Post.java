@@ -3,6 +3,7 @@ package com.hotsix.iAmNotAlone.domain.post.entity;
 import com.hotsix.iAmNotAlone.domain.common.BaseEntity;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.post.model.form.AddPostForm;
+import com.hotsix.iAmNotAlone.domain.post.model.form.ModifyPostForm;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
 import java.util.List;
 import javax.persistence.Column;
@@ -58,7 +59,8 @@ public class Post extends BaseEntity {
     private int gender;
 
     @Convert(converter = ListToStringConverter.class)
-    private List<String> img_path;
+    @Column(name = "img_path")
+    private List<String> imgPath;
 
 
     public static Post createPost(AddPostForm form, Membership membership, List<String> path) {
@@ -69,9 +71,17 @@ public class Post extends BaseEntity {
             .content(form.getContent())
             .address(form.getAddress())
             .likes(0L)
-            .gender(form.getGender())
-            .img_path(path)
+            .gender(membership.getGender())
+            .imgPath(path)
             .build();
+    }
+
+    public void modifyPost(ModifyPostForm form) {
+        this.boardId = form.getBoardId();
+        this.regionId = form.getRegionId();
+        this.address = form.getAddress();
+        this.content = form.getContent();
+        this.imgPath = form.getImgPath();
     }
 
 
