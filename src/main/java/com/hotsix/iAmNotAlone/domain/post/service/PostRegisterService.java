@@ -39,7 +39,7 @@ public class PostRegisterService{
         log.info("회원정보 조회");
 
         List<String> files = new ArrayList<>();
-        if (!multipartFiles.isEmpty()) {
+        if (multipartFiles.get(0).getSize() != 0) {
             List<S3FileDto> s3FileDtos = s3UploadService.uploadFiles(multipartFiles);
             for (S3FileDto file : s3FileDtos) {
                 files.add(file.getUploadFileUrl());
