@@ -33,19 +33,29 @@ public class PostModifyService {
         );
         log.info("게시글 조회");
 
-        //이미지 파일 새 리스트에
-//        List<String> images = new ArrayList<>();
-//        for (String image : form.getImgPath()) {
-//            images.add(image);
-//        }
-//
-//        if (multipartFiles.get(0).getSize() != 0) {
-//            List<S3FileDto> s3FileDtos = s3UploadService.uploadFiles(multipartFiles);
-//            for (S3FileDto file : s3FileDtos) {
-//
-//            }
-//        }
+        // 이미지가 존재하면 전제 삭제
+        if (form.getImgPath().get(0).length() != 0) {
+            for (String url : form.getImgPath()) {
+                String[] split = url.split("/");
+                String filePath =
+                    split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
+                String fileName = split[split.length - 1];
+                log.info(filePath + " " + fileName);
+                s3UploadService.deleteFile(filePath, fileName);
+            }
+            log.info("이미지 전체 삭제");
+        }
 
+        // 이미지 전체 업로드
+        List<String> files = new ArrayList<>();
+        if (multipartFiles.get(0).getSize() != 0) {
+            List<S3FileDto> s3FileDtos = s3UploadService.uploadFiles(multipartFiles);
+            for (S3FileDto file : s3FileDtos) {
+                files.add(file.getUploadFileUrl());
+            }
+            log.info("이미지 업로드");
+            form.setImgPath(files);
+        }
 
 
         post.modifyPost(form);
