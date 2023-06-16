@@ -9,5 +9,4 @@ public class AddPostForm {
     private Long regionId;
     private String address;
     private String content;
-    private int gender;
 }
