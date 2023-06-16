@@ -66,12 +66,12 @@ public class MembershipService {
         if (multipartFiles.get(0).getSize() != 0) {
             // 1-2. 기존에 파일이 있다. -> 기존 파일 s3 버킷에서 삭제
             if (member.getImgPath().length() != 0) {
-                String[] split = member.getImgPath().split("/");
-                String filePath =
-                    split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
-                String fileName = split[split.length - 1];
-                log.info(filePath + " " + fileName);
-                s3UploadService.deleteFile(filePath, fileName);
+                String[] split = member.getImgPath().split("com/");
+//                String filePath =
+//                    split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
+//                String fileName = split[split.length - 1];
+//                log.info(filePath + " " + fileName);
+                s3UploadService.deleteFile(split[1]);
             }
             // 1-1. 기존에 파일이 없다. -> 삭제 없이 s3 버킷에 업로드
             List<S3FileDto> s3FileDtos = s3UploadService.uploadFiles(multipartFiles);
@@ -79,12 +79,12 @@ public class MembershipService {
         } else { // 2. 새로 업로드하느 파일이 없다.
             // 2-2. 기존 파일을 삭제한다.
             if (!form.getPath().equals(member.getImgPath())) {
-                String[] split = member.getImgPath().split("/");
-                String filePath =
-                    split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
-                String fileName = split[split.length - 1];
-                log.info(filePath + " " + fileName);
-                s3UploadService.deleteFile(filePath, fileName);
+                String[] split = member.getImgPath().split("com/");
+//                String filePath =
+//                    split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
+//                String fileName = split[split.length - 1];
+//                log.info(filePath + " " + fileName);
+                s3UploadService.deleteFile(split[1]);
             }
         }
         // 2-1. 기존에 파일을 그대로 둔다.
