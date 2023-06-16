@@ -120,12 +120,12 @@ public class S3UploadService {
             .build();
     }
 
-    public String deleteFile(String uploadFilePath, String uuidFileName) {
+    public String deleteFile(String keyName) {
 
         String result = "success";
 
         try {
-            String keyName = uploadFilePath + "/" + uuidFileName; // ex) 구분/년/월/일/파일.확장자
+//            String keyName = uploadFilePath + "/" + uuidFileName; // ex) 구분/년/월/일/파일.확장자
             boolean isObjectExist = amazonS3Client.doesObjectExist(bucket, keyName);
             if (isObjectExist) {
                 amazonS3Client.deleteObject(bucket, keyName);

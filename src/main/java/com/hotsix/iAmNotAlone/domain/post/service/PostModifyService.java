@@ -36,12 +36,12 @@ public class PostModifyService {
         // 이미지가 존재하면 전제 삭제
         if (form.getImgPath().get(0).length() != 0) {
             for (String url : form.getImgPath()) {
-                String[] split = url.split("/");
-                String filePath =
-                    split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
-                String fileName = split[split.length - 1];
-                log.info(filePath + " " + fileName);
-                s3UploadService.deleteFile(filePath, fileName);
+                String[] split = url.split("com/");
+//                String filePath =
+//                    split[split.length - 4] + "/" + split[split.length - 3] + "/" + split[split.length - 2];
+//                String fileName = split[split.length - 1];
+//                log.info(filePath + " " + fileName);
+                s3UploadService.deleteFile(split[1]);
             }
             log.info("이미지 전체 삭제");
         }
