@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.S3FileDto;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -12,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +32,7 @@ public class S3UploadService {
 
     /**
      * 파일 여러개 올릴때
+     *
      * @param multipartFiles
      * @return
      */
@@ -55,7 +58,7 @@ public class S3UploadService {
 
                 // S3에 폴더 및 파일 업로드
                 amazonS3Client.putObject(
-                    new PutObjectRequest(bucket, keyName, inputStream, objectMetadata));
+                        new PutObjectRequest(bucket, keyName, inputStream, objectMetadata));
 
 
                 // S3에 업로드한 폴더 및 파일 URL
@@ -67,12 +70,12 @@ public class S3UploadService {
             }
 
             s3files.add(
-                S3FileDto.builder()
-                    .originalFileName(originalFileName)
-                    .uploadFileName(uploadFileName)
-                    .uploadFilePath(uploadFilePath)
-                    .uploadFileUrl(uploadFileUrl)
-                    .build());
+                    S3FileDto.builder()
+                            .originalFileName(originalFileName)
+                            .uploadFileName(uploadFileName)
+                            .uploadFilePath(uploadFilePath)
+                            .uploadFileUrl(uploadFileUrl)
+                            .build());
         }
 
         return s3files;
@@ -80,6 +83,7 @@ public class S3UploadService {
 
     /**
      * 파일 하나 올릴때
+     *
      * @param multipartFile
      * @return
      */
@@ -101,7 +105,7 @@ public class S3UploadService {
 
             // S3에 폴더 및 파일 업로드
             amazonS3Client.putObject(
-                new PutObjectRequest(bucket, keyName, inputStream, objectMetadata));
+                    new PutObjectRequest(bucket, keyName, inputStream, objectMetadata));
 
 
             // S3에 업로드한 폴더 및 파일 URL
@@ -113,19 +117,19 @@ public class S3UploadService {
         }
 
         return S3FileDto.builder()
-            .originalFileName(originalFileName)
-            .uploadFileName(uploadFileName)
-            .uploadFilePath(uploadFilePath)
-            .uploadFileUrl(uploadFileUrl)
-            .build();
+                .originalFileName(originalFileName)
+                .uploadFileName(uploadFileName)
+                .uploadFilePath(uploadFilePath)
+                .uploadFileUrl(uploadFileUrl)
+                .build();
     }
 
-    public String deleteFile(String uploadFilePath, String uuidFileName) {
+    public String deleteFile(String keyName) {
 
         String result = "success";
 
         try {
-            String keyName = uploadFilePath + "/" + uuidFileName; // ex) 구분/년/월/일/파일.확장자
+//            String keyName = uploadFilePath + "/" + uuidFileName; // ex) 구분/년/월/일/파일.확장자
             boolean isObjectExist = amazonS3Client.doesObjectExist(bucket, keyName);
             if (isObjectExist) {
                 amazonS3Client.deleteObject(bucket, keyName);
