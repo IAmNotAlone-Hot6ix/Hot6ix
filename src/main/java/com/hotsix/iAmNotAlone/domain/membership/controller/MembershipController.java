@@ -43,7 +43,7 @@ public class MembershipController {
     @DeleteMapping("/api/membership/delete/{user_id}")
     public ResponseEntity<String> deleteMember(@PathVariable Long user_id) {
         membershipService.delete(user_id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("회원탈퇴가 정상적으로 완료되었습니다.");
     }
 
     // 마이페이지 유저 정보 api
