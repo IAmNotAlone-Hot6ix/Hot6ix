@@ -1,37 +1,23 @@
 package com.hotsix.iAmNotAlone.domain.membership.entity;
 
+import com.hotsix.iAmNotAlone.domain.common.BaseEntity;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.UpdateMembershipForm;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.global.auth.common.Role;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
+import lombok.*;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.ConstraintMode;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Membership {
+public class Membership extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,17 +56,17 @@ public class Membership {
 
     public static Membership of(AddMembershipForm form, Region region, String password, String url) {
         return Membership.builder()
-            .email(form.getEmail())
-            .nickname(form.getNickname())
-            .password(password)
-            .birth(form.getBirth())
-            .gender(form.getGender())
-            .introduction(form.getIntroduction())
-            .imgPath(url)
-            .region(region)
-            .personality(form.getPersonalities())
-            .role(Role.USER)
-            .build();
+                .email(form.getEmail())
+                .nickname(form.getNickname())
+                .password(password)
+                .birth(form.getBirth())
+                .gender(form.getGender())
+                .introduction(form.getIntroduction())
+                .imgPath(url)
+                .region(region)
+                .personality(form.getPersonalities())
+                .role(Role.USER)
+                .build();
     }
 
     public void updateRefreshToken(String refreshToken) {

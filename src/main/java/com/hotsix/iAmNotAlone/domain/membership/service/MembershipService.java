@@ -6,9 +6,11 @@ import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_MAT
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_MATCH_PASSWORD_VERIFY;
 
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
+import com.hotsix.iAmNotAlone.domain.membership.model.dto.MyMemberDto;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.S3FileDto;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.UpdateMembershipForm;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.UpdatePasswordForm;
+import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipQueryRepository;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.MemberDto;
@@ -35,6 +37,7 @@ public class MembershipService {
     private final RegionRepository regionRepository;
     private final PasswordEncoder passwordEncoder;
     private final S3UploadService s3UploadService;
+    private final MembershipQueryRepository membershipQueryRepository;
 
     /**
      * 회원 리스트 조회
@@ -53,9 +56,9 @@ public class MembershipService {
     @Transactional
     public MemberDto update(Long user_id, UpdateMembershipForm form, List<MultipartFile> multipartFiles) {
         Membership member = membershipRepository.findById(user_id)
-            .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
         Region region = regionRepository.findById(form.getRegionId()).orElseThrow(
-            () -> new IllegalArgumentException("일치하는 지역이 없습니다. 지역을 선택해주세요.")
+                () -> new IllegalArgumentException("일치하는 지역이 없습니다. 지역을 선택해주세요.")
         );
 
         // 1. 기존에 파일이 있고, 새로 업로드하는 파일이 있으면 url 바꾸고 기존 파일은 삭제
@@ -127,6 +130,12 @@ public class MembershipService {
     @Transactional
     public void delete(Long user_id) {
         membershipRepository.deleteById(user_id);
+    }
+
+    @Transactional
+    public MyMemberDto my(Long user_id){
+        Membership membership = membershipQueryRepository.findByIdMembership(user_id);
+        return new MyMemberDto(membership);
     }
 
 }
