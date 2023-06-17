@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: prod
+      on-profile: local
 
   h2:
     console:
@@ -9,9 +9,9 @@ spring:
       path: /h2-console
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_DATABASE_URL}
-    username: ${MYSQL_DATABASE_USERNAME}
-    password: ${MYSQL_DATABASE_PASSWORD}
+    url: jdbc:mysql://localhost:3306/iamnotalonedb
+    username: root
+    password: 1234
 
   jpa:
     hibernate:
