@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/membership")
 public class MembershipController {
 
     private final MembershipDetailService membershipDetailService;
@@ -28,7 +29,7 @@ public class MembershipController {
     /**
      * 마이페이지 유저 정보 api, 회원 조회
      */
-    @GetMapping("/api/my/{userId}")
+    @GetMapping("/detail/{userId}")
     public ResponseEntity<MembershipDetailDto> membershipDetails(@PathVariable Long userId) {
         return ResponseEntity.ok(membershipDetailService.findMembership(userId));
     }
@@ -36,7 +37,7 @@ public class MembershipController {
     /**
      * 회원 수정
      */
-    @PutMapping(value = "/api/membership/update/{userId}", consumes = {
+    @PutMapping(value = "/update/{userId}", consumes = {
         MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Long> membershipModify(@PathVariable Long userId,
         @RequestPart ModifyMembershipForm form,
@@ -48,7 +49,7 @@ public class MembershipController {
     /**
      * 회원 탈퇴
      */
-    @DeleteMapping("/api/membership/delete/{userId}")
+    @DeleteMapping("/delete/{userId}")
     public ResponseEntity<String> membershipRemove(@PathVariable Long userId) {
         membershipRemoveService.removeMembership(userId);
         return ResponseEntity.ok("회원탈퇴가 정상적으로 완료되었습니다.");
@@ -57,7 +58,7 @@ public class MembershipController {
     /**
      * 비밀번호 수정
      */
-    @PutMapping("/api/membership/update/password/{userId}")
+    @PutMapping("/update/password/{userId}")
     public ResponseEntity<String> passwordModify(@PathVariable Long userId,
         @RequestBody ModifyPasswordForm form) {
         passwordModifyService.modifyPassword(userId, form);

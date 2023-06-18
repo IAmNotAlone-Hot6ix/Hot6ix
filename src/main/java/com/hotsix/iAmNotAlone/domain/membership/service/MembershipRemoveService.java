@@ -4,7 +4,6 @@ import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOU
 
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
-import com.hotsix.iAmNotAlone.domain.region.repository.RegionRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.util.S3UploadService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MembershipRemoveService {
 
     private final MembershipRepository membershipRepository;
-    private final RegionRepository regionRepository;
     private final S3UploadService s3UploadService;
 
     /**
