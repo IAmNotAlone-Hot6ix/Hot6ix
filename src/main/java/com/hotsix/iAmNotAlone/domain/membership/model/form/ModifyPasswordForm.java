@@ -3,7 +3,7 @@ package com.hotsix.iAmNotAlone.domain.membership.model.form;
 import lombok.Getter;
 
 @Getter
-public class UpdatePasswordForm {
+public class ModifyPasswordForm {
 
     private String password;
     private String newPassword;

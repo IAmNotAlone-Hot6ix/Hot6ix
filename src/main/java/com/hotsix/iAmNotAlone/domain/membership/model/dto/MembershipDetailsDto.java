@@ -9,7 +9,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class MemberDto {
+public class MembershipDetailsDto {
 
     private Long id;
     private String email;
@@ -19,11 +19,10 @@ public class MemberDto {
     private int gender;
     private String path;
     private Region region;
+    private List<String> personality;
 
-    private List<String> personalities;
-
-    public static MemberDto from(Membership member) {
-        return MemberDto.builder()
+    public static MembershipDetailsDto from(Membership member) {
+        return MembershipDetailsDto.builder()
             .id(member.getId())
             .email(member.getEmail())
             .nickname(member.getNickname())
@@ -32,7 +31,7 @@ public class MemberDto {
             .gender(member.getGender())
             .path(member.getImgPath())
             .region(member.getRegion())
-            .personalities(member.getPersonality())
+            .personality(member.getPersonality())
             .build();
     }
 }

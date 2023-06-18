@@ -8,7 +8,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
-public class MyMemberDto {
+public class MembershipDetailDto {
+
+    private Long id;
+    private String email;
     private String nickname;
     private String img_path;
     private int gender;
@@ -17,7 +20,9 @@ public class MyMemberDto {
     private List<String> personality;
     private String introduction;
 
-    public MyMemberDto(Membership membership) {
+    public MembershipDetailDto(Membership membership) {
+        id = membership.getId();
+        email = membership.getEmail();
         nickname = membership.getNickname();
         img_path = membership.getImgPath();
         gender = membership.getGender();

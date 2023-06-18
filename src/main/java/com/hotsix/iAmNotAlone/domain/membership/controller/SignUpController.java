@@ -1,8 +1,7 @@
 package com.hotsix.iAmNotAlone.domain.membership.controller;
 
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
-import com.hotsix.iAmNotAlone.domain.membership.model.dto.MemberDto;
-import com.hotsix.iAmNotAlone.domain.membership.model.form.NicknameVerifyForm;
+import com.hotsix.iAmNotAlone.domain.membership.model.form.VerifyNicknameForm;
 import com.hotsix.iAmNotAlone.domain.membership.service.SignUpService;
 import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +27,13 @@ public class SignUpController {
     private final JwtService jwtService;
 
     @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<MemberDto> signUp(@RequestPart AddMembershipForm form,
+    public ResponseEntity<Long> signUp(@RequestPart AddMembershipForm form,
         @RequestPart(value = "files", required = false) MultipartFile multipartFile) {
-        return ResponseEntity.ok(MemberDto.from(signUpService.signUp(form, multipartFile)));
+        return ResponseEntity.ok(signUpService.signUp(form, multipartFile));
     }
 
     @PostMapping("/nickname")
-    public ResponseEntity<Boolean> validateNickname(@RequestBody NicknameVerifyForm form) {
+    public ResponseEntity<Boolean> validateNickname(@RequestBody VerifyNicknameForm form) {
         return ResponseEntity.ok(signUpService.validateNickname(form.getNickname()));
     }
 

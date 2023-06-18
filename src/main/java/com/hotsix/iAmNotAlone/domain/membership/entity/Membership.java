@@ -2,7 +2,7 @@ package com.hotsix.iAmNotAlone.domain.membership.entity;
 
 import com.hotsix.iAmNotAlone.domain.common.BaseEntity;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
-import com.hotsix.iAmNotAlone.domain.membership.model.form.UpdateMembershipForm;
+import com.hotsix.iAmNotAlone.domain.membership.model.form.ModifyMembershipForm;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.global.auth.common.Role;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
@@ -11,12 +11,14 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import org.hibernate.envers.AuditOverride;
 
 @Entity
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@AuditOverride(forClass = BaseEntity.class)
 public class Membership extends BaseEntity {
 
     @Id
@@ -64,7 +66,7 @@ public class Membership extends BaseEntity {
                 .introduction(form.getIntroduction())
                 .imgPath(url)
                 .region(region)
-                .personality(form.getPersonalities())
+                .personality(form.getPersonality())
                 .role(Role.USER)
                 .build();
     }
@@ -77,12 +79,12 @@ public class Membership extends BaseEntity {
         this.refreshToken = null;
     }
 
-    public void updateMembership(UpdateMembershipForm form, Region region) {
+    public void updateMembership(ModifyMembershipForm form, Region region) {
         this.nickname = form.getNickname();
         this.introduction = form.getIntroduction();
-        this.imgPath = form.getPath();
+        this.imgPath = form.getImgPath();
         this.region = region;
-        this.personality = form.getPersonalities();
+        this.personality = form.getPersonality();
     }
 
     public void updatePassword(String password) {

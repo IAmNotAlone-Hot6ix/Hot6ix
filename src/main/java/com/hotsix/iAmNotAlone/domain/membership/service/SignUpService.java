@@ -33,7 +33,7 @@ public class SignUpService {
     private final S3UploadService s3UploadService;
 
     @Transactional
-    public Membership signUp(AddMembershipForm form, MultipartFile multipartFile) {
+    public Long signUp(AddMembershipForm form, MultipartFile multipartFile) {
         Region region = regionRepository.findById(form.getRegionId()).orElseThrow(
             () -> new BusinessException(NOT_FOUND_REGION)
         );
@@ -48,7 +48,8 @@ public class SignUpService {
         }
 
         String password = passwordEncoder.encode(form.getPassword());
-        return membershipRepository.save(Membership.of(form, region, password, url));
+        Membership membership = membershipRepository.save(Membership.of(form, region, password, url));
+        return membership.getId();
     }
 
     /**
