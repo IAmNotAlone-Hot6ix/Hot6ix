@@ -16,7 +16,7 @@ public class MembershipDetailService {
 
     private final MembershipQueryRepository membershipQueryRepository;
 
-    public MembershipDetailDto my(Long userId){
+    public MembershipDetailDto findMembership(Long userId){
         Membership membership = membershipQueryRepository.findByIdMembership(userId);
         return new MembershipDetailDto(membership);
     }

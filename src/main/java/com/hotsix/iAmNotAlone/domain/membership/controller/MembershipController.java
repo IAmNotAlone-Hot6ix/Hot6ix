@@ -24,16 +24,14 @@ public class MembershipController {
     private final MembershipRemoveService membershipRemoveService;
     private final PasswordModifyService passwordModifyService;
 
-    // 마이페이지 유저 정보 api
 
     /**
      * 마이페이지 유저 정보 api, 회원 조회
      */
     @GetMapping("/api/my/{userId}")
     public ResponseEntity<MembershipDetailDto> membershipDetails(@PathVariable Long userId) {
-        return ResponseEntity.ok(membershipDetailService.my(userId));
+        return ResponseEntity.ok(membershipDetailService.findMembership(userId));
     }
-
 
     /**
      * 회원 수정
@@ -56,7 +54,6 @@ public class MembershipController {
         return ResponseEntity.ok("회원탈퇴가 정상적으로 완료되었습니다.");
     }
 
-
     /**
      * 비밀번호 수정
      */
@@ -66,7 +63,5 @@ public class MembershipController {
         passwordModifyService.modifyPassword(userId, form);
         return ResponseEntity.ok().build();
     }
-
-
 
 }
