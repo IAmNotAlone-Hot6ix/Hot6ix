@@ -6,14 +6,12 @@ import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOU
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_VERIFY_AUTH;
 
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
-import com.hotsix.iAmNotAlone.domain.membership.model.dto.S3FileDto;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.domain.region.repository.RegionRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.util.S3UploadService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +31,7 @@ public class SignUpService {
     private final S3UploadService s3UploadService;
 
     @Transactional
-    public Membership signUp(AddMembershipForm form, MultipartFile multipartFile) {
+    public Long signUp(AddMembershipForm form, MultipartFile multipartFile) {
         Region region = regionRepository.findById(form.getRegionId()).orElseThrow(
             () -> new BusinessException(NOT_FOUND_REGION)
         );
@@ -48,7 +46,8 @@ public class SignUpService {
         }
 
         String password = passwordEncoder.encode(form.getPassword());
-        return membershipRepository.save(Membership.of(form, region, password, url));
+        Membership membership = membershipRepository.save(Membership.of(form, region, password, url));
+        return membership.getId();
     }
 
     /**

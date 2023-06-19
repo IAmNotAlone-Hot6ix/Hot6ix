@@ -24,7 +24,7 @@ public class AddMembershipForm {
     private int gender;
     private String introduction;
     private Long regionId;
-    private List<String> personalities;
+    private List<String> personality;
     private boolean verify;
 
 }

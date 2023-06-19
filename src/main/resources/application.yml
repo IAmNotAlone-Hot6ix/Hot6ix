@@ -1,12 +1,4 @@
 spring:
-  config:
-    activate:
-      on-profile: prod
-
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${MYSQL_DATABASE_URL}

@@ -3,7 +3,8 @@ package com.hotsix.iAmNotAlone.domain.membership.model.form;
 import lombok.Getter;
 
 @Getter
-public class NicknameVerifyForm {
+public class VerifyEmailForm {
 
-    private String nickname;
+    private String email;
+    private String code;
 }

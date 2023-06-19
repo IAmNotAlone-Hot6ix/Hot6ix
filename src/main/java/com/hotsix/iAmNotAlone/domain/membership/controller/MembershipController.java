@@ -1,10 +1,12 @@
 package com.hotsix.iAmNotAlone.domain.membership.controller;
 
-import com.hotsix.iAmNotAlone.domain.membership.model.dto.MemberDto;
-import com.hotsix.iAmNotAlone.domain.membership.model.dto.MyMemberDto;
-import com.hotsix.iAmNotAlone.domain.membership.model.form.UpdateMembershipForm;
-import com.hotsix.iAmNotAlone.domain.membership.model.form.UpdatePasswordForm;
-import com.hotsix.iAmNotAlone.domain.membership.service.MembershipService;
+import com.hotsix.iAmNotAlone.domain.membership.model.dto.MembershipDetailDto;
+import com.hotsix.iAmNotAlone.domain.membership.model.form.ModifyMembershipForm;
+import com.hotsix.iAmNotAlone.domain.membership.model.form.ModifyPasswordForm;
+import com.hotsix.iAmNotAlone.domain.membership.service.MembershipModifyService;
+import com.hotsix.iAmNotAlone.domain.membership.service.MembershipRemoveService;
+import com.hotsix.iAmNotAlone.domain.membership.service.MembershipDetailService;
+import com.hotsix.iAmNotAlone.domain.membership.service.PasswordModifyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,40 +17,52 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/membership")
 public class MembershipController {
 
-    private final MembershipService membershipService;
+    private final MembershipDetailService membershipDetailService;
+    private final MembershipModifyService membershipModifyService;
+    private final MembershipRemoveService membershipRemoveService;
+    private final PasswordModifyService passwordModifyService;
 
-    @GetMapping("/memberships")
-    public List<MemberDto> findAll() {
-        return membershipService.findAll();
+
+    /**
+     * 마이페이지 유저 정보 api, 회원 조회
+     */
+    @GetMapping("/detail/{userId}")
+    public ResponseEntity<MembershipDetailDto> membershipDetails(@PathVariable Long userId) {
+        return ResponseEntity.ok(membershipDetailService.findMembership(userId));
     }
 
-    @PutMapping(value = "/api/membership/update/{user_id}", consumes = {
-            MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<MemberDto> updateMember(@PathVariable Long user_id,
-                                                  @RequestPart UpdateMembershipForm form,
-                                                  @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles
+    /**
+     * 회원 수정
+     */
+    @PutMapping(value = "/update/{userId}", consumes = {
+        MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<Long> membershipModify(@PathVariable Long userId,
+        @RequestPart ModifyMembershipForm form,
+        @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles
     ) {
-        return ResponseEntity.ok(membershipService.update(user_id, form, multipartFiles));
+        return ResponseEntity.ok(membershipModifyService.modifyMembership(userId, form, multipartFiles));
     }
 
-    @PutMapping("/api/membership/update/password/{user_id}")
-    public ResponseEntity<String> updatePassword(@PathVariable Long user_id, @RequestBody
-    UpdatePasswordForm form) {
-        membershipService.updatePassword(user_id, form);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/api/membership/delete/{user_id}")
-    public ResponseEntity<String> deleteMember(@PathVariable Long user_id) {
-        membershipService.delete(user_id);
+    /**
+     * 회원 탈퇴
+     */
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<String> membershipRemove(@PathVariable Long userId) {
+        membershipRemoveService.removeMembership(userId);
         return ResponseEntity.ok("회원탈퇴가 정상적으로 완료되었습니다.");
     }
 
-    // 마이페이지 유저 정보 api
-    @GetMapping("/api/my/{user_id}")
-    public ResponseEntity<MyMemberDto> myMember(@PathVariable Long user_id) {
-        return ResponseEntity.ok(membershipService.my(user_id));
+    /**
+     * 비밀번호 수정
+     */
+    @PutMapping("/update/password/{userId}")
+    public ResponseEntity<String> passwordModify(@PathVariable Long userId,
+        @RequestBody ModifyPasswordForm form) {
+        passwordModifyService.modifyPassword(userId, form);
+        return ResponseEntity.ok().build();
     }
+
 }

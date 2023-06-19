@@ -4,7 +4,6 @@ import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.EXPIRE_
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_MATCH_CODE;
 
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.EmailMessage;
-import com.hotsix.iAmNotAlone.domain.membership.model.form.EmailRequestForm;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.util.RedisUtil;
 import javax.mail.MessagingException;
@@ -21,11 +20,11 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class EmailService {
+public class EmailSendService {
 
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine springTemplateEngine;
-    private final MembershipService membershipService;
+    private final PasswordModifyService passwordModifyService;
     private final RedisUtil redisUtil;
 
     /**
@@ -36,7 +35,7 @@ public class EmailService {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         if (type.equals("password")) {
-            membershipService.createTemPassword(emailMessage.getTo(), authCode);
+            passwordModifyService.createTemPassword(emailMessage.getTo(), authCode);
         }
 
         try {

@@ -8,11 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class UpdateMembershipForm {
+public class ModifyMembershipForm {
 
     private String nickname;
     private String introduction;
-    private String path;
+    private String imgPath;
     private Long regionId;
-    private List<String> personalities;
+    private List<String> personality;
 }
