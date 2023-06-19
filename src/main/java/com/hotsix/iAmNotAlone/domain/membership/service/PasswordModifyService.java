@@ -30,7 +30,7 @@ public class PasswordModifyService {
             () -> new BusinessException(NOT_FOUND_USER)
         );
         // 비밀번호 검증
-        if (!passwordEncoder.encode(form.getPassword()).equals(membership.getPassword())) {
+        if (!passwordEncoder.matches(form.getPassword(), membership.getPassword())) {
             throw new BusinessException(NOT_MATCH_PASSWORD);
         } else if (!form.getNewPassword().equals(form.getNewPasswordVerify())) {
             throw new BusinessException(NOT_MATCH_PASSWORD_VERIFY);
