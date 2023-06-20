@@ -6,11 +6,25 @@ import com.hotsix.iAmNotAlone.domain.membership.model.form.ModifyMembershipForm;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.global.auth.common.Role;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
-import lombok.*;
-
-import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.envers.AuditOverride;
 
 @Entity
@@ -27,7 +41,7 @@ public class Membership extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "region_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "region_id")
     private Region region;
 
     private String email;
@@ -40,12 +54,9 @@ public class Membership extends BaseEntity {
     @Column(name = "img_path")
     private String imgPath;
 
-    @Column(name = "likelist", length = 100)
-    private String likes;
-
     @Convert(converter = ListToStringConverter.class)
-    @Column(insertable = false, updatable = false)
-    private List<String> likelist;
+    @Column(name = "likelist")
+    private ArrayList<String> likelist;
 
     private String refreshToken;
 
@@ -89,5 +100,27 @@ public class Membership extends BaseEntity {
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+
+    /**
+     * likelist 수정
+     */
+    public void updateLikeList(String postId, boolean isLikeOperation) {
+        ArrayList<String> newLikeList = this.likelist;
+        if(newLikeList == null) {
+            newLikeList = new ArrayList<>();
+        }
+
+        if (isLikeOperation) {
+            newLikeList.add(postId);
+        } else {
+            newLikeList.remove(postId);
+
+            if(newLikeList.size() == 0) {
+                newLikeList = null;
+            }
+        }
+        this.likelist = newLikeList;
     }
 }

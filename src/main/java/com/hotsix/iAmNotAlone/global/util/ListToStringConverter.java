@@ -1,5 +1,6 @@
 package com.hotsix.iAmNotAlone.global.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.persistence.AttributeConverter;
@@ -22,7 +23,8 @@ public class ListToStringConverter implements AttributeConverter<List<String>, S
         if (dbData == null) {
             return null;
         }
-        return Arrays.asList(dbData.split(","));
+
+        return new ArrayList<>(Arrays.asList(dbData.split(",")));
     }
 
 }

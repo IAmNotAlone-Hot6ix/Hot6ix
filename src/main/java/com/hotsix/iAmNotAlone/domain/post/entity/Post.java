@@ -7,11 +7,9 @@ import com.hotsix.iAmNotAlone.domain.post.model.form.ModifyPostForm;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
 import java.util.List;
 import javax.persistence.Column;
-import javax.persistence.ConstraintMode;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,11 +19,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.envers.AuditOverride;
 
 @Entity
 @Getter
 @Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @AuditOverride(forClass = BaseEntity.class)
@@ -40,7 +40,7 @@ public class Post extends BaseEntity {
     private Long boardId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "member_id")
     private Membership membership;
 
     @Column(name = "region_id")
@@ -61,6 +61,7 @@ public class Post extends BaseEntity {
     @Convert(converter = ListToStringConverter.class)
     @Column(name = "img_path")
     private List<String> imgPath;
+
 
 
     public static Post createPost(AddPostForm form, Membership membership, List<String> path) {
@@ -84,5 +85,9 @@ public class Post extends BaseEntity {
         this.imgPath = form.getImgPath();
     }
 
+    // 좋아요 수 업데이트
+    public void updateLikes(Long likes) {
+        this.likes = likes;
+    }
 
 }
