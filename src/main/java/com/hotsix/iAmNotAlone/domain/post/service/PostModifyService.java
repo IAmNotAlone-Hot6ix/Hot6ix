@@ -1,19 +1,21 @@
 package com.hotsix.iAmNotAlone.domain.post.service;
 
-import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_POST;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.S3FileDto;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import com.hotsix.iAmNotAlone.domain.post.model.form.ModifyPostForm;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.util.S3UploadService;
-import java.util.HashMap;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashMap;
+import java.util.List;
+
+import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_POST;
 
 @Slf4j
 @Service
@@ -28,7 +30,7 @@ public class PostModifyService {
     public Long modifyPost(Long id, ModifyPostForm form, List<MultipartFile> multipartFiles) {
 
         Post post = postRepository.findById(id).orElseThrow(
-            () -> new BusinessException(NOT_FOUND_POST)
+                () -> new BusinessException(NOT_FOUND_POST)
         );
         log.info("게시글 조회");
 

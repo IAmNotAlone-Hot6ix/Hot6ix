@@ -1,7 +1,5 @@
 package com.hotsix.iAmNotAlone.domain.post.service;
 
-import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_POST;
-
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import com.hotsix.iAmNotAlone.domain.post.model.dto.PostDetailDto;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
@@ -10,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_POST;
 
 @Slf4j
 @Service
@@ -21,18 +21,11 @@ public class PostDetailService {
 
     public PostDetailDto findPost(Long id) {
         Post post = postRepository.findById(id).orElseThrow(
-            () -> new BusinessException(NOT_FOUND_POST)
+                () -> new BusinessException(NOT_FOUND_POST)
         );
         log.info("게시글 정보 조회");
 
         return PostDetailDto.from(post);
     }
-
-//    public PostDetailDto findPost(Long id) {
-//        Post post = postRepository.findById(id).orElseThrow(
-//            () -> new BusinessException(NOT_FOUND_POST)
-//        );
-//
-//    }
 
 }

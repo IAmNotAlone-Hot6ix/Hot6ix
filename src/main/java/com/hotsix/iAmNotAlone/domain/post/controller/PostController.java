@@ -4,25 +4,17 @@ import com.hotsix.iAmNotAlone.domain.post.model.dto.PostDetailDto;
 import com.hotsix.iAmNotAlone.domain.post.model.dto.PostResponseDto;
 import com.hotsix.iAmNotAlone.domain.post.model.form.AddPostForm;
 import com.hotsix.iAmNotAlone.domain.post.model.form.ModifyPostForm;
-import com.hotsix.iAmNotAlone.domain.post.service.PostDetailService;
-import com.hotsix.iAmNotAlone.domain.post.service.PostModifyService;
-import com.hotsix.iAmNotAlone.domain.post.service.PostPageService;
-import com.hotsix.iAmNotAlone.domain.post.service.PostRegisterService;
-import com.hotsix.iAmNotAlone.domain.post.service.PostRemoveService;
-import java.util.List;
+import com.hotsix.iAmNotAlone.domain.post.service.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,17 +55,23 @@ public class PostController {
 
     // 게시글 무한스크롤 요청 api
     @GetMapping("/api/post/{userId}")
-    public ResponseEntity<List<PostResponseDto>> getPostLowerThanId(@RequestParam Long lastPostId,
+    public ResponseEntity<Result> getPostLowerThanId(@RequestParam Long lastPostId,
         @RequestParam int size, @PathVariable Long userId) {
         List<PostResponseDto> postResponse = postPageService.postPagesBy(lastPostId, size, userId);
-        return new ResponseEntity<>(postResponse, HttpStatus.OK);
+        return ResponseEntity.ok(new Result(postResponse));
     }
 
     // 마이페이지 게시글 세팅 api
     @GetMapping("/api/post/basic/{userId}")
-    public ResponseEntity<List<PostResponseDto>> getPostInUserId(@PathVariable Long userId) {
+    public ResponseEntity<Result> getPostInUserId(@PathVariable Long userId) {
         List<PostResponseDto> postResponse = postPageService.postBasicSetting(userId);
-        return new ResponseEntity<>(postResponse, HttpStatus.OK);
+        return ResponseEntity.ok(new Result(postResponse));
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private T data;
     }
 
 }
