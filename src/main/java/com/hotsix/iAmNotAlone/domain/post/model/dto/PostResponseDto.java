@@ -13,6 +13,7 @@ public class PostResponseDto {
     private int gender;
     private LocalDateTime createdAt;
     private String content;
+    private int commentCount;
 
     public PostResponseDto(Post post) {
 
@@ -21,7 +22,7 @@ public class PostResponseDto {
         gender = post.getMembership().getGender();
         createdAt = post.getCreatedAt();
         content = removeContent(post.getContent());
-
+        commentCount = post.getCommentsList().size();
     }
 
     public String removeContent(String content) {

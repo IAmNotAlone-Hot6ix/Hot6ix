@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Page<Post> findByIdLessThanAndMembershipInOrderByIdDesc(Long lastPostId, List<Membership> membership, PageRequest pageRequest);
+    Page<Post> findByIdLessThanAndMembershipIdOrderByIdDesc(Long lastPostId, Long membershipId, PageRequest pageRequest);
 
-    List<Post> findTop5ByMembershipInOrderByIdDesc(List<Membership> membershipList);
+    List<Post> findTop5ByMembershipIdOrderByIdDesc(Long loginMemberId);
 
 
 }
