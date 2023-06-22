@@ -8,13 +8,13 @@ import lombok.Getter;
 @Builder
 public class RegionMainDto {
 
-    Long region_id;
+    Long regionId;
     String sido;
     String sigg;
 
     public static RegionMainDto from(Region region) {
         return RegionMainDto.builder()
-            .region_id(region.getId())
+            .regionId(region.getId())
             .sido(region.getSido())
             .sigg(region.getSigg())
             .build();
