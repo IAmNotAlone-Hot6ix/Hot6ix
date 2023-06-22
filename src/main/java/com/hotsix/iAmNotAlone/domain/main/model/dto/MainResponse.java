@@ -12,16 +12,12 @@ public class MainResponse {
 
     private List<RegionMainDto> regionMainDtoList;
 
-    private List<BoardMainDto> boardList;
-
     private Long region_id;
 
 
-    public static MainResponse of(List<RegionMainDto> regionList, List<BoardMainDto> boardMainDtoList,
-        Long region_id) {
+    public static MainResponse of(List<RegionMainDto> regionList, Long region_id) {
         return MainResponse.builder()
             .regionMainDtoList(regionList)
-            .boardList(boardMainDtoList)
             .region_id(region_id)
             .build();
     }

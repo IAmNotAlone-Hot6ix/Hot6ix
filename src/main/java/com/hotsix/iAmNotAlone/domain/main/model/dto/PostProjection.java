@@ -1,19 +1,31 @@
 package com.hotsix.iAmNotAlone.domain.main.model.dto;
 
+import java.time.LocalDateTime;
+
 public interface PostProjection {
 
-    Long getBoard_id();
-    Long getPost_id();
-    Long getRegion_id();
+    Long getBoardId();
+
+    Long getPostId();
+
+    Long getRegionId();
+
     String getAddress();
+
     String getContent();
-    String getCreated_at();
-    Long getUser_id();
-    String getNick_name();
+
+    LocalDateTime getCreatedAt();
+
+    Long getMemberId();
+
+    String getNickName();
+
     int getGender();
-    String getUser_file();
-    int getComment_count();
-    String getStr_likes();
-    String getRoom_files();
+
+    String getUserFile();
+
+    int getCommentCount();
+
+    String getRoomFiles();
 
 }

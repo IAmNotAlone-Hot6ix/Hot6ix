@@ -14,11 +14,14 @@ public class MainPostResponse {
      * 게시글 리스트
      */
     private List<PostProjectionMainDto> postProjectionMainDtoList;
+    private Long lastPostId;
 
 
-    public static MainPostResponse from(List<PostProjectionMainDto> postProjectionMainDtoList) {
+    public static MainPostResponse of(List<PostProjectionMainDto> postProjectionMainDtoList,
+        Long lastPostId) {
         return MainPostResponse.builder()
             .postProjectionMainDtoList(postProjectionMainDtoList)
+            .lastPostId(lastPostId)
             .build();
     }
 }
