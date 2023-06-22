@@ -8,18 +8,18 @@ import lombok.Getter;
 @Builder
 public class PostProjectionMainDto {
 
-    Long board_id;
-    Long post_id;
-    Long region_id;
-    String address;
-    String content;
-    String created_at;
-    Long user_id;
-    String nick_name;
-    int gender;
-    String user_file;
-    int comment_count;
-    boolean likes;
-    List<String> room_files;
+    private Long boardId;
+    private Long postId;
+    private Long regionId;
+    private String address;
+    private String content;
+    private String createdAt;
+    private Long memberId;
+    private String nickName;
+    private int gender;
+    private String userFile;
+    private int commentCount;
+    private boolean likesFlag;
+    private List<String> roomFiles;
 
 }
