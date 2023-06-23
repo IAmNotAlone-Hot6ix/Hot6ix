@@ -20,11 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MainService {
 
     private final RegionRepository regionRepository;
@@ -34,6 +36,7 @@ public class MainService {
 
     /**
      * 메인화면 컨트롤 데이터 바인딩용 조회
+     *
      * @param memberId 회원 아이디
      * @return MainResponse
      */
@@ -61,6 +64,7 @@ public class MainService {
      */
     public MainPostResponse getPost(Long userId, Long regionId, Long boardId, Long lastPostId,
         Pageable pageable) {
+        log.info("Main enter");
 
         ListToStringConverter converter = new ListToStringConverter();
 
@@ -70,6 +74,8 @@ public class MainService {
 
         // 게시글 좋아요 여부
         List<String> likesList = membership.getLikelist() == null ? null : membership.getLikelist();
+
+        log.info("membership.getGender(): " + membership.getGender());
 
         // 게시글 리스트
         List<PostProjection> postProjectionList =
@@ -92,9 +98,9 @@ public class MainService {
                 .address(projection.getAddress())
                 .content(projection.getContent())
                 .createdAt(formattedDateTime)
-                .memberId(projection.getMemberId())
-                .nickName(projection.getNickName())
-                .gender(projection.getGender())
+                .memberId(projection.getMemberId() == null ? null : projection.getMemberId())
+                .nickName(projection.getNickName() == null ? "" : projection.getNickName())
+                .gender(projection.getGender() == null ? null : projection.getGender())
                 .userFile(projection.getUserFile())
                 .commentCount(projection.getCommentCount())
                 .likesFlag(

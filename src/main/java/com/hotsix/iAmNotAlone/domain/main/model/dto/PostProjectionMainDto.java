@@ -16,7 +16,7 @@ public class PostProjectionMainDto {
     private String createdAt;
     private Long memberId;
     private String nickName;
-    private int gender;
+    private Long gender;
     private String userFile;
     private int commentCount;
     private boolean likesFlag;
