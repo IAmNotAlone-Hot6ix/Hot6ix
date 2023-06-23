@@ -20,7 +20,7 @@ public interface PostProjection {
 
     String getNickName();
 
-    int getGender();
+    Long getGender();
 
     String getUserFile();
 
