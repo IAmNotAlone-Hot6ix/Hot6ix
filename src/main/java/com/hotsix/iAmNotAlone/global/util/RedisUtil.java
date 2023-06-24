@@ -1,7 +1,10 @@
 package com.hotsix.iAmNotAlone.global.util;
 
 import java.time.Duration;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -33,5 +36,27 @@ public class RedisUtil {
     // 삭제
     public void deleteData(String key) {
         redisTemplate.delete(key);
+    }
+
+    // count increment
+    public void addLike(String key) {
+        redisTemplate.opsForValue().increment(key, 1);
+    }
+
+    // count decrement
+    public void removeLike(String key) {
+        redisTemplate.opsForValue().decrement(key, 1);
+    }
+
+    // findCount
+    public Long getLikeCount(String key) {
+        String value = redisTemplate.opsForValue().get(key);
+        return value != null ? Long.parseLong(value) : 0;
+    }
+
+    // findKeys
+    public Cursor<byte[]> getFindKeys(String matchStr) {
+        return Objects.requireNonNull(redisTemplate.getConnectionFactory()).getConnection()
+            .scan(ScanOptions.scanOptions().match(matchStr).count(1000).build());
     }
 }
