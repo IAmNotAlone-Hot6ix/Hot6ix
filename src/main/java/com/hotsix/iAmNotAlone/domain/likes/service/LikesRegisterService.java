@@ -24,14 +24,14 @@ public class LikesRegisterService {
 
 
     @Transactional
-    public boolean addLike(String postId, String userId) {
+    public boolean addLike(String postId, String memberId) {
 
         // id 체크
         if(!postRepository.existsById(Long.valueOf(postId))) {
             throw new BusinessException(NOT_FOUND_POST);
         }
 
-        Membership membership = membershipRepository.findById(Long.valueOf(userId))
+        Membership membership = membershipRepository.findById(Long.valueOf(memberId))
             .orElseThrow(() -> new BusinessException(NOT_FOUND_USER));
 
         String key = getLikeKey(postId);
