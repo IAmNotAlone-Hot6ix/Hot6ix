@@ -1,13 +1,18 @@
 package com.hotsix.iAmNotAlone.domain.membership.controller;
 
+import com.hotsix.iAmNotAlone.domain.membership.model.dto.LikesListPostResponse;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.MembershipDetailDto;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.ModifyMembershipForm;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.ModifyPasswordForm;
+import com.hotsix.iAmNotAlone.domain.membership.service.MembershipLikesListService;
 import com.hotsix.iAmNotAlone.domain.membership.service.MembershipModifyService;
 import com.hotsix.iAmNotAlone.domain.membership.service.MembershipRemoveService;
 import com.hotsix.iAmNotAlone.domain.membership.service.MembershipDetailService;
 import com.hotsix.iAmNotAlone.domain.membership.service.PasswordModifyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +29,7 @@ public class MembershipController {
     private final MembershipModifyService membershipModifyService;
     private final MembershipRemoveService membershipRemoveService;
     private final PasswordModifyService passwordModifyService;
+    private final MembershipLikesListService membershipLikesListService;
 
 
     /**
@@ -43,7 +49,8 @@ public class MembershipController {
         @RequestPart ModifyMembershipForm form,
         @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles
     ) {
-        return ResponseEntity.ok(membershipModifyService.modifyMembership(userId, form, multipartFiles));
+        return ResponseEntity.ok(
+            membershipModifyService.modifyMembership(userId, form, multipartFiles));
     }
 
     /**
@@ -63,6 +70,18 @@ public class MembershipController {
         @RequestBody ModifyPasswordForm form) {
         passwordModifyService.modifyPassword(userId, form);
         return ResponseEntity.ok().build();
+    }
+
+
+    /**
+     * 관심목록 페이지 조회
+     */
+    @GetMapping("/like/{memberId}")
+    public ResponseEntity<LikesListPostResponse> getLikesList(@PathVariable Long memberId,
+        @RequestParam(required = false) Long lastPostId, @RequestParam int size) {
+        Pageable pageable = PageRequest.of(0, size, Sort.by("createdAt").descending());
+        return ResponseEntity.ok(
+            membershipLikesListService.getPost(memberId, lastPostId, pageable));
     }
 
 }
