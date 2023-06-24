@@ -36,4 +36,5 @@ public class PostResponseDto {
         }
         return content;
     }
+
 }
