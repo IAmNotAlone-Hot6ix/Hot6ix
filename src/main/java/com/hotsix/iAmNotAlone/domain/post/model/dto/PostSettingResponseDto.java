@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class PostResponseDto {
+public class PostSettingResponseDto {
 
     private String nickname;
     private String img_path;
@@ -14,8 +14,10 @@ public class PostResponseDto {
     private LocalDateTime createdAt;
     private String content;
     private int commentCount;
+    private Long postId;
+    private String postImgPath;
 
-    public PostResponseDto(Post post) {
+    public PostSettingResponseDto(Post post) {
 
         nickname = post.getMembership().getNickname();
         img_path = post.getMembership().getImgPath();
@@ -23,6 +25,8 @@ public class PostResponseDto {
         createdAt = post.getCreatedAt();
         content = removeContent(post.getContent());
         commentCount = post.getCommentsList().size();
+        postId = post.getId();
+        postImgPath = post.getImgPath().get(0);
     }
 
     public String removeContent(String content) {
