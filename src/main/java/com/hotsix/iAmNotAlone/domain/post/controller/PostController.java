@@ -1,8 +1,7 @@
 package com.hotsix.iAmNotAlone.domain.post.controller;
 
 import com.hotsix.iAmNotAlone.domain.post.model.dto.PostDetailDto;
-import com.hotsix.iAmNotAlone.domain.post.model.dto.PostScrollResponseDto;
-import com.hotsix.iAmNotAlone.domain.post.model.dto.PostSettingResponseDto;
+import com.hotsix.iAmNotAlone.domain.post.model.dto.PostResponseDto;
 import com.hotsix.iAmNotAlone.domain.post.model.form.AddPostForm;
 import com.hotsix.iAmNotAlone.domain.post.model.form.ModifyPostForm;
 import com.hotsix.iAmNotAlone.domain.post.service.*;
@@ -55,16 +54,16 @@ public class PostController {
 
     // 게시글 무한스크롤 요청 api
     @GetMapping("/api/post/{userId}")
-    public ResponseEntity<Result<List<PostScrollResponseDto>>> getPostLowerThanId(@RequestParam Long lastPostId,
-                                                     @RequestParam int size, @PathVariable Long userId) {
-        List<PostScrollResponseDto> postResponse = postPageService.postPagesBy(lastPostId, size, userId);
+    public ResponseEntity<Result<List<PostResponseDto>>> getPostLowerThanId(@RequestParam Long lastPostId,
+                                                                            @RequestParam int size, @PathVariable Long userId) {
+        List<PostResponseDto> postResponse = postPageService.postPagesBy(lastPostId, size, userId);
         return ResponseEntity.ok(new Result(postResponse));
     }
 
     // 마이페이지 게시글 세팅 api
     @GetMapping("/api/post/basic/{userId}")
-    public ResponseEntity<Result<List<PostSettingResponseDto>>> getPostInUserId(@PathVariable Long userId) {
-        List<PostSettingResponseDto> postResponse = postPageService.postBasicSetting(userId);
+    public ResponseEntity<Result<List<PostResponseDto>>> getPostInUserId(@PathVariable Long userId) {
+        List<PostResponseDto> postResponse = postPageService.postBasicSetting(userId);
         return ResponseEntity.ok(new Result(postResponse));
     }
 

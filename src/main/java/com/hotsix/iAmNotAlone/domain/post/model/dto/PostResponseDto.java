@@ -6,7 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class PostSettingResponseDto {
+public class PostResponseDto {
 
     private String nickname;
     private String img_path;
@@ -17,7 +17,7 @@ public class PostSettingResponseDto {
     private Long postId;
     private String postImgPath;
 
-    public PostSettingResponseDto(Post post) {
+    public PostResponseDto(Post post) {
 
         nickname = post.getMembership().getNickname();
         img_path = post.getMembership().getImgPath();
