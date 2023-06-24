@@ -11,5 +11,6 @@ public class IAmNotAloneApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(IAmNotAloneApplication.class, args);
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+		// jenkins CICD Test
 	}
 }
