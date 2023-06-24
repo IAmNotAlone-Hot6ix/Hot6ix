@@ -23,6 +23,7 @@ import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.AuditOverride;
@@ -56,7 +57,8 @@ public class Membership extends BaseEntity {
 
     @Convert(converter = ListToStringConverter.class)
     @Column(name = "likelist")
-    private ArrayList<String> likelist;
+    @Default
+    private List<String> likelist = new ArrayList<>();
 
     private String refreshToken;
 
@@ -107,20 +109,12 @@ public class Membership extends BaseEntity {
      * likelist 수정
      */
     public void updateLikeList(String postId, boolean isLikeOperation) {
-        ArrayList<String> newLikeList = this.likelist;
-        if(newLikeList == null) {
-            newLikeList = new ArrayList<>();
-        }
+        this.likelist.remove("");
 
         if (isLikeOperation) {
-            newLikeList.add(postId);
+            this.likelist.add(String.valueOf(postId));
         } else {
-            newLikeList.remove(postId);
-
-            if(newLikeList.size() == 0) {
-                newLikeList = null;
-            }
+            this.likelist.remove(String.valueOf(postId));
         }
-        this.likelist = newLikeList;
     }
 }
