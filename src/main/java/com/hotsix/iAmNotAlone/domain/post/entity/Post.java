@@ -84,8 +84,8 @@ public class Post extends BaseEntity {
     }
 
     // 좋아요 수 업데이트
-    public void updateLikes(Long likes) {
-        this.likes = this.likes + likes;
+    public void updateLikes(Long likesCount) {
+        this.likes = this.likes + likesCount;
     }
 
 }

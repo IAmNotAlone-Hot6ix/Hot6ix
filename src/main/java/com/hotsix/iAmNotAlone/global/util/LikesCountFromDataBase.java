@@ -2,7 +2,6 @@ package com.hotsix.iAmNotAlone.global.util;
 
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.redis.core.Cursor;
@@ -25,17 +24,16 @@ public class LikesCountFromDataBase {
 
         while (cursor.hasNext()) {
             String key = new String(cursor.next());
-            String postId = key.split(":")[1];
-            Long likesCountStr = redisUtil.getLikeCount(key);
+            String postId = extractPostIdFromKey(key);
+            Long likesCount = redisUtil.getLikeCount(key);
 
-            if (likesCountStr != null) {
+            if (likesCount != null) {
                 try {
-                    updatePostLikes(Long.valueOf(postId), likesCountStr);
+                    updatePostLikes(Long.valueOf(postId), likesCount);
                     log.info("post table likes update");
 
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    log.info("not found post: " + postId);
+                    log.error("not found post: " + postId);
 
                 } finally {
                     redisUtil.deleteData(key);
@@ -46,14 +44,15 @@ public class LikesCountFromDataBase {
         log.info("likes scheduled end!");
     }
 
-    @Transactional
-    public void updatePostLikes(Long postId, Long likesCountStr) {
-        Optional<Post> optionalPost = postRepository.findById(postId);
-        if (optionalPost.isPresent()) {
-            Post post = optionalPost.get();
-            post.updateLikes(likesCountStr);
-            postRepository.save(post);
-        }
+    private String extractPostIdFromKey(String key) {
+        return key.split(":")[1];
     }
 
+    @Transactional
+    public void updatePostLikes(Long postId, Long likesCount) throws Exception {
+        Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new Exception(""));
+        post.updateLikes(likesCount);
+        postRepository.save(post);
+    }
 }
