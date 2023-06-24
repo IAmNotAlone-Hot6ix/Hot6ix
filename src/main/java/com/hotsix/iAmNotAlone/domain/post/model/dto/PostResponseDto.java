@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class PostResponseDto {
 
     private String nickname;
-    private String img_path;
+    private String imgPath;
     private int gender;
     private LocalDateTime createdAt;
     private String content;
@@ -20,7 +20,7 @@ public class PostResponseDto {
     public PostResponseDto(Post post) {
 
         nickname = post.getMembership().getNickname();
-        img_path = post.getMembership().getImgPath();
+        imgPath = post.getMembership().getImgPath();
         gender = post.getMembership().getGender();
         createdAt = post.getCreatedAt();
         content = removeContent(post.getContent());
