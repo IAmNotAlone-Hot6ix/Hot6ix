@@ -22,22 +22,22 @@ public class LikesController {
     /**
      * 좋아요
      */
-    @PostMapping("/{post_id}/{user_id}")
-    public ResponseEntity<Boolean> addLikes(@PathVariable Long post_id,
-        @PathVariable Long user_id) {
+    @PostMapping("/{postId}/{memberId}")
+    public ResponseEntity<Boolean> addLikes(@PathVariable Long postId,
+        @PathVariable Long memberId) {
         return ResponseEntity.ok(
-            likesRegisterService.addLike(String.valueOf(post_id),
-                String.valueOf(user_id)));
+            likesRegisterService.addLike(String.valueOf(postId),
+                String.valueOf(memberId)));
     }
 
     /**
      * 좋아요 취소
      */
-    @DeleteMapping("/{post_id}/{user_id}")
-    public ResponseEntity<Boolean> deleteLikes(@PathVariable Long post_id,
-        @PathVariable Long user_id) {
+    @DeleteMapping("/{postId}/{memberId}")
+    public ResponseEntity<Boolean> deleteLikes(@PathVariable Long postId,
+        @PathVariable Long memberId) {
         return ResponseEntity.ok(
-            likesRemoveService.deleteLike(String.valueOf(post_id),
-                String.valueOf(user_id)));
+            likesRemoveService.deleteLike(String.valueOf(postId),
+                String.valueOf(memberId)));
     }
 }
