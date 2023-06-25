@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/post/")
 public class PostController {
 
     private final PostRegisterService postRegisterService;
@@ -25,35 +26,39 @@ public class PostController {
     private final PostPageService postPageService;
     private final PostRemoveService postRemoveService;
 
-    @PostMapping(value = "/post/{userId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/{userId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Long> postAdd(@PathVariable(name = "userId") Long id,
-                                        @RequestPart AddPostForm form,
-                                        @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles
+        @RequestPart AddPostForm form,
+        @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles
     ) {
+
         return ResponseEntity.ok(postRegisterService.addPost(id, form, multipartFiles));
     }
 
-    @GetMapping("/post/{postId}")
-    public ResponseEntity<PostDetailDto> postDetails(@PathVariable("postId") Long id) {
-        return ResponseEntity.ok(postDetailService.findPost(id));
+    @GetMapping("/{postId}/{membershipId}")
+    public ResponseEntity<PostDetailDto> postDetails(@PathVariable Long postId,
+        @PathVariable Long membershipId) {
+
+        return ResponseEntity.ok(postDetailService.findPost(postId, membershipId));
     }
 
-    @PutMapping(value = "/post/{postId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(value = "/{postId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Long> postModify(@PathVariable("postId") Long id,
-                                           @RequestPart ModifyPostForm form,
-                                           @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles
+        @RequestPart ModifyPostForm form,
+        @RequestPart(value = "files", required = false) List<MultipartFile> multipartFiles
     ) {
+
         return ResponseEntity.ok(postModifyService.modifyPost(id, form, multipartFiles));
     }
 
-    @DeleteMapping("/post/{postId}")
+    @DeleteMapping("/{postId}")
     public ResponseEntity<String> postRemove(@PathVariable("postId") Long id) {
         postRemoveService.removePost(id);
         return ResponseEntity.ok("게시글이 삭제 되었습니다.");
     }
 
     // 게시글 무한스크롤 요청 api
-    @GetMapping("/api/post/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<Result<List<PostResponseDto>>> getPostLowerThanId(@RequestParam Long lastPostId,
                                                                             @RequestParam int size, @PathVariable Long userId) {
         List<PostResponseDto> postResponse = postPageService.postPagesBy(lastPostId, size, userId);
@@ -61,7 +66,7 @@ public class PostController {
     }
 
     // 마이페이지 게시글 세팅 api
-    @GetMapping("/api/post/basic/{userId}")
+    @GetMapping("/basic/{userId}")
     public ResponseEntity<Result<List<PostResponseDto>>> getPostInUserId(@PathVariable Long userId) {
         List<PostResponseDto> postResponse = postPageService.postBasicSetting(userId);
         return ResponseEntity.ok(new Result(postResponse));

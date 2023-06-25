@@ -65,7 +65,8 @@ public class Post extends BaseEntity {
     public static Post createPost(AddPostForm form, Membership membership, List<String> path) {
         return Post.builder()
             .boardId(form.getBoardId())
-            .membership(membership)
+            .membership(Membership.builder().id(membership.getId()).imgPath(membership.getImgPath())
+                .nickname(membership.getNickname()).build())
             .regionId(form.getRegionId())
             .content(form.getContent())
             .address(form.getAddress())
