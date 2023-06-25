@@ -6,6 +6,7 @@ import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import com.hotsix.iAmNotAlone.domain.post.model.dto.PostDetailDto;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
+import com.hotsix.iAmNotAlone.global.util.RedisUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class PostDetailService {
 
     private final PostRepository postRepository;
     private final MembershipRepository membershipRepository;
+    private final RedisUtil redisUtil;
 
     public PostDetailDto findPost(Long postId, Long membershipId) {
         Post post = postRepository.findById(postId).orElseThrow(
@@ -37,9 +39,10 @@ public class PostDetailService {
         );
         List<Long> likeList = membership.getLikelist().stream().map(Long::parseLong).collect(
             Collectors.toList());
+        Long likeCount = redisUtil.getLikeCount("likes:" + postId);
 
+        postDetailDto.setLikes(likeCount);
         postDetailDto.setLike(likeList.contains(postId));
-
         return postDetailDto;
     }
 
