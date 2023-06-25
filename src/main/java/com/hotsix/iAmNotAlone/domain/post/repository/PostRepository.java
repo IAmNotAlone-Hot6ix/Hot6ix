@@ -4,9 +4,11 @@ import com.hotsix.iAmNotAlone.domain.main.model.dto.PostProjection;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.LikesPostProjection;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,6 +19,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByIdLessThanAndMembershipIdOrderByIdDesc(Long lastPostId, Long membershipId, PageRequest pageRequest);
 
     List<Post> findTop5ByMembershipIdOrderByIdDesc(Long loginMemberId);
+
+    @Override
+    @EntityGraph(attributePaths = {"membership"})
+    Optional<Post> findById(Long postI7);
 
 
     @Query("    SELECT p.boardId                    AS boardId"

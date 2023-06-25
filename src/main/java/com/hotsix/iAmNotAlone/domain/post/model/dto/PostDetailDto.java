@@ -17,6 +17,7 @@ public class PostDetailDto {
     private String address;
     private String content;
     private Long likes;
+    private boolean like;
     private int gender;
     private List<String> imgPath;
 
@@ -32,5 +33,9 @@ public class PostDetailDto {
             .gender(post.getGender())
             .imgPath(post.getImgPath())
             .build();
+    }
+
+    public void setLike(boolean like) {
+        this.like = like;
     }
 }
