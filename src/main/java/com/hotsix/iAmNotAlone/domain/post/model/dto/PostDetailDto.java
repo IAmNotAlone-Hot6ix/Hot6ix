@@ -38,4 +38,8 @@ public class PostDetailDto {
     public void setLike(boolean like) {
         this.like = like;
     }
+
+    public void setLikes(Long likeCount) {
+        this.likes = likes + likeCount;
+    }
 }
