@@ -38,11 +38,7 @@ public class PostDetailService {
         List<Long> likeList = membership.getLikelist().stream().map(Long::parseLong).collect(
             Collectors.toList());
 
-        if (likeList.contains(postId)) {
-            postDetailDto.setLike(true);
-        } else {
-            postDetailDto.setLike(false);
-        }
+        postDetailDto.setLike(likeList.contains(postId));
 
         return postDetailDto;
     }
