@@ -37,12 +37,15 @@ public class PostDetailService {
         Membership membership = membershipRepository.findById(membershipId).orElseThrow(
             () -> new BusinessException(NOT_FOUND_USER)
         );
-        List<Long> likeList = membership.getLikelist().stream().map(Long::parseLong).collect(
+        // 좋아요 확인
+        List<Long> likeList = membership.getLikelist().stream().filter(s->!s.isEmpty()).map(Long::parseLong).collect(
             Collectors.toList());
-        Long likeCount = redisUtil.getLikeCount("likes:" + postId);
+        postDetailDto.setLike(likeList.isEmpty() ? false : likeList.contains(postId));
 
+        //좋아요 수
+        Long likeCount = redisUtil.getLikeCount("likes:" + postId);
         postDetailDto.setLikes(likeCount);
-        postDetailDto.setLike(likeList.contains(postId));
+
         return postDetailDto;
     }
 
