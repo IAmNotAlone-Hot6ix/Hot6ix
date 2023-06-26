@@ -1,4 +1,4 @@
-package com.hotsix.iAmNotAlone.domain.main.model.dto;
+package com.hotsix.iAmNotAlone.domain.membership.model.dto;
 
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import java.time.LocalDateTime;
@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PostMainDto {
+public class LikesListDto {
 
     private Long boardId;
     private Long postId;
@@ -25,13 +25,13 @@ public class PostMainDto {
     private String roomFiles;
 
 
-    public static PostMainDto of(Post post, Long commentCount, boolean LikesFlag) {
+    public static LikesListDto of(Post post, Long commentCount, boolean LikesFlag) {
         // 날짜
         LocalDateTime localDateTime = post.getCreatedAt();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String createAt = localDateTime.format(formatter);
 
-        return PostMainDto.builder()
+        return LikesListDto.builder()
             .boardId(post.getBoardId())
             .postId(post.getId())
             .regionId(post.getRegionId())

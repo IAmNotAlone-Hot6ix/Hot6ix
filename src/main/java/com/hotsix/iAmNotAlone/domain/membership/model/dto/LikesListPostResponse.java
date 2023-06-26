@@ -13,14 +13,13 @@ public class LikesListPostResponse {
     /**
      * 게시글 리스트
      */
-    private List<LikesListPostProjectionDto> likeListPost;
+    private List<LikesListDto> likeListPost;
     private Long lastPostId;
 
 
-    public static LikesListPostResponse of(List<LikesListPostProjectionDto> likesListPostProjectionDtoList,
-        Long lastPostId) {
+    public static LikesListPostResponse of(List<LikesListDto> likesListDtos, Long lastPostId) {
         return LikesListPostResponse.builder()
-            .likeListPost(likesListPostProjectionDtoList)
+            .likeListPost(likesListDtos)
             .lastPostId(lastPostId)
             .build();
     }
