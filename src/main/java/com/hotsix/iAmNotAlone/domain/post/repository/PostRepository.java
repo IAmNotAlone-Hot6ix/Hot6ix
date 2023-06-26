@@ -15,9 +15,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    // 마이페이지 무한스크롤
     Page<Post> findByIdLessThanAndMembershipIdOrderByIdDesc(Long lastPostId, Long membershipId, PageRequest pageRequest);
 
-    List<Post> findTop5ByMembershipIdOrderByIdDesc(Long loginMemberId);
+    // 마이페이지 게시글 세팅
+    List<Post> findTop10ByMembershipIdOrderByIdDesc(Long loginMemberId);
 
     @Override
     @EntityGraph(attributePaths = {"membership"})

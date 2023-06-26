@@ -5,22 +5,10 @@ import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.post.model.form.AddPostForm;
 import com.hotsix.iAmNotAlone.domain.post.model.form.ModifyPostForm;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
-import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.envers.AuditOverride;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -61,8 +49,6 @@ public class Post extends BaseEntity {
     @Convert(converter = ListToStringConverter.class)
     @Column(name = "img_path")
     private List<String> imgPath;
-
-
 
     public static Post createPost(AddPostForm form, Membership membership, List<String> path) {
         return Post.builder()

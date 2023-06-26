@@ -13,11 +13,13 @@ public class CommentsDetailResponseDto {
     private String img_path;
     private LocalDateTime createdAt;
     private String content;
+    private Long commentId;
 
     public CommentsDetailResponseDto(Comments comments) {
         nickName = comments.getMembership().getNickname();
         img_path = comments.getMembership().getImgPath();
         createdAt = comments.getCreatedAt();
         content = comments.getContent();
+        commentId = comments.getId();
     }
 }
