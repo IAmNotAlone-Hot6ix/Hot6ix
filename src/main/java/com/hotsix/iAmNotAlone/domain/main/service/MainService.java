@@ -2,20 +2,19 @@ package com.hotsix.iAmNotAlone.domain.main.service;
 
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_USER;
 
+import com.hotsix.iAmNotAlone.domain.comments.repository.CommentsRepository;
 import com.hotsix.iAmNotAlone.domain.main.model.dto.MainPostResponse;
 import com.hotsix.iAmNotAlone.domain.main.model.dto.MainResponse;
-import com.hotsix.iAmNotAlone.domain.main.model.dto.PostProjection;
-import com.hotsix.iAmNotAlone.domain.main.model.dto.PostProjectionMainDto;
+import com.hotsix.iAmNotAlone.domain.main.model.dto.PostMainDto;
 import com.hotsix.iAmNotAlone.domain.main.model.dto.RegionMainDto;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
+import com.hotsix.iAmNotAlone.domain.membership.service.MembershipGetInfoForMainService;
+import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.domain.region.repository.RegionRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
-import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,9 +28,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class MainService {
 
+    private final MembershipGetInfoForMainService forMainService;
+
     private final RegionRepository regionRepository;
     private final MembershipRepository membershipRepository;
     private final PostRepository postRepository;
+    private final CommentsRepository commentsRepository;
 
 
     /**
@@ -56,69 +58,42 @@ public class MainService {
 
     /**
      * 게시글 조회
-     * @param userId   회원 아이디
+     * @param memberId   회원 아이디
      * @param regionId 지역 아이디
      * @param boardId  게시판 아이디
      * @param pageable 페이징 페이지, 크기
      * @return MainPostResponse
      */
-    public MainPostResponse getPost(Long userId, Long regionId, Long boardId, Long lastPostId,
+    public MainPostResponse getPost(Long memberId, Long regionId, Long boardId, Long lastPostId,
         Pageable pageable) {
         log.info("Main enter");
 
-        ListToStringConverter converter = new ListToStringConverter();
+        // 로그인한 회원의 게시글
+        List<Long> likesList = forMainService.getLikeList(memberId);
 
-        // membership
-        Membership membership = membershipRepository.findById(userId)
-            .orElseThrow(() -> new BusinessException(NOT_FOUND_USER));
-
-        // 게시글 좋아요 여부
-        List<String> likesList = membership.getLikelist() == null ? null : membership.getLikelist();
-
-        log.info("membership.getGender(): " + membership.getGender());
+        // 로그인한 회원의 성별
+        int gender = forMainService.getGender(memberId);
+        log.debug("membership.getGender(): " + gender);
 
         // 게시글 리스트
-        List<PostProjection> postProjectionList =
-            postRepository.findMainResponse(regionId, boardId, membership.getGender(), lastPostId,
-                pageable);
+        List<Post> postList =
+            postRepository.findRecentPostsByRegionAndBoard(regionId, boardId, lastPostId, pageable);
 
-        List<PostProjectionMainDto> postProjectionMainDtoList = new ArrayList<>();
+        List<PostMainDto> postMainDtoList = new ArrayList<>();
+        for(Post post : postList) {
+            if(post.getMembership().getGender() == gender) {
+                Long commentCount = commentsRepository.countByPostId(post.getId());
+                boolean likesFlag = !likesList.isEmpty() && likesList.contains(post.getId());
 
-        for (PostProjection projection : postProjectionList) {
-
-            // 날짜
-            LocalDateTime localDateTime = projection.getCreatedAt();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String formattedDateTime = localDateTime.format(formatter);
-
-            PostProjectionMainDto postProjectionMainDto = PostProjectionMainDto.builder()
-                .boardId(projection.getBoardId())
-                .postId(projection.getPostId())
-                .regionId(projection.getRegionId())
-                .address(projection.getAddress())
-                .content(projection.getContent())
-                .createdAt(formattedDateTime)
-                .memberId(projection.getMemberId() == null ? null : projection.getMemberId())
-                .nickName(projection.getNickName() == null ? "" : projection.getNickName())
-                .gender(projection.getGender() == null ? null : projection.getGender())
-                .userFile(projection.getUserFile())
-                .commentCount(projection.getCommentCount())
-                .likesFlag(
-                    likesList != null && likesList.contains(String.valueOf(projection.getPostId()))
-                )
-                .roomFiles(
-                    converter.convertToEntityAttribute(projection.getRoomFiles())
-                )
-                .build();
-
-            postProjectionMainDtoList.add(postProjectionMainDto);
+                postMainDtoList.add(PostMainDto.of(post, commentCount, likesFlag));
+            }
         }
 
         // 게시글의 마지막 id
         Long newLastPostId =
-            postProjectionList.size() == 0 ? null
-                : postProjectionList.get(postProjectionList.size() - 1).getPostId();
+            postList.size() == 0 ? null
+                : postList.get(postList.size() - 1).getId();
 
-        return MainPostResponse.of(postProjectionMainDtoList, newLastPostId);
+        return MainPostResponse.of(postMainDtoList, newLastPostId);
     }
 }

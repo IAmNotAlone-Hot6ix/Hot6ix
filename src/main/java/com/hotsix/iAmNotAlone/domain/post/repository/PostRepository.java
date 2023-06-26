@@ -1,6 +1,5 @@
 package com.hotsix.iAmNotAlone.domain.post.repository;
 
-import com.hotsix.iAmNotAlone.domain.main.model.dto.PostProjection;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.LikesPostProjection;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import java.util.List;
@@ -22,32 +21,16 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Override
     @EntityGraph(attributePaths = {"membership"})
-    Optional<Post> findById(Long postI7);
+    Optional<Post> findById(Long postId);
 
 
-    @Query("    SELECT p.boardId                    AS boardId"
-            + "      , p.id                         AS postId"
-            + "      , p.regionId                   AS regionId"
-            + "      , p.address                    AS address"
-            + "      , p.content                    AS content"
-            + "      , p.createdAt                  AS createdAt"
-            + "      , m.id                         AS memberId"
-            + "      , m.nickname                   AS nickName"
-            + "      , m.gender                     AS gender"
-            + "      , m.imgPath                    AS userFile"
-            + "      , p.imgPath                    AS roomFiles "
-            + "      , count(c)                     AS commentCount"
+    @EntityGraph(attributePaths = {"membership"})
+    @Query("    SELECT p "
             + "   FROM Post             p "
-        + "  LEFT JOIN p.membership     m"
-        + "  LEFT JOIN Comments         c "
-            + "     ON p.id             = c.post.id "
         + "      WHERE p.regionId       = :regionId "
         + "        AND p.boardId        = :boardId "
-        + "        AND p.gender         = :gender "
-        + "        AND (:lastPostId IS NULL "
-        +"                  OR p.id < :lastPostId)"
-        + "   GROUP BY p.id")
-    List<PostProjection> findMainResponse(Long regionId, Long boardId, int gender, Long lastPostId,
+        + "        AND (:lastPostId IS NULL OR p.id < :lastPostId)")
+    List<Post> findRecentPostsByRegionAndBoard(Long regionId, Long boardId, Long lastPostId,
         Pageable pageable);
 
 

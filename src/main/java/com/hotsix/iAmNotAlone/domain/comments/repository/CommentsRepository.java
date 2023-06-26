@@ -19,5 +19,8 @@ public interface CommentsRepository extends JpaRepository<Comments, Long> {
 
     List<Comments> findTop10ByPostIdOrderByIdAsc(Long postId);
 
-    Page<Comments> findByIdGreaterThanAndPostIdOrderByIdAsc(Long lastCommentId, Long postId, PageRequest pageRequest);
+    Page<Comments> findByIdGreaterThanAndPostIdOrderByIdAsc(Long lastCommentId, Long postId,
+        PageRequest pageRequest);
+
+    Long countByPostId(Long postId);
 }

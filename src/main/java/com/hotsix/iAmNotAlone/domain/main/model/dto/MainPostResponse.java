@@ -13,14 +13,13 @@ public class MainPostResponse {
     /**
      * 게시글 리스트
      */
-    private List<PostProjectionMainDto> postProjectionMainDtoList;
+    private List<PostMainDto> postMainDtoList;
     private Long lastPostId;
 
 
-    public static MainPostResponse of(List<PostProjectionMainDto> postProjectionMainDtoList,
-        Long lastPostId) {
+    public static MainPostResponse of(List<PostMainDto> postMainDtos, Long lastPostId) {
         return MainPostResponse.builder()
-            .postProjectionMainDtoList(postProjectionMainDtoList)
+            .postMainDtoList(postMainDtos)
             .lastPostId(lastPostId)
             .build();
     }
