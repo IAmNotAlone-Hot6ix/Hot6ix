@@ -24,7 +24,7 @@ public class PostResponseDto {
         gender = post.getMembership().getGender();
         createdAt = post.getCreatedAt();
         content = removeContent(post.getContent());
-        commentCount = post.getCommentsList().size();
+//        commentCount = post.getCommentsList().size();
         postId = post.getId();
         postImgPath = post.getImgPath().get(0);
     }

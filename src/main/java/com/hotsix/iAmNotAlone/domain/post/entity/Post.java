@@ -1,16 +1,20 @@
 package com.hotsix.iAmNotAlone.domain.post.entity;
 
-import com.hotsix.iAmNotAlone.domain.comments.entity.Comments;
 import com.hotsix.iAmNotAlone.domain.common.BaseEntity;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.post.model.form.AddPostForm;
 import com.hotsix.iAmNotAlone.domain.post.model.form.ModifyPostForm;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
-
-import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.*;
-
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -58,9 +62,7 @@ public class Post extends BaseEntity {
     @Column(name = "img_path")
     private List<String> imgPath;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "post",cascade = CascadeType.REMOVE)
-    private List<Comments> commentsList = new ArrayList<>();
+
 
     public static Post createPost(AddPostForm form, Membership membership, List<String> path) {
         return Post.builder()
