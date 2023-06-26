@@ -3,7 +3,6 @@ package com.hotsix.iAmNotAlone.domain.main.model.dto;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,7 +22,7 @@ public class PostMainDto {
     private String userFile;
     private Long commentCount;
     private boolean likesFlag;
-    private List<String> roomFiles;
+    private String roomFiles;
 
 
     public static PostMainDto of(Post post, Long commentCount, boolean LikesFlag) {
@@ -44,7 +43,7 @@ public class PostMainDto {
             .userFile(post.getMembership().getImgPath())
             .commentCount(commentCount)
             .likesFlag(LikesFlag)
-            .roomFiles(post.getImgPath())
+            .roomFiles(post.getImgPath().get(0))
             .build();
     }
 
