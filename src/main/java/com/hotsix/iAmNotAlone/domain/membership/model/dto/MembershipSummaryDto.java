@@ -6,14 +6,14 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class MembershipPostDto {
+public class MembershipSummaryDto {
 
     private Long membershipId;
     private String imgPath;
     private String nickname;
 
-    public static MembershipPostDto from(Membership membership) {
-        return MembershipPostDto.builder()
+    public static MembershipSummaryDto from(Membership membership) {
+        return MembershipSummaryDto.builder()
             .membershipId(membership.getId())
             .imgPath(membership.getImgPath())
             .nickname(membership.getNickname())

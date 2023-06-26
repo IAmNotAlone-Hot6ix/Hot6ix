@@ -36,6 +36,11 @@ dependencies {
 
 	implementation 'org.springframework.data:spring-data-envers'
 
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.webjars:webjars-locator-core'
+	implementation 'org.webjars:sockjs-client:1.5.1'
+	implementation 'org.webjars:stomp-websocket:2.3.4'
+
 	// https://mvnrepository.com/artifact/com.auth0/java-jwt
 	implementation group: 'com.auth0', name: 'java-jwt', version: '4.3.0'
 	compileOnly 'org.projectlombok:lombok'

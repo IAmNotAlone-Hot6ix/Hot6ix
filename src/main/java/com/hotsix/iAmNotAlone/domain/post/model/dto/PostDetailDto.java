@@ -1,6 +1,6 @@
 package com.hotsix.iAmNotAlone.domain.post.model.dto;
 
-import com.hotsix.iAmNotAlone.domain.membership.model.dto.MembershipPostDto;
+import com.hotsix.iAmNotAlone.domain.membership.model.dto.MembershipSummaryDto;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import java.util.List;
 import lombok.Builder;
@@ -12,7 +12,7 @@ public class PostDetailDto {
 
     private Long postId;
     private Long boardId;
-    private MembershipPostDto membership;
+    private MembershipSummaryDto membership;
     private Long regionId;
     private String address;
     private String content;
@@ -25,7 +25,7 @@ public class PostDetailDto {
         return PostDetailDto.builder()
             .postId(post.getId())
             .boardId(post.getBoardId())
-            .membership(MembershipPostDto.from(post.getMembership()))
+            .membership(MembershipSummaryDto.from(post.getMembership()))
             .regionId(post.getRegionId())
             .address(post.getAddress())
             .content(post.getContent())
