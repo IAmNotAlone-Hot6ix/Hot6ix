@@ -25,11 +25,10 @@ public class CommentPageService {
     // 페이지
     public List<CommentsDetailResponseDto> commentPagesBy(Long lastCommentId, int size, Long postId) {
 
-        Post post = postRepository.findById(postId).orElseThrow(
+        postRepository.findById(postId).orElseThrow(
                 () -> new BusinessException(ErrorCode.NOT_FOUND_POST)
         );
-        Long postNum = post.getId();
-        Page<Comments> comments = fetchPages(lastCommentId, size, postNum);
+        Page<Comments> comments = fetchPages(lastCommentId, size, postId);
         List<Comments> content = comments.getContent();
 
         return content.stream()

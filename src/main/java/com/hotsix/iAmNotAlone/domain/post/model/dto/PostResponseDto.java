@@ -13,9 +13,10 @@ public class PostResponseDto {
     private int gender;
     private LocalDateTime createdAt;
     private String content;
-    private int commentCount;
+    private Long commentCount;
     private Long postId;
     private String postImgPath;
+    private boolean likeYn;
 
     public PostResponseDto(Post post) {
 
@@ -24,9 +25,9 @@ public class PostResponseDto {
         gender = post.getMembership().getGender();
         createdAt = post.getCreatedAt();
         content = removeContent(post.getContent());
-//        commentCount = post.getCommentsList().size();
         postId = post.getId();
         postImgPath = post.getImgPath().get(0);
+        likeYn = likeCheck(post.getLikes());
     }
 
     public String removeContent(String content) {
@@ -35,6 +36,13 @@ public class PostResponseDto {
             content += "...더보기";
         }
         return content;
+    }
+
+    public boolean likeCheck(Long likeLength){
+        if (likeLength>0){
+            return true;
+        }
+        return false;
     }
 
 }

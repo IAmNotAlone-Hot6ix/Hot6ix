@@ -40,13 +40,4 @@ public class CommentsRegisterService {
         return comments.getId();
     }
 
-    @Transactional
-    public List<CommentsDetailResponseDto> getCommentsDetail(Long postId) {
-
-        List<Comments> comments = commentsRepository.findByPost(postId);
-
-        return comments.stream().map(
-                        c -> new CommentsDetailResponseDto(c))
-                .collect(Collectors.toList());
-    }
 }
