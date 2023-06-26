@@ -35,7 +35,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @EntityGraph(attributePaths = {"membership"})
     @Query("    SELECT p "
-        + "   FROM Post             p "
+            + "   FROM Post             p "
         + "      WHERE p.id             IN :memberLikePostList"
         + "        AND (:lastPostId IS NULL OR p.id < :lastPostId)")
     List<Post> findRecentPostsByLikeList(List<Long> memberLikePostList, Long lastPostId,
