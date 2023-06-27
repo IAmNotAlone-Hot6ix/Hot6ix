@@ -4,6 +4,7 @@ import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOU
 
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
+import com.hotsix.iAmNotAlone.domain.post.service.PostRemoveService;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.util.S3UploadService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class MembershipRemoveService {
 
     private final MembershipRepository membershipRepository;
     private final S3UploadService s3UploadService;
+    private final PostRemoveService postRemoveService;
 
     /**
      * 회원 삭제
@@ -31,6 +33,7 @@ public class MembershipRemoveService {
             s3UploadService.deleteFile(split[1]);
         }
 
+        postRemoveService.removeAllPost(id);
         membershipRepository.deleteById(id);
     }
 }

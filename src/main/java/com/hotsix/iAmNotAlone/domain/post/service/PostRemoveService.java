@@ -5,6 +5,7 @@ import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.exception.business.ErrorCode;
 import com.hotsix.iAmNotAlone.global.util.S3UploadService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,5 +33,19 @@ public class PostRemoveService {
             }
         }
         postRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void removeAllPost(Long id) {
+        List<Post> postList = postRepository.findAllByMembershipId(id);
+        for (Post p : postList) {
+            if (p.getImgPath().get(0).length() != 0) {
+                for (String url : p.getImgPath()) {
+                    String[] split = url.split("com/");
+                    s3UploadService.deleteFile(split[1]);
+                }
+            }
+        }
+        postRepository.deleteAllByMembershipId(id);
     }
 }
