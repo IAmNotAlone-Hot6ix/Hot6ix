@@ -13,7 +13,7 @@ public class MembershipDetailDto {
     private Long id;
     private String email;
     private String nickname;
-    private String img_path;
+    private String imgPath;
     private int gender;
     private LocalDate birth;
     private Region region;
@@ -24,7 +24,7 @@ public class MembershipDetailDto {
         id = membership.getId();
         email = membership.getEmail();
         nickname = membership.getNickname();
-        img_path = membership.getImgPath();
+        imgPath = membership.getImgPath();
         gender = membership.getGender();
         birth = membership.getBirth();
         region = membership.getRegion();
