@@ -4,6 +4,7 @@ import com.hotsix.iAmNotAlone.domain.chat.dto.AddChatRoomForm;
 import com.hotsix.iAmNotAlone.domain.common.BaseEntity;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,9 +48,9 @@ public class ChatRoom extends BaseEntity {
         return ChatRoom.builder()
             .sender(sender)
             .receiver(receiver)
+//            .chatMessageList(new ArrayList<>())
             .build();
     }
-
 //    public void updateLastMessage(String message) {
 //        this.lastMessage = message;
 //    }

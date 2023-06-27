@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests(authorize -> authorize
                         .antMatchers("/login", "/signup", "/email/**", "/swagger-ui/**", "/v3/api-docs/**"
-                                , "/swagger-resources/**", "/refresh", "/post").permitAll()
+                                , "/swagger-resources/**", "/refresh", "/post", "/ws").permitAll()
                         .antMatchers("/api/**").access("hasRole('ROLE_USER')"))
                 .build();
     }

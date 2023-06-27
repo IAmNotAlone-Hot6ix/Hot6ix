@@ -2,6 +2,7 @@ package com.hotsix.iAmNotAlone.domain.chat.service;
 
 import com.hotsix.iAmNotAlone.domain.chat.domain.ChatRoom;
 import com.hotsix.iAmNotAlone.domain.chat.dto.ChatRoomDto;
+import com.hotsix.iAmNotAlone.domain.chat.repository.ChatMessageRepository;
 import com.hotsix.iAmNotAlone.domain.chat.repository.ChatRoomRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChatRoomListService {
 
     private final ChatRoomRepository chatRoomRepository;
+    private final ChatMessageRepository chatMessageRepository;
 
     public List<ChatRoomDto> getChatRoomList(Long membershipId) {
-
 
         List<ChatRoomDto> chatRoomDtoList = new ArrayList<>();
         for (ChatRoom c : chatRoomRepository.findByMemberIdOrderByCreatedAtDesc(membershipId)) {
@@ -29,6 +30,9 @@ public class ChatRoomListService {
                 chatRoomDtoList.add(ChatRoomDto.from(c, c.getSender()));
             }
         }
+
+//        chatMessageRepository.findByChatRoomIdOOrderByCreatedAtAsc()
+
 
         return chatRoomDtoList;
     }

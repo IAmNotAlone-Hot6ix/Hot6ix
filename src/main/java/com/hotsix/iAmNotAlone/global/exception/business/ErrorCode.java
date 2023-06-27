@@ -30,8 +30,11 @@ public enum ErrorCode {
     //게시글
     NOT_FOUND_POST(HttpStatus.BAD_REQUEST, "게시글을 찾을 수 없습니다."),
 
+    //댓글
     NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "댓글을 찾을 수 없습니다."),
 
+    //채팅방
+    NOT_FOUND_CHATROOM(HttpStatus.BAD_REQUEST, "채팅방을 찾을 수 없습니다.")
     ;
     private final HttpStatus httpStatus;
     private final String detail;
