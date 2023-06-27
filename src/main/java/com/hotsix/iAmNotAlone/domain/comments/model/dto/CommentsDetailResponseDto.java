@@ -20,6 +20,7 @@ public class CommentsDetailResponseDto {
     private LocalDateTime createdAt;
     private String content;
     private Long commentId;
+    private Long memberId;
 
     public CommentsDetailResponseDto(Comments comments) {
         nickName = comments.getMembership().getNickname();
@@ -27,5 +28,6 @@ public class CommentsDetailResponseDto {
         createdAt = comments.getCreatedAt();
         content = comments.getContent();
         commentId = comments.getId();
+        memberId = comments.getMembership().getId();
     }
 }

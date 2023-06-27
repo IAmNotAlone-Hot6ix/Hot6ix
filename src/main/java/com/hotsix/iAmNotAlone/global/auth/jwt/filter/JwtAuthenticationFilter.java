@@ -76,5 +76,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setCharacterEncoding("utf-8");
         response.getWriter().write(jsonAccessRefreshMap);
     }
+
 }
 
