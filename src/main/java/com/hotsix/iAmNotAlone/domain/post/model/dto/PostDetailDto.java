@@ -2,6 +2,7 @@ package com.hotsix.iAmNotAlone.domain.post.model.dto;
 
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.MembershipSummaryDto;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class PostDetailDto {
     private Long likes;
     private boolean like;
     private int gender;
+    private LocalDateTime createdAt;
     private List<String> imgPath;
 
     public static PostDetailDto from(Post post) {
@@ -31,6 +33,7 @@ public class PostDetailDto {
             .content(post.getContent())
             .likes(post.getLikes())
             .gender(post.getGender())
+            .createdAt(post.getCreatedAt())
             .imgPath(post.getImgPath())
             .build();
     }
