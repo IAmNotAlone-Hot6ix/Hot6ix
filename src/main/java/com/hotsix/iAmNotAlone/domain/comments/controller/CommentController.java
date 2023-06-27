@@ -1,6 +1,7 @@
 package com.hotsix.iAmNotAlone.domain.comments.controller;
 
 import com.hotsix.iAmNotAlone.domain.comments.model.dto.CommentsDetailResponseDto;
+import com.hotsix.iAmNotAlone.domain.comments.model.dto.CommentsUpdateRemoveResponseDto;
 import com.hotsix.iAmNotAlone.domain.comments.model.form.CommentRequestForm;
 import com.hotsix.iAmNotAlone.domain.comments.model.form.CommentUpdateRequestForm;
 import com.hotsix.iAmNotAlone.domain.comments.service.CommentModifyService;
@@ -34,13 +35,13 @@ public class CommentController {
 
     //댓글 수정 api
     @PutMapping("/api/comment/{commentId}")
-    public ResponseEntity<Long> commentModify(@PathVariable Long commentId,@RequestBody CommentUpdateRequestForm form){
+    public ResponseEntity<CommentsUpdateRemoveResponseDto> commentModify(@PathVariable Long commentId,@RequestBody CommentUpdateRequestForm form){
         return ResponseEntity.ok(commentModifyService.modifyComment(commentId, form));
     }
 
     //댓글 삭제 api
     @DeleteMapping("/api/comment/{commentId}")
-    public ResponseEntity<Long> commentDelete(@PathVariable Long commentId){
+    public ResponseEntity<CommentsUpdateRemoveResponseDto> commentDelete(@PathVariable Long commentId){
         return ResponseEntity.ok(commentRemoveService.removeComment(commentId));
     }
 
