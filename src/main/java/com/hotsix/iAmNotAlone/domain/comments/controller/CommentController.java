@@ -26,10 +26,10 @@ public class CommentController {
 
     // 댓글 등록 api
     @PostMapping("/api/comment/{postId}/{userId}")
-    public ResponseEntity<Long> commentAdd(@PathVariable Long postId, @PathVariable Long userId, @RequestBody CommentRequestForm form) {
-        Long commentsRegisterId = commentsRegisterService.addComments(postId, userId, form);
+    public ResponseEntity<CommentsDetailResponseDto> commentAdd(@PathVariable Long postId, @PathVariable Long userId, @RequestBody CommentRequestForm form) {
+        CommentsDetailResponseDto responseDto = commentsRegisterService.addComments(postId, userId, form);
 
-        return ResponseEntity.ok(commentsRegisterId);
+        return ResponseEntity.ok(responseDto);
     }
 
     //댓글 수정 api

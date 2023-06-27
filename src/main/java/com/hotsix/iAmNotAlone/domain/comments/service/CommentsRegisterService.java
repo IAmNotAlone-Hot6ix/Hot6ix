@@ -14,9 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -27,7 +24,7 @@ public class CommentsRegisterService {
     private final CommentsRepository commentsRepository;
 
     @Transactional
-    public Long addComments(Long postId, Long userId, CommentRequestForm form) {
+    public CommentsDetailResponseDto addComments(Long postId, Long userId, CommentRequestForm form) {
 
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new BusinessException(ErrorCode.NOT_FOUND_POST));
@@ -37,7 +34,16 @@ public class CommentsRegisterService {
         );
 
         Comments comments = commentsRepository.save(Comments.createComments(form, membership, post));
-        return comments.getId();
+
+        return CommentsDetailResponseDto.builder()
+                .nickName(comments.getMembership().getNickname())
+                .content(comments.getContent())
+                .imgPath(comments.getMembership().getImgPath())
+                .createdAt(comments.getCreatedAt())
+                .commentId(comments.getId())
+                .build();
+
+
     }
 
 }
