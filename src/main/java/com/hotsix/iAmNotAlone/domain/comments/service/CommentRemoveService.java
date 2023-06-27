@@ -1,6 +1,7 @@
 package com.hotsix.iAmNotAlone.domain.comments.service;
 
 import com.hotsix.iAmNotAlone.domain.comments.entity.Comments;
+import com.hotsix.iAmNotAlone.domain.comments.model.dto.CommentsUpdateRemoveResponseDto;
 import com.hotsix.iAmNotAlone.domain.comments.repository.CommentsRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.exception.business.ErrorCode;
@@ -15,11 +16,14 @@ public class CommentRemoveService {
     private final CommentsRepository commentsRepository;
 
     @Transactional
-    public Long removeComment(Long commentId) {
+    public CommentsUpdateRemoveResponseDto removeComment(Long commentId) {
         Comments comments = commentsRepository.findById(commentId).orElseThrow(
                 () -> new BusinessException(ErrorCode.NOT_FOUND_COMMENT)
         );
         commentsRepository.delete(comments);
-        return comments.getId();
+        return CommentsUpdateRemoveResponseDto.builder()
+                .memberId(comments.getMembership().getId())
+                .commentId(comments.getId())
+                .build();
     }
 }
