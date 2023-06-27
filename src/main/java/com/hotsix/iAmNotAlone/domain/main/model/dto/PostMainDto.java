@@ -38,6 +38,7 @@ public class PostMainDto {
             .address(post.getAddress())
             .content(post.getContent())
             .createdAt(createAt)
+            .memberId(post.getMembership().getId())
             .nickName(post.getMembership().getNickname())
             .gender(post.getMembership().getGender())
             .userFile(post.getMembership().getImgPath())
