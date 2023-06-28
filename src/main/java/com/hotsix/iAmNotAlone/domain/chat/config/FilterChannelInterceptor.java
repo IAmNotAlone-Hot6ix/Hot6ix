@@ -28,7 +28,7 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(message);
 
-        if (StompCommand.CONNECT.equals(stompHeaderAccessor.getCommand())) {
+        if (StompCommand.CONNECT.equals(stompHeaderAccessor.getCommand()) || StompCommand.SEND.equals(stompHeaderAccessor.getCommand())) {
             List<String> nativeHeader = stompHeaderAccessor.getNativeHeader("Authorization");
 
             if (nativeHeader != null && !nativeHeader.isEmpty()) {
@@ -38,10 +38,11 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
                     String jwtToken = token.replace(TOKEN_PREFIX, "");
 
                     if (jwtService.isTokenValid(jwtToken)) {
-                        log.debug("유효성 검사 성공");
+                        log.info("유효성 검사 성공");
 
                     } else {
-                        log.debug("유효성 검사 실패");
+                        log.info("유효성 검사 성공");
+                        throw new MessageDeliveryException("유효하지 않은 접근입니다.");
                     }
                 }
             } else {
