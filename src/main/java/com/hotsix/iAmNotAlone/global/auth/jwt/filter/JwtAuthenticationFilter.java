@@ -1,23 +1,28 @@
 package com.hotsix.iAmNotAlone.global.auth.jwt.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
+import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.global.auth.PrincipalDetails;
 import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
 import com.hotsix.iAmNotAlone.global.auth.signin.model.form.LoginRequestForm;
-import java.io.IOException;
-import java.util.Map;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -27,6 +32,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final MembershipRepository membershipRepository;
     private final JwtService jwtService;
 
     //인증 체크
@@ -42,6 +48,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         } catch (Exception e) {
             e.printStackTrace();
         }
+        request.setAttribute("loginForm", loginRequestForm);
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequestForm.getEmail(), loginRequestForm.getPassword());
@@ -60,7 +67,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
         String email = principalDetails.getMember().getEmail();
         Long id = principalDetails.getMember().getId();
-        String accessToken = jwtService.createAccessToken(id,email);
+        String accessToken = jwtService.createAccessToken(id, email);
         String refreshToken = jwtService.createRefreshToken();
 
         jwtService.updateRefreshToken(email, refreshToken);
@@ -77,5 +84,26 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.getWriter().write(jsonAccessRefreshMap);
     }
 
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        log.info("로그인 실패");
+        String errorMessage = null;
+
+        LoginRequestForm loginRequestForm = (LoginRequestForm) request.getAttribute("loginForm");
+        String email = loginRequestForm.getEmail();
+
+        Optional<Membership> emailOptional = membershipRepository.findByEmail(email);
+        response.setCharacterEncoding("utf-8");
+
+        if (!emailOptional.isPresent()) {
+            errorMessage = "가입된 회원이 존재하지 않습니다. 회원가입을 진행하여 주세요";
+        } else if (failed instanceof BadCredentialsException) {
+            errorMessage = "아이디나 비밀번호가 일치하지 않습니다. 다시 입력해 주세요";
+        }
+
+        if (errorMessage != null) {
+            response.getWriter().write(errorMessage);
+        }
+    }
 }
 
