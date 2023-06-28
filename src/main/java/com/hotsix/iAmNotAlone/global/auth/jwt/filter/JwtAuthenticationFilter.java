@@ -93,6 +93,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String email = loginRequestForm.getEmail();
 
         Optional<Membership> emailOptional = membershipRepository.findByEmail(email);
+        response.setContentType(APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("utf-8");
 
         if (!emailOptional.isPresent()) {
