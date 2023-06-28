@@ -1,11 +1,9 @@
 package com.hotsix.iAmNotAlone.domain.chat.service;
 
-import com.hotsix.iAmNotAlone.domain.chat.domain.ChatMessage;
 import com.hotsix.iAmNotAlone.domain.chat.domain.ChatRoom;
 import com.hotsix.iAmNotAlone.domain.chat.dto.ChatRoomDto;
 import com.hotsix.iAmNotAlone.domain.chat.repository.ChatMessageRepository;
 import com.hotsix.iAmNotAlone.domain.chat.repository.ChatRoomRepository;
-import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,11 +25,11 @@ public class ChatRoomListService {
         for (ChatRoom c : chatRoomRepository.findByMemberIdOrderByCreatedAtDesc(membershipId)) {
 
             if (Objects.equals(c.getSender().getId(), membershipId)) {
-                chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(
+                chatMessageRepository.findByChatRoomIdOrderByCreatedAt(
                     c.getId()).stream().findFirst().ifPresent(chatMessage -> chatRoomDtoList.add(
                     ChatRoomDto.from(c, c.getReceiver(), chatMessage)));
             } else {
-                chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(
+                chatMessageRepository.findByChatRoomIdOrderByCreatedAt(
                     c.getId()).stream().findFirst().ifPresent(chatMessage -> chatRoomDtoList.add(
                     ChatRoomDto.from(c, c.getSender(), chatMessage)));
             }
