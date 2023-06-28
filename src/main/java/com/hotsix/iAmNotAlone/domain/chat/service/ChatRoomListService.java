@@ -5,6 +5,7 @@ import com.hotsix.iAmNotAlone.domain.chat.domain.ChatRoom;
 import com.hotsix.iAmNotAlone.domain.chat.dto.ChatRoomDto;
 import com.hotsix.iAmNotAlone.domain.chat.repository.ChatMessageRepository;
 import com.hotsix.iAmNotAlone.domain.chat.repository.ChatRoomRepository;
+import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,16 +25,15 @@ public class ChatRoomListService {
 
         List<ChatRoomDto> chatRoomDtoList = new ArrayList<>();
         for (ChatRoom c : chatRoomRepository.findByMemberIdOrderByCreatedAtDesc(membershipId)) {
+
             if (Objects.equals(c.getSender().getId(), membershipId)) {
-                ChatMessage chatMessage = chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(
-                        c.getId()).stream()
-                    .findFirst().get();
-                chatRoomDtoList.add(ChatRoomDto.from(c, c.getReceiver(), chatMessage));
+                chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(
+                    c.getId()).stream().findFirst().ifPresent(chatMessage -> chatRoomDtoList.add(
+                    ChatRoomDto.from(c, c.getReceiver(), chatMessage)));
             } else {
-                ChatMessage chatMessage = chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(
-                        c.getId()).stream()
-                    .findFirst().get();
-                chatRoomDtoList.add(ChatRoomDto.from(c, c.getSender(), chatMessage));
+                chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(
+                    c.getId()).stream().findFirst().ifPresent(chatMessage -> chatRoomDtoList.add(
+                    ChatRoomDto.from(c, c.getSender(), chatMessage)));
             }
         }
 
