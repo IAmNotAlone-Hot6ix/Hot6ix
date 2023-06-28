@@ -40,7 +40,7 @@ public class ChatMessageService {
 //        ChatRoom chatRoom = chatRoomRepository.findById(roomId).orElseThrow(
 //            () -> new BusinessException(ErrorCode.NOT_FOUND_CHATROOM)
 //        );
-        return chatMessageRepository.findByChatRoomIdOrderByCreatedAtAsc(roomId).stream().map(
+        return chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(roomId).stream().map(
             ChatMessageDto::from).collect(Collectors.toList());
     }
 }

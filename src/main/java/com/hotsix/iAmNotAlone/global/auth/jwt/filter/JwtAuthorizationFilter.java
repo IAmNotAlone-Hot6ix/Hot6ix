@@ -42,8 +42,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         String authorizationHeader = request.getHeader(ACCESS_TOKEN_SUBJECT);
         String refreshTokenHeader = request.getHeader(REFRESH_TOKEN_SUBJECT);
-        System.out.println(authorizationHeader);
-        System.out.println(refreshTokenHeader);
+        log.debug("authorizationHeader: " + authorizationHeader);
+        log.debug("refreshTokenHeader: " + refreshTokenHeader);
 
         String accessTokenValid = jwtService.extractAccessToken(request)
                 .filter(token -> jwtService.isTokenValid(token))

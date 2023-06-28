@@ -1,13 +1,14 @@
 package com.hotsix.iAmNotAlone.domain.chat.service;
 
+import com.hotsix.iAmNotAlone.domain.chat.domain.ChatMessage;
 import com.hotsix.iAmNotAlone.domain.chat.domain.ChatRoom;
 import com.hotsix.iAmNotAlone.domain.chat.dto.ChatRoomDto;
 import com.hotsix.iAmNotAlone.domain.chat.repository.ChatMessageRepository;
 import com.hotsix.iAmNotAlone.domain.chat.repository.ChatRoomRepository;
+import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,14 +25,20 @@ public class ChatRoomListService {
 
         List<ChatRoomDto> chatRoomDtoList = new ArrayList<>();
         for (ChatRoom c : chatRoomRepository.findByMemberIdOrderByCreatedAtDesc(membershipId)) {
+
             if (Objects.equals(c.getSender().getId(), membershipId)) {
-                chatRoomDtoList.add(ChatRoomDto.from(c, c.getReceiver()));
+                chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(
+                    c.getId()).stream().findFirst().ifPresent(chatMessage -> chatRoomDtoList.add(
+                    ChatRoomDto.from(c, c.getReceiver(), chatMessage)));
             } else {
-                chatRoomDtoList.add(ChatRoomDto.from(c, c.getSender()));
+                chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(
+                    c.getId()).stream().findFirst().ifPresent(chatMessage -> chatRoomDtoList.add(
+                    ChatRoomDto.from(c, c.getSender(), chatMessage)));
             }
         }
 
-//        chatMessageRepository.findByChatRoomIdOOrderByCreatedAtAsc()
+
+
 
 
         return chatRoomDtoList;
