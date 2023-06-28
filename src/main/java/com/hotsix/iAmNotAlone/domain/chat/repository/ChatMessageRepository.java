@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> {
 
 
-    List<ChatMessage> findByChatRoomIdOrderByCreatedAtAsc(Long id);
+    List<ChatMessage> findByChatRoomIdOrderByCreatedAtDesc(Long id);
 
 }

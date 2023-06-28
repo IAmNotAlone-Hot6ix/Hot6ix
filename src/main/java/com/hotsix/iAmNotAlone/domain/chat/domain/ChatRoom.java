@@ -41,18 +41,12 @@ public class ChatRoom extends BaseEntity {
     @JoinColumn(name = "receiver_id")
     private Membership receiver;
 
-//    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
-//    private List<ChatMessage> chatMessageList = new ArrayList<>();
 
     public static ChatRoom from(Membership sender, Membership receiver) {
         return ChatRoom.builder()
             .sender(sender)
             .receiver(receiver)
-//            .chatMessageList(new ArrayList<>())
             .build();
     }
-//    public void updateLastMessage(String message) {
-//        this.lastMessage = message;
-//    }
 
 }

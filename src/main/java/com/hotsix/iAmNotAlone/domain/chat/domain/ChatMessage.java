@@ -3,6 +3,7 @@ package com.hotsix.iAmNotAlone.domain.chat.domain;
 import com.hotsix.iAmNotAlone.domain.chat.dto.AddChatMessageFrom;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,23 +31,22 @@ public class ChatMessage {
     @Column(name = "chat_message_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "chat_room_id")
-    private ChatRoom chatRoom;
+    @Column(name = "chat_room_id")
+    private Long chatRoomId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender_id")
-    private Membership sender;
+    @Column(name = "sender_id")
+    private Long senderId;
 
-    private String createdAt;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
     private String message;
 
     public static ChatMessage of(AddChatMessageFrom form) {
 
         return ChatMessage.builder()
-            .chatRoom(ChatRoom.builder().id(form.getChatRoomId()).build())
-            .sender(Membership.builder().id(form.getSenderId()).build())
+            .chatRoomId(form.getChatRoomId())
+            .senderId(form.getSenderId())
             .message(form.getMessage())
             .createdAt(form.getCreatedAt())
             .build();

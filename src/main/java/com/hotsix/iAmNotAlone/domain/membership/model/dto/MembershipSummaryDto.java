@@ -17,8 +17,6 @@ public class MembershipSummaryDto {
             .membershipId(membership.getId())
             .imgPath(membership.getImgPath())
             .nickname(membership.getNickname())
-//            .address(membership.getRegion().getSido() + " " + membership.getRegion().getSigg())
-//            .gender(membership.getGender())
             .build();
     }
 }
