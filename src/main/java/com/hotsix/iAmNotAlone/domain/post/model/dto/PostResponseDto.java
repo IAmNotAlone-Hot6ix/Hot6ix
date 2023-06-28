@@ -16,7 +16,7 @@ public class PostResponseDto {
     private Long commentCount;
     private Long postId;
     private String postImgPath;
-    private boolean likeYn;
+    private boolean like;
 
     public PostResponseDto(Post post) {
 
@@ -27,7 +27,7 @@ public class PostResponseDto {
         content = removeContent(post.getContent());
         postId = post.getId();
         postImgPath = post.getImgPath().get(0);
-        likeYn = likeCheck(post.getLikes());
+        like = likeCheck(post.getLikes());
     }
 
     public String removeContent(String content) {
