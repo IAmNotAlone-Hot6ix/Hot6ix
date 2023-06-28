@@ -41,6 +41,7 @@ public class CommentsRegisterService {
                 .imgPath(comments.getMembership().getImgPath())
                 .createdAt(comments.getCreatedAt())
                 .commentId(comments.getId())
+                .memberId(comments.getMembership().getId())
                 .build();
 
 
