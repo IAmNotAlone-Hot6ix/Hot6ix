@@ -4,6 +4,7 @@ import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
 import com.hotsix.iAmNotAlone.global.auth.jwt.filter.JwtAuthenticationFilter;
 import com.hotsix.iAmNotAlone.global.auth.jwt.filter.JwtAuthorizationFilter;
+import com.hotsix.iAmNotAlone.global.auth.oauth.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,10 +27,11 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final CorsConfig corsConfig;
     private final MembershipRepository membershipRepository;
+    private final PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
+        http
                 .formLogin().disable()
                 .csrf().disable()
                 .httpBasic().disable()
@@ -40,9 +42,16 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests(authorize -> authorize
                         .antMatchers("/login", "/signup", "/email/**", "/swagger-ui/**", "/v3/api-docs/**"
-                                , "/swagger-resources/**", "/refresh", "/post", "/ws").permitAll()
-                        .antMatchers("/api/**").access("hasRole('ROLE_USER')"))
-                .build();
+                                , "/swagger-resources/**", "/refresh", "/post").permitAll()
+                        .antMatchers("/api/**").access("hasRole('ROLE_USER')"));
+
+        http
+                .oauth2Login()
+                .loginPage("/login")
+                .userInfoEndpoint()
+                .userService(principalOauth2UserService);
+
+        return http.build();
     }
 
     @Bean
@@ -59,9 +68,8 @@ public class SecurityConfig {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
             http
                     .addFilter(corsConfig.corsFilter())
-                    .addFilter(new JwtAuthenticationFilter(authenticationManager, jwtService))
-                    .addFilter(new JwtAuthorizationFilter(authenticationManager,
-                            membershipRepository, jwtService));
+                    .addFilter(new JwtAuthenticationFilter(authenticationManager, membershipRepository,jwtService))
+                    .addFilter(new JwtAuthorizationFilter(authenticationManager, membershipRepository, jwtService));
         }
     }
 
