@@ -41,7 +41,7 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
                         log.info("유효성 검사 성공");
 
                     } else {
-                        log.info("유효성 검사 성공");
+                        log.info("유효성 검사 실패");
                         throw new MessageDeliveryException("유효하지 않은 접근입니다.");
                     }
                 }
