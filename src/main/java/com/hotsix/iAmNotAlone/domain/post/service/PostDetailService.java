@@ -1,5 +1,6 @@
 package com.hotsix.iAmNotAlone.domain.post.service;
 
+import com.hotsix.iAmNotAlone.domain.comments.repository.CommentsRepository;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
@@ -24,6 +25,7 @@ import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOU
 public class PostDetailService {
 
     private final PostRepository postRepository;
+    private final CommentsRepository commentsRepository;
     private final MembershipRepository membershipRepository;
     private final RedisUtil redisUtil;
 
@@ -31,7 +33,8 @@ public class PostDetailService {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new BusinessException(NOT_FOUND_POST)
         );
-        PostDetailDto postDetailDto = PostDetailDto.from(post);
+        Long commentCount = commentsRepository.countByPostId(postId);
+        PostDetailDto postDetailDto = PostDetailDto.from(post, commentCount);
         log.info("게시글 정보 조회");
 
         Membership membership = membershipRepository.findById(membershipId).orElseThrow(
