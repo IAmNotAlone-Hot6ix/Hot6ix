@@ -1,11 +1,13 @@
 package com.hotsix.iAmNotAlone.domain.post.model.dto;
 
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class PostResponseDto {
 
     private String nickname;
@@ -18,19 +20,23 @@ public class PostResponseDto {
     private String postImgPath;
     private boolean like;
 
-    public PostResponseDto(Post post) {
+    public static PostResponseDto of(Post post, Long commentCount, boolean likeFlag) {
 
-        nickname = post.getMembership().getNickname();
-        imgPath = post.getMembership().getImgPath();
-        gender = post.getMembership().getGender();
-        createdAt = post.getCreatedAt();
-        content = removeContent(post.getContent());
-        postId = post.getId();
-        postImgPath = post.getImgPath().get(0);
-        like = likeCheck(post.getLikes());
+        return PostResponseDto.builder()
+                .nickname(post.getMembership().getNickname())
+                .imgPath(post.getMembership().getImgPath())
+                .gender(post.getMembership().getGender())
+                .createdAt(post.getCreatedAt())
+                .content(removeContent(post.getContent()))
+                .commentCount(commentCount)
+                .postId(post.getId())
+                .postImgPath(post.getImgPath().get(0))
+                .like(likeFlag)
+                .build();
+
     }
 
-    public String removeContent(String content) {
+    public static String removeContent(String content) {
         if (content.length() > 30) {
             content = content.substring(0, 30);
             content += "...더보기";
@@ -38,11 +44,5 @@ public class PostResponseDto {
         return content;
     }
 
-    public boolean likeCheck(Long likeLength){
-        if (likeLength>0){
-            return true;
-        }
-        return false;
-    }
 
 }
