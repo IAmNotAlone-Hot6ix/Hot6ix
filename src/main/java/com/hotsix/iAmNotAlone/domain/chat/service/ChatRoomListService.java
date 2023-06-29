@@ -25,11 +25,11 @@ public class ChatRoomListService {
         for (ChatRoom c : chatRoomRepository.findByMemberIdOrderByCreatedAtDesc(membershipId)) {
 
             if (Objects.equals(c.getSender().getId(), membershipId)) {
-                chatMessageRepository.findByChatRoomIdOrderByCreatedAt(
+                chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(
                     c.getId()).stream().findFirst().ifPresent(chatMessage -> chatRoomDtoList.add(
                     ChatRoomDto.from(c, c.getReceiver(), chatMessage)));
             } else {
-                chatMessageRepository.findByChatRoomIdOrderByCreatedAt(
+                chatMessageRepository.findByChatRoomIdOrderByCreatedAtDesc(
                     c.getId()).stream().findFirst().ifPresent(chatMessage -> chatRoomDtoList.add(
                     ChatRoomDto.from(c, c.getSender(), chatMessage)));
             }
