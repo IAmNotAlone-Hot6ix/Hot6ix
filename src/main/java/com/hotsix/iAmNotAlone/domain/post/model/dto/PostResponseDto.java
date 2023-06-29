@@ -18,6 +18,7 @@ public class PostResponseDto {
     private Long commentCount;
     private Long postId;
     private String postImgPath;
+    private String address;
     private boolean like;
 
     public static PostResponseDto of(Post post, Long commentCount, boolean likeFlag) {
@@ -31,6 +32,7 @@ public class PostResponseDto {
                 .commentCount(commentCount)
                 .postId(post.getId())
                 .postImgPath(post.getImgPath().get(0))
+                .address(post.getAddress())
                 .like(likeFlag)
                 .build();
 
