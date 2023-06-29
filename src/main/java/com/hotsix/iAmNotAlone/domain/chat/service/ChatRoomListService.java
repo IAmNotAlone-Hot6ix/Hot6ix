@@ -5,8 +5,10 @@ import com.hotsix.iAmNotAlone.domain.chat.dto.ChatRoomDto;
 import com.hotsix.iAmNotAlone.domain.chat.repository.ChatMessageRepository;
 import com.hotsix.iAmNotAlone.domain.chat.repository.ChatRoomRepository;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,15 +33,13 @@ public class ChatRoomListService {
             } else {
                 chatMessageRepository.findFirstByChatRoomIdOrderByCreatedAtDesc(c.getId())
                     .ifPresent(chatMessage -> chatRoomDtoList.add(
-                        ChatRoomDto.from(c, c.getReceiver(), chatMessage)));
+                        ChatRoomDto.from(c, c.getSender(), chatMessage)));
             }
         }
 
-
-
-
-
-        return chatRoomDtoList;
+        return chatRoomDtoList.stream()
+            .sorted(Comparator.comparing(ChatRoomDto::getLastTime).reversed()).collect(
+                Collectors.toList());
     }
 
 }
