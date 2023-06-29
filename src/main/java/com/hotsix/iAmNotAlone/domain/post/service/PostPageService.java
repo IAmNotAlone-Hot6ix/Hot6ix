@@ -1,7 +1,9 @@
 package com.hotsix.iAmNotAlone.domain.post.service;
 
 import com.hotsix.iAmNotAlone.domain.comments.repository.CommentsRepository;
+import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
+import com.hotsix.iAmNotAlone.domain.membership.service.MembershipGetInfoForMainService;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import com.hotsix.iAmNotAlone.domain.post.model.dto.PostResponseDto;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
@@ -22,21 +24,30 @@ public class PostPageService {
     private final PostRepository postRepository;
     private final MembershipRepository membershipRepository;
     private final CommentsRepository commentsRepository;
+    private final MembershipGetInfoForMainService forMainService;
 
     // 페이지
     public List<PostResponseDto> postPagesBy(Long lastPostId, int size, Long userId) {
-        membershipRepository.findById(userId).orElseThrow(
-                ()->new BusinessException(ErrorCode.NOT_FOUND_USER)
+        Membership membership = membershipRepository.findById(userId).orElseThrow(
+                () -> new BusinessException(ErrorCode.NOT_FOUND_USER)
         );
+        List<Long> likeList = forMainService.getLikeList(membership.getId());
         Page<Post> posts = fetchPages(lastPostId, size, userId);
         List<Post> postList = posts.getContent();
 
         List<PostResponseDto> postResponseList = new ArrayList<>();
 
         for (Post post : postList) {
-            PostResponseDto postResponseDto = new PostResponseDto(post);
+//            PostResponseDto postResponseDto = new PostResponseDto(post);
+//            Long commentCount = commentsRepository.countByPostId(post.getId());
+//            postResponseDto.setCommentCount(commentCount);
+//
+//            boolean likesFlag = !likeList.isEmpty() && likeList.contains(post.getId());
+//            postResponseDto.setLike(likesFlag);
+//            postResponseList.add(postResponseDto);
             Long commentCount = commentsRepository.countByPostId(post.getId());
-            postResponseDto.setCommentCount(commentCount);
+            boolean likesFlag = !likeList.isEmpty() && likeList.contains(post.getId());
+            PostResponseDto postResponseDto = PostResponseDto.of(post, commentCount, likesFlag);
             postResponseList.add(postResponseDto);
         }
         return postResponseList;
@@ -50,17 +61,20 @@ public class PostPageService {
 
     // 페이지 기본 세팅
     public List<PostResponseDto> postBasicSetting(Long userId) {
-        membershipRepository.findById(userId).orElseThrow(
-                ()->new BusinessException(ErrorCode.NOT_FOUND_USER)
+        Membership membership = membershipRepository.findById(userId).orElseThrow(
+                () -> new BusinessException(ErrorCode.NOT_FOUND_USER)
         );
+
+        List<Long> likeList = forMainService.getLikeList(membership.getId());
         List<Post> postList = postRepository.findTop10ByMembershipIdOrderByIdDesc(userId);
 
         List<PostResponseDto> postResponseList = new ArrayList<>();
 
         for (Post post : postList) {
-            PostResponseDto postResponseDto = new PostResponseDto(post);
+
             Long commentCount = commentsRepository.countByPostId(post.getId());
-            postResponseDto.setCommentCount(commentCount);
+            boolean likesFlag = !likeList.isEmpty() && likeList.contains(post.getId());
+            PostResponseDto postResponseDto = PostResponseDto.of(post, commentCount, likesFlag);
             postResponseList.add(postResponseDto);
         }
         return postResponseList;
