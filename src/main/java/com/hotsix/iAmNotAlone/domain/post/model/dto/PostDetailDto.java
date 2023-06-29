@@ -20,10 +20,11 @@ public class PostDetailDto {
     private Long likes;
     private boolean like;
     private int gender;
+    private Long commentCount;
     private LocalDateTime createdAt;
     private List<String> imgPath;
 
-    public static PostDetailDto from(Post post) {
+    public static PostDetailDto from(Post post, Long commentCount) {
         return PostDetailDto.builder()
             .postId(post.getId())
             .boardId(post.getBoardId())
@@ -33,6 +34,7 @@ public class PostDetailDto {
             .content(post.getContent())
             .likes(post.getLikes())
             .gender(post.getGender())
+            .commentCount(commentCount)
             .createdAt(post.getCreatedAt())
             .imgPath(post.getImgPath())
             .build();
