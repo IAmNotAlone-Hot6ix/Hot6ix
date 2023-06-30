@@ -14,17 +14,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @RequiredArgsConstructor
 @Log4j2
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
     private final FilterChannelInterceptor filterChannelInterceptor;
+
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-//            .addInterceptors()
             .setAllowedOriginPatterns("*")
-            .withSockJS();
-
-
+            .withSockJS().setHeartbeatTime(10000); // 10초
     }
 
     @Override
