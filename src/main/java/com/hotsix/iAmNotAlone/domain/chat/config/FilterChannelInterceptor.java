@@ -6,17 +6,15 @@ import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
-@Order(Ordered.HIGHEST_PRECEDENCE + 99)
 @Component
 @RequiredArgsConstructor
 @Log4j2
@@ -26,13 +24,14 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
 
 
     /**
-     * 연결 시
+     * 연결, SEND 시 선조취 하는 메서드
      */
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(message);
 
-        if (StompCommand.CONNECT.equals(stompHeaderAccessor.getCommand())) {
+        if (StompCommand.CONNECT.equals(stompHeaderAccessor.getCommand())
+                || StompCommand.SEND.equals(stompHeaderAccessor.getCommand())) {
             log.info("StompCommand.CONNECT");
             
             // Authorization 의 값 중 첫번째 값
@@ -47,7 +46,7 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
 
                 } else {
                     log.info("유효성 검사 실패");
-                    throw new AuthenticationException("서버 연결에 실패했습니다. 다시 접속해주세요.") {};
+                    throw new AccessDeniedException("유효한 접근이 아닙니다. 다시 접속해주세요.");
                 }
             } else {
                 log.info("토큰 없음");
@@ -60,7 +59,7 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
 
 
     /**
-     *
+     * CONNECT, DISCONNECT 한 후 후조취 하는 메서드
      */
     @Override
     public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
