@@ -9,13 +9,12 @@ import com.hotsix.iAmNotAlone.domain.post.model.dto.PostResponseDto;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.exception.business.ErrorCode;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,18 +37,12 @@ public class PostPageService {
         List<PostResponseDto> postResponseList = new ArrayList<>();
 
         for (Post post : postList) {
-//            PostResponseDto postResponseDto = new PostResponseDto(post);
-//            Long commentCount = commentsRepository.countByPostId(post.getId());
-//            postResponseDto.setCommentCount(commentCount);
-//
-//            boolean likesFlag = !likeList.isEmpty() && likeList.contains(post.getId());
-//            postResponseDto.setLike(likesFlag);
-//            postResponseList.add(postResponseDto);
             Long commentCount = commentsRepository.countByPostId(post.getId());
             boolean likesFlag = !likeList.isEmpty() && likeList.contains(post.getId());
             PostResponseDto postResponseDto = PostResponseDto.of(post, commentCount, likesFlag);
             postResponseList.add(postResponseDto);
         }
+
         return postResponseList;
     }
 
@@ -77,6 +70,7 @@ public class PostPageService {
             PostResponseDto postResponseDto = PostResponseDto.of(post, commentCount, likesFlag);
             postResponseList.add(postResponseDto);
         }
+
         return postResponseList;
     }
 
