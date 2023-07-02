@@ -1,16 +1,15 @@
 package com.hotsix.iAmNotAlone.domain.membership.controller;
 
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
+import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipOAuthForm;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.VerifyNicknameForm;
+import com.hotsix.iAmNotAlone.domain.membership.service.OAuthSignUpService;
 import com.hotsix.iAmNotAlone.domain.membership.service.SignUpService;
 import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,12 +22,13 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 public class SignUpController {
 
+    private final OAuthSignUpService oAuthSignUpService;
     private final SignUpService signUpService;
     private final JwtService jwtService;
 
     @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Long> signUp(@RequestPart AddMembershipForm form,
-        @RequestPart(value = "files", required = false) MultipartFile multipartFile) {
+                                       @RequestPart(value = "files", required = false) MultipartFile multipartFile) {
         return ResponseEntity.ok(signUpService.signUp(form, multipartFile));
     }
 
@@ -38,10 +38,16 @@ public class SignUpController {
     }
 
     @PostMapping("/refresh")
-    public void refresh(HttpServletRequest request , HttpServletResponse response) throws IOException {
+    public void refresh(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String refresh = jwtService.refresh(request, response);
         response.setContentType(APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("utf-8");
         response.getWriter().write(refresh);
     }
+
+    @PatchMapping("/oauth/signup/{id}")
+    public ResponseEntity<Long> oauthSignUp(@RequestBody AddMembershipOAuthForm form, @PathVariable Long id) {
+        return ResponseEntity.ok(oAuthSignUpService.oAuthSignUp(form, id));
+    }
+
 }
