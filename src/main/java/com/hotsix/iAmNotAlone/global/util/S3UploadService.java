@@ -192,4 +192,5 @@ public class S3UploadService {
         String str = sdf.format(date);
         return str.replace("-", "/");
     }
+
 }

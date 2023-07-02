@@ -106,8 +106,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         writeResponse(membership.getId().toString());
         jwtService.updateRefreshToken(email, refreshToken);
 
-
-
         return new PrincipalDetails(membership, oAuth2User.getAttributes());
     }
 

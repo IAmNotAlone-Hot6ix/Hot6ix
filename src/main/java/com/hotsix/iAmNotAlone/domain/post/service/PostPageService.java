@@ -73,7 +73,6 @@ public class PostPageService {
             PostResponseDto postResponseDto = PostResponseDto.of(post, commentCount, likesFlag);
             postResponseList.add(postResponseDto);
         }
-
         return postResponseList;
     }
 

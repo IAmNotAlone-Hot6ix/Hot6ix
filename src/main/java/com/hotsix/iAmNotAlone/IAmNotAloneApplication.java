@@ -23,4 +23,5 @@ public class IAmNotAloneApplication {
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
 }

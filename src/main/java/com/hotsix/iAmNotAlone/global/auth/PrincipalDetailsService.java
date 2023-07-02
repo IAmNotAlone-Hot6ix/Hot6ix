@@ -26,4 +26,5 @@ public class PrincipalDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("이메일이 없습니다.");
         }
     }
+
 }

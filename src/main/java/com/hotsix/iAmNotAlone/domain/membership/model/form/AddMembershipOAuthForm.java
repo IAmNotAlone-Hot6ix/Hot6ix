@@ -25,4 +25,5 @@ public class AddMembershipOAuthForm {
     private Long regionId;
     private List<String> personality;
 
+
 }
