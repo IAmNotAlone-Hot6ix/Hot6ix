@@ -4,7 +4,7 @@ import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
 import com.hotsix.iAmNotAlone.global.auth.jwt.filter.JwtAuthenticationFilter;
 import com.hotsix.iAmNotAlone.global.auth.jwt.filter.JwtAuthorizationFilter;
-//import com.hotsix.iAmNotAlone.global.auth.oauth.PrincipalOauth2UserService;
+import com.hotsix.iAmNotAlone.global.auth.oauth.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -27,7 +25,7 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final CorsConfig corsConfig;
     private final MembershipRepository membershipRepository;
-//    private final PrincipalOauth2UserService principalOauth2UserService;
+    private final PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,14 +40,14 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests(authorize -> authorize
                         .antMatchers("/login", "/signup", "/email/**", "/swagger-ui/**", "/v3/api-docs/**"
-                                , "/swagger-resources/**", "/refresh", "/post").permitAll()
+                                , "/swagger-resources/**", "/refresh", "/post", "/oauth/signup").permitAll()
                         .antMatchers("/api/**").access("hasRole('ROLE_USER')"));
 
-//        http
-//                .oauth2Login()
-//                .loginPage("/login")
-//                .userInfoEndpoint()
-////                .userService(principalOauth2UserService);
+        http
+                .oauth2Login()
+                .loginPage("/login")
+                .userInfoEndpoint()
+                .userService(principalOauth2UserService);
 
         return http.build();
     }
@@ -68,13 +66,9 @@ public class SecurityConfig {
             AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
             http
                     .addFilter(corsConfig.corsFilter())
-                    .addFilter(new JwtAuthenticationFilter(authenticationManager, membershipRepository,jwtService))
+                    .addFilter(new JwtAuthenticationFilter(authenticationManager, membershipRepository, jwtService))
                     .addFilter(new JwtAuthorizationFilter(authenticationManager, membershipRepository, jwtService));
         }
     }
 
-    @Bean  // 비밀번호 암호화
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }

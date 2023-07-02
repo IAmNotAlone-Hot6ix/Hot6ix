@@ -2,25 +2,11 @@ package com.hotsix.iAmNotAlone.domain.membership.entity;
 
 import com.hotsix.iAmNotAlone.domain.common.BaseEntity;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
+import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipOAuthForm;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.ModifyMembershipForm;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.global.auth.common.Role;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
@@ -28,10 +14,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.AuditOverride;
 
+import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @AuditOverride(forClass = BaseEntity.class)
 public class Membership extends BaseEntity {
@@ -115,6 +106,27 @@ public class Membership extends BaseEntity {
             this.likelist.add(String.valueOf(postId));
         } else {
             this.likelist.remove(String.valueOf(postId));
+        }
+    }
+
+    public void updateMembership(AddMembershipOAuthForm form, Region region) {
+        if (form.getNickname() != null) {
+            this.nickname = form.getNickname();
+        }
+        if (form.getIntroduction() != null) {
+            this.introduction = form.getIntroduction();
+        }
+        if (form.getBirth() != null) {
+            this.birth = form.getBirth();
+        }
+        if (region != null) {
+            this.region = region;
+        }
+        if (form.getPersonality() != null) {
+            this.personality = form.getPersonality();
+        }
+        if (form.getGender() != null) {
+            this.gender = form.getGender();
         }
     }
 }

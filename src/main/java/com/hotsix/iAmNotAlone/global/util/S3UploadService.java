@@ -4,21 +4,17 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.S3FileDto;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -100,6 +96,44 @@ public class S3UploadService {
         objectMetadata.setContentType(multipartFile.getContentType());
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
+
+            String keyName = uploadFilePath + "/" + uploadFileName; // ex) 구분/년/월/일/파일.확장자
+
+            // S3에 폴더 및 파일 업로드
+            amazonS3Client.putObject(
+                    new PutObjectRequest(bucket, keyName, inputStream, objectMetadata));
+
+
+            // S3에 업로드한 폴더 및 파일 URL
+            uploadFileUrl = amazonS3Client.getUrl(bucket, keyName).toString();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("Filed upload failed", e);
+        }
+
+        return S3FileDto.builder()
+                .originalFileName(originalFileName)
+                .uploadFileName(uploadFileName)
+                .uploadFilePath(uploadFilePath)
+                .uploadFileUrl(uploadFileUrl)
+                .build();
+    }
+
+    public S3FileDto OAuthUploadFile(String kakaoImg) {
+
+        String uploadFilePath = getFolderName();
+
+        String originalFileName = kakaoImg;
+        String uploadFileName = getUuidFileName(originalFileName);
+        String uploadFileUrl = "";
+
+        byte[] bytes = kakaoImg.getBytes();
+        InputStream kakaoInputStream = new ByteArrayInputStream(bytes);
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(kakaoImg.length());
+
+        try (InputStream inputStream = kakaoInputStream) {
 
             String keyName = uploadFilePath + "/" + uploadFileName; // ex) 구분/년/월/일/파일.확장자
 

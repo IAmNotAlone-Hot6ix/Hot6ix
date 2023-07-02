@@ -7,6 +7,7 @@ import com.hotsix.iAmNotAlone.domain.membership.service.MembershipGetInfoForMain
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import com.hotsix.iAmNotAlone.domain.post.model.dto.PostResponseDto;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
+import com.hotsix.iAmNotAlone.domain.region.repository.RegionRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.exception.business.ErrorCode;
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class PostPageService {
     private final MembershipRepository membershipRepository;
     private final CommentsRepository commentsRepository;
     private final MembershipGetInfoForMainService forMainService;
+    private final RegionRepository regionRepository;
 
     // 페이지
     public List<PostResponseDto> postPagesBy(Long lastPostId, int size, Long userId) {
@@ -67,6 +69,7 @@ public class PostPageService {
 
             Long commentCount = commentsRepository.countByPostId(post.getId());
             boolean likesFlag = !likeList.isEmpty() && likeList.contains(post.getId());
+
             PostResponseDto postResponseDto = PostResponseDto.of(post, commentCount, likesFlag);
             postResponseList.add(postResponseDto);
         }
