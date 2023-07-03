@@ -5,6 +5,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
+import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
+import com.hotsix.iAmNotAlone.global.exception.business.ErrorCode;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -134,6 +136,14 @@ public class JwtService {
             response.getWriter().write("토큰시간 유효시간이 지났습니다. 재로그인 해주세요");
         }
         return "";
+    }
+
+    public String extractEmail(Long memberId) {
+        Membership membership = membershipRepository.findById(memberId).orElseThrow(
+                () -> new BusinessException(ErrorCode.NOT_FOUND_USER)
+        );
+
+        return membership.getEmail();
     }
 
 }

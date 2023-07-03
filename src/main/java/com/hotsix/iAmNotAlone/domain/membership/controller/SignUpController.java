@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -48,6 +49,16 @@ public class SignUpController {
     @PatchMapping("/oauth/signup/{id}")
     public ResponseEntity<Long> oauthSignUp(@RequestBody AddMembershipOAuthForm form, @PathVariable Long id) {
         return ResponseEntity.ok(oAuthSignUpService.oAuthSignUp(form, id));
+    }
+
+    @PostMapping("/oauth/token/{memberId}")
+    public ResponseEntity<Map<String, String>> token(HttpServletResponse response, @PathVariable Long memberId){
+        String email = jwtService.extractEmail(memberId);
+        String accessToken = jwtService.createAccessToken(memberId, email);
+        String refreshToken = jwtService.createRefreshToken();
+        Map<String, String> token = jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken);
+        jwtService.updateRefreshToken(email,refreshToken);
+        return ResponseEntity.ok(token);
     }
 
 }
