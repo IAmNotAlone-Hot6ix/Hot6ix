@@ -47,6 +47,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String url = (String) properties.get("profile_image");
         String password = passwordEncoder.encode(clientId);
 
+
         Optional<Membership> memberOptional = membershipRepository.findByEmail(email);
 
         Region region = Region.builder().id(1L).build();
