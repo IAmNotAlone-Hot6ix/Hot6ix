@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -81,6 +84,21 @@ public class JwtService {
         tokenMap.put(REFRESH_TOKEN_SUBJECT, refreshToken);
 
         return tokenMap;
+    }
+    public Map<String, String> sendURLAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
+        response.setStatus(HttpServletResponse.SC_OK);
+
+        Map<String, String> tokenMap = new HashMap<>();
+        try {
+            String encodedAccessToken = URLEncoder.encode(accessToken, StandardCharsets.UTF_8.toString());
+            String encodedRefreshToken = URLEncoder.encode(refreshToken, StandardCharsets.UTF_8.toString());
+            tokenMap.put(ACCESS_TOKEN_SUBJECT, encodedAccessToken);
+            tokenMap.put(REFRESH_TOKEN_SUBJECT, encodedRefreshToken);
+            return tokenMap;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
         public Map<String, String> sendURLAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
