@@ -92,6 +92,12 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         ObjectMapper om = new ObjectMapper();
         log.info("소셜 로그인 성공");
 
+        try {
+            servletResponse.sendRedirect("https://iamnotalone.vercel.app/main");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        
         String accessToken = jwtService.createAccessToken(membership.getId(), email);
         String refreshToken = jwtService.createRefreshToken();
 
@@ -104,10 +110,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             throw new RuntimeException(e);
         }
 
-        log.info(jsonAccessRefreshMap);
-        servletResponse.setContentType(APPLICATION_JSON_VALUE);
-        servletResponse.setCharacterEncoding("utf-8");
-
         writeResponse(jsonAccessRefreshMap);
         writeResponse(membership.getId().toString());
         jwtService.updateRefreshToken(email, refreshToken);
@@ -117,7 +119,9 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     private void writeResponse(String response) {
         try {
-            servletResponse.getWriter().write(response);
+            servletResponse.setCharacterEncoding("utf-8");
+            servletResponse.setContentType(APPLICATION_JSON_VALUE);
+            servletResponse.getWriter().write(response+"\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
