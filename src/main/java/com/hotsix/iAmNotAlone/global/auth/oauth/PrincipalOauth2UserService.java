@@ -1,13 +1,17 @@
 package com.hotsix.iAmNotAlone.global.auth.oauth;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import static com.hotsix.iAmNotAlone.global.auth.common.Role.USER;
+
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
-import com.hotsix.iAmNotAlone.domain.region.repository.RegionRepository;
 import com.hotsix.iAmNotAlone.global.auth.PrincipalDetails;
 import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
 import com.hotsix.iAmNotAlone.global.util.S3UploadService;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Optional;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,17 +20,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
-import java.util.Optional;
-
-import static com.hotsix.iAmNotAlone.global.auth.common.Role.USER;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +42,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
 
-        String url = "";
+        String url;
 
         String email = (String) kakaoAccount.get("email");
         String nickname = (String) properties.get("nickname");
@@ -82,11 +75,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
 //        writeResponse(savedMember.getId().toString());
         try {
-            String memberId = URLEncoder.encode(savedMember.getId().toString(), StandardCharsets.UTF_8);
-            Cookie cookie = new Cookie("memberId", memberId);
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            servletResponse.addCookie(cookie);
+//            String memberId = URLEncoder.encode(savedMember.getId().toString(), StandardCharsets.UTF_8);
+//            Cookie cookie = new Cookie("memberId", memberId);
+//            cookie.setSecure(true);
+//            cookie.setHttpOnly(true);
+//            servletResponse.addCookie(cookie);
             servletResponse.sendRedirect("https://iamnotalone.vercel.app/socialsignup/"+savedMember.getId());
 
         } catch (IOException e) {
@@ -96,21 +89,20 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     }
 
     private OAuth2User handleExistingMembership(Membership membership, String email, OAuth2User oAuth2User) {
-        ObjectMapper om = new ObjectMapper();
         log.info("소셜 로그인 성공");
 
-        String accessToken = jwtService.createAccessToken(membership.getId(), email);
+//        String accessToken = jwtService.createAccessToken(membership.getId(), email);
         String refreshToken = jwtService.createRefreshToken();
 
-        Map<String, String> tokenshMap = jwtService.sendURLAccessAndRefreshToken( accessToken, refreshToken);
-        String jsonAccessRefreshMap = null;
+//        Map<String, String> tokenshMap = jwtService.sendAccessAndRefreshToken( accessToken, refreshToken);
+//        String jsonAccessRefreshMap = null;
 
         try {
-            jsonAccessRefreshMap = om.writeValueAsString(tokenshMap);
-            Cookie cookie = new Cookie("tokenMap", jsonAccessRefreshMap);
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            servletResponse.addCookie(cookie);
+//            jsonAccessRefreshMap = om.writeValueAsString(tokenshMap);
+//            Cookie cookie = new Cookie("tokenMap", jsonAccessRefreshMap);
+//            cookie.setSecure(true);
+//            cookie.setHttpOnly(true);
+//            servletResponse.addCookie(cookie);
             servletResponse.sendRedirect("https://iamnotalone.vercel.app/");
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -121,13 +113,13 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         return new PrincipalDetails(membership, oAuth2User.getAttributes());
     }
 
-    private void writeResponse(String response) {
-        try {
-            servletResponse.setCharacterEncoding("utf-8");
-            servletResponse.setContentType(APPLICATION_JSON_VALUE);
-            servletResponse.getWriter().write(response + "\n");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    private void writeResponse(String response) {
+//        try {
+//            servletResponse.setCharacterEncoding("utf-8");
+//            servletResponse.setContentType(APPLICATION_JSON_VALUE);
+//            servletResponse.getWriter().write(response + "\n");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 }
