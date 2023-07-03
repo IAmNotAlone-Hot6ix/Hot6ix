@@ -91,12 +91,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     private OAuth2User handleExistingMembership(Membership membership, String email, OAuth2User oAuth2User) {
         ObjectMapper om = new ObjectMapper();
         log.info("소셜 로그인 성공");
-
-        try {
-            servletResponse.sendRedirect("https://iamnotalone.vercel.app/main");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         
         String accessToken = jwtService.createAccessToken(membership.getId(), email);
         String refreshToken = jwtService.createRefreshToken();
@@ -114,6 +108,12 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         writeResponse(membership.getId().toString());
         jwtService.updateRefreshToken(email, refreshToken);
 
+        try {
+            servletResponse.sendRedirect("https://iamnotalone.vercel.app/main");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        
         return new PrincipalDetails(membership, oAuth2User.getAttributes());
     }
 
