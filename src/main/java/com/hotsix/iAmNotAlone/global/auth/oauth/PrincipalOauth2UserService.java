@@ -109,7 +109,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         jwtService.updateRefreshToken(email, refreshToken);
 
         try {
-            servletResponse.sendRedirect("https://iamnotalone.vercel.app/main");
+            servletResponse.sendRedirect("https://iamnotalone.vercel.app");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
