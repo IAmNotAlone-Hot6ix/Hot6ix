@@ -18,7 +18,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
@@ -82,10 +81,8 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
 //        writeResponse(savedMember.getId().toString());
         try {
-            Cookie cookie = new Cookie("memberId",savedMember.getId().toString());
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            servletResponse.addCookie(cookie);
+
+            servletResponse.setHeader("memberId",savedMember.getId().toString());
             servletResponse.sendRedirect("https://iamnotalone.vercel.app/socialsignup");
 
         } catch (IOException e) {
@@ -106,10 +103,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         try {
             jsonAccessRefreshMap = om.writeValueAsString(accessRefreshMap);
-            Cookie cookie = new Cookie("accessRefreshToken",jsonAccessRefreshMap);
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            servletResponse.addCookie(cookie);
+//            Cookie cookie = new Cookie("accessRefreshToken",jsonAccessRefreshMap);
+//            cookie.setSecure(true);
+//            cookie.setHttpOnly(true);
+//            servletResponse.addCookie(cookie);
+            servletResponse.setHeader("jsonAccessRefreshMap",jsonAccessRefreshMap);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
