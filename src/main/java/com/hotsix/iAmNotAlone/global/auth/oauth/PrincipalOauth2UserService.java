@@ -102,7 +102,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String accessToken = jwtService.createAccessToken(membership.getId(), email);
         String refreshToken = jwtService.createRefreshToken();
 
-        Map<String, String> tokenshMap = jwtService.sendURLAccessAndRefreshToken(servletResponse, accessToken, refreshToken);
+        Map<String, String> tokenshMap = jwtService.sendURLAccessAndRefreshToken( accessToken, refreshToken);
         String jsonAccessRefreshMap = null;
 
         try {
