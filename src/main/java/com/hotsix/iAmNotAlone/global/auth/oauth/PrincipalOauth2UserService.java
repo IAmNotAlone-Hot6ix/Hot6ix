@@ -82,11 +82,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
 //        writeResponse(savedMember.getId().toString());
         try {
-            String memberId = URLEncoder.encode(savedMember.getId().toString(), StandardCharsets.UTF_8);
-            Cookie cookie = new Cookie("memberId", memberId);
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            servletResponse.addCookie(cookie);
+//            String memberId = URLEncoder.encode(savedMember.getId().toString(), StandardCharsets.UTF_8);
+//            Cookie cookie = new Cookie("memberId", memberId);
+//            cookie.setSecure(true);
+//            cookie.setHttpOnly(true);
+//            servletResponse.addCookie(cookie);
             servletResponse.sendRedirect("https://iamnotalone.vercel.app/socialsignup/"+savedMember.getId());
 
         } catch (IOException e) {
@@ -102,15 +102,15 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String accessToken = jwtService.createAccessToken(membership.getId(), email);
         String refreshToken = jwtService.createRefreshToken();
 
-        Map<String, String> tokenshMap = jwtService.sendURLAccessAndRefreshToken( accessToken, refreshToken);
+        Map<String, String> tokenshMap = jwtService.sendAccessAndRefreshToken( accessToken, refreshToken);
         String jsonAccessRefreshMap = null;
 
         try {
-            jsonAccessRefreshMap = om.writeValueAsString(tokenshMap);
-            Cookie cookie = new Cookie("tokenMap", jsonAccessRefreshMap);
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            servletResponse.addCookie(cookie);
+//            jsonAccessRefreshMap = om.writeValueAsString(tokenshMap);
+//            Cookie cookie = new Cookie("tokenMap", jsonAccessRefreshMap);
+//            cookie.setSecure(true);
+//            cookie.setHttpOnly(true);
+//            servletResponse.addCookie(cookie);
             servletResponse.sendRedirect("https://iamnotalone.vercel.app/");
         } catch (IOException e) {
             throw new RuntimeException(e);
