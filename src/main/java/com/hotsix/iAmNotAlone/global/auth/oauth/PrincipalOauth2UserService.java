@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
@@ -112,7 +113,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-        
+
 //        writeResponse(jsonAccessRefreshMap);
 //        writeResponse(membership.getId().toString());
         jwtService.updateRefreshToken(email, refreshToken);
