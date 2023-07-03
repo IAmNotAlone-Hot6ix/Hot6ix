@@ -81,7 +81,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         writeResponse(savedMember.getId().toString());
         try {
-            servletResponse.sendRedirect("/socialsignup");
+            servletResponse.sendRedirect("https://iamnotalone.vercel.app/socialsignup");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
