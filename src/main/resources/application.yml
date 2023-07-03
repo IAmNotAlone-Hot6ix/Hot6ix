@@ -6,7 +6,7 @@ spring:
           kakao:
             client-id: ${KAKAO_REST_API_KEY} # 카카오 restapi key
             client-secret: ${KAKAO_SECRET_KEY} # 카카오 시크릿 키
-            redirect-uri: http://43.200.78.88:8080/login/oauth2/code/kakao # 코드를 받는 콜백 주소
+            redirect-uri: http://127.0.0.1:5173/login/oauth2/code/kakao # 코드를 받는 콜백 주소
             authorization-grant-type: authorization_code
             client-authentication-method: POST
             client-name: Kakao
