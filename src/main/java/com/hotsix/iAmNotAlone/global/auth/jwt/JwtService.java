@@ -101,22 +101,6 @@ public class JwtService {
 
     }
 
-        public Map<String, String> sendURLAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        Map<String, String> tokenMap = new HashMap<>();
-        try {
-            String encodedAccessToken = URLEncoder.encode(accessToken, StandardCharsets.UTF_8.toString());
-            String encodedRefreshToken = URLEncoder.encode(refreshToken, StandardCharsets.UTF_8.toString());
-            tokenMap.put(ACCESS_TOKEN_SUBJECT, encodedAccessToken);
-            tokenMap.put(REFRESH_TOKEN_SUBJECT, encodedRefreshToken);
-            return tokenMap;
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     public Map<String, String> sendAccessToken(HttpServletResponse response, String accessToken) {
 
         Map<String, String> tokenMap = new HashMap<>();
