@@ -42,14 +42,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
 
-        String url;
-
         String email = (String) kakaoAccount.get("email");
         String nickname = (String) properties.get("nickname");
-        String imgPath = (String) properties.get("profile_image");
+        String url = (String) properties.get("profile_image");
         String password = passwordEncoder.encode(clientId);
 
-        url = s3UploadService.OAuthUploadFile(imgPath).getUploadFileUrl();
 
         Optional<Membership> memberOptional = membershipRepository.findByEmail(email);
 
