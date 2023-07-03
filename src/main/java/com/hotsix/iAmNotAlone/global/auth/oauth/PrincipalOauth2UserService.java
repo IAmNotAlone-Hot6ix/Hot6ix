@@ -1,6 +1,5 @@
 package com.hotsix.iAmNotAlone.global.auth.oauth;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
@@ -18,8 +17,11 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 
@@ -36,7 +38,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     private final JwtService jwtService;
     private final S3UploadService s3UploadService;
     private final HttpServletResponse servletResponse;
-    private final RegionRepository regionRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -62,7 +63,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         Region region = Region.builder().id(1L).build();
 
         if (!memberOptional.isPresent()) {
-            return handleNewMembership(email, password, nickname, url,region ,oAuth2User);
+            return handleNewMembership(email, password, nickname, url, region, oAuth2User);
         } else {
             return handleExistingMembership(memberOptional.get(), email, oAuth2User);
         }
@@ -79,9 +80,15 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                 .build();
         Membership savedMember = membershipRepository.save(membership);
 
-        writeResponse(savedMember.getId().toString());
+//        writeResponse(savedMember.getId().toString());
         try {
-            servletResponse.sendRedirect("/socialsignup");
+            String memberId = URLEncoder.encode(savedMember.getId().toString(), StandardCharsets.UTF_8.toString());
+            Cookie cookie = new Cookie("memberId", memberId);
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            servletResponse.addCookie(cookie);
+            servletResponse.sendRedirect("https://iamnotalone.vercel.app/socialsignup/"+savedMember.getId().toString());
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -95,21 +102,23 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String accessToken = jwtService.createAccessToken(membership.getId(), email);
         String refreshToken = jwtService.createRefreshToken();
 
-        Map<String, String> accessRefreshMap = jwtService.sendAccessAndRefreshToken(servletResponse, accessToken, refreshToken);
+        Map<String, String> tokenshMap = jwtService.sendURLAccessAndRefreshToken(servletResponse, accessToken, refreshToken);
         String jsonAccessRefreshMap = null;
 
         try {
-            jsonAccessRefreshMap = om.writeValueAsString(accessRefreshMap);
-        } catch (JsonProcessingException e) {
+            jsonAccessRefreshMap = om.writeValueAsString(tokenshMap);
+            Cookie cookie = new Cookie("tokenMap", jsonAccessRefreshMap);
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            servletResponse.addCookie(cookie);
+            servletResponse.sendRedirect("https://iamnotalone.vercel.app");
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        log.info(jsonAccessRefreshMap);
-        servletResponse.setContentType(APPLICATION_JSON_VALUE);
-        servletResponse.setCharacterEncoding("utf-8");
 
-        writeResponse(jsonAccessRefreshMap);
-        writeResponse(membership.getId().toString());
+//        writeResponse(jsonAccessRefreshMap);
+//        writeResponse(membership.getId().toString());
         jwtService.updateRefreshToken(email, refreshToken);
 
         return new PrincipalDetails(membership, oAuth2User.getAttributes());
@@ -117,7 +126,9 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
     private void writeResponse(String response) {
         try {
-            servletResponse.getWriter().write(response);
+            servletResponse.setCharacterEncoding("utf-8");
+            servletResponse.setContentType(APPLICATION_JSON_VALUE);
+            servletResponse.getWriter().write(response + "\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
