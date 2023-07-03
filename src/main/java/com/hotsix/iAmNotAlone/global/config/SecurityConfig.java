@@ -30,6 +30,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .oauth2Login()
+                .loginPage("/login")
+                .userInfoEndpoint()
+                .userService(principalOauth2UserService);
+
+        http
                 .formLogin().disable()
                 .csrf().disable()
                 .httpBasic().disable()
@@ -40,14 +46,9 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests(authorize -> authorize
                         .antMatchers("/login", "/signup", "/email/**", "/swagger-ui/**", "/v3/api-docs/**"
-                                , "/swagger-resources/**", "/refresh", "/post", "/oauth/signup").permitAll()
+                                , "/swagger-resources/**", "/refresh", "/post", "/oauth/**").permitAll()
                         .antMatchers("/api/**").access("hasRole('ROLE_USER')"));
 
-        http
-                .oauth2Login()
-                .loginPage("/login")
-                .userInfoEndpoint()
-                .userService(principalOauth2UserService);
 
         return http.build();
     }

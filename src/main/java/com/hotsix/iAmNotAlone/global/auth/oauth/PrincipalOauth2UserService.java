@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
+import com.hotsix.iAmNotAlone.domain.region.entity.Region;
+import com.hotsix.iAmNotAlone.domain.region.repository.RegionRepository;
 import com.hotsix.iAmNotAlone.global.auth.PrincipalDetails;
 import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
 import com.hotsix.iAmNotAlone.global.util.S3UploadService;
@@ -34,6 +36,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     private final JwtService jwtService;
     private final S3UploadService s3UploadService;
     private final HttpServletResponse servletResponse;
+    private final RegionRepository regionRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -56,26 +59,29 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         Optional<Membership> memberOptional = membershipRepository.findByEmail(email);
 
+        Region region = Region.builder().id(1L).build();
+
         if (!memberOptional.isPresent()) {
-            return handleNewMembership(email, password, nickname, url, oAuth2User);
+            return handleNewMembership(email, password, nickname, url,region ,oAuth2User);
         } else {
             return handleExistingMembership(memberOptional.get(), email, oAuth2User);
         }
     }
 
-    private OAuth2User handleNewMembership(String email, String password, String nickname, String imgPath, OAuth2User oAuth2User) {
+    private OAuth2User handleNewMembership(String email, String password, String nickname, String imgPath, Region region, OAuth2User oAuth2User) {
         Membership membership = Membership.builder()
                 .email(email)
                 .password(password)
                 .nickname(nickname)
                 .imgPath(imgPath)
                 .role(USER)
+                .region(region)
                 .build();
         Membership savedMember = membershipRepository.save(membership);
 
         writeResponse(savedMember.getId().toString());
         try {
-            servletResponse.sendRedirect("/socialsignup.html");
+            servletResponse.sendRedirect("/socialsignup");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
