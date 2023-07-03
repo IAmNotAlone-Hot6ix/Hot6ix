@@ -47,7 +47,7 @@ public class SignUpController {
     }
 
     @PatchMapping("/oauth/signup/{id}")
-    public ResponseEntity<Long> oauthSignUp(@RequestBody AddMembershipOAuthForm form, @PathVariable Long id) {
+    public ResponseEntity<Map<String,String>> oauthSignUp(@RequestBody AddMembershipOAuthForm form, @PathVariable Long id) {
         return ResponseEntity.ok(oAuthSignUpService.oAuthSignUp(form, id));
     }
 

@@ -30,7 +30,7 @@ public class OAuthSignUpService {
     private final JwtService jwtService;
 
     @Transactional
-    public ResponseEntity<Map<String,String>> oAuthSignUp(AddMembershipOAuthForm form, Long id) {
+    public Map<String,String> oAuthSignUp(AddMembershipOAuthForm form, Long id) {
         Region region = regionRepository.findById(form.getRegionId()).orElseThrow(
                 () -> new BusinessException(NOT_FOUND_REGION)
         );
@@ -46,7 +46,7 @@ public class OAuthSignUpService {
 
         membership.updateMembership(form, region);
 
-        return ResponseEntity.ok(map);
+        return map;
     }
 
     /**
