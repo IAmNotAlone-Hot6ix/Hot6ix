@@ -79,9 +79,14 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                 .build();
         Membership savedMember = membershipRepository.save(membership);
 
-        writeResponse(savedMember.getId().toString());
+//        writeResponse(savedMember.getId().toString());
         try {
+            Cookie cookie = new Cookie("memberId",savedMember.getId().toString());
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            servletResponse.addCookie(cookie);
             servletResponse.sendRedirect("https://iamnotalone.vercel.app/socialsignup");
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -91,7 +96,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     private OAuth2User handleExistingMembership(Membership membership, String email, OAuth2User oAuth2User) {
         ObjectMapper om = new ObjectMapper();
         log.info("소셜 로그인 성공");
-        
+
         String accessToken = jwtService.createAccessToken(membership.getId(), email);
         String refreshToken = jwtService.createRefreshToken();
 
@@ -100,20 +105,18 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         try {
             jsonAccessRefreshMap = om.writeValueAsString(accessRefreshMap);
+            Cookie cookie = new Cookie("accessRefreshToken",jsonAccessRefreshMap);
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            servletResponse.addCookie(cookie);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
-        writeResponse(jsonAccessRefreshMap);
-        writeResponse(membership.getId().toString());
+        
+//        writeResponse(jsonAccessRefreshMap);
+//        writeResponse(membership.getId().toString());
         jwtService.updateRefreshToken(email, refreshToken);
 
-        try {
-            servletResponse.sendRedirect("https://iamnotalone.vercel.app");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        
         return new PrincipalDetails(membership, oAuth2User.getAttributes());
     }
 
