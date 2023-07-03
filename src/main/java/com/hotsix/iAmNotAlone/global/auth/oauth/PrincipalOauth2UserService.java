@@ -82,12 +82,12 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
 //        writeResponse(savedMember.getId().toString());
         try {
-            String memberId = URLEncoder.encode(savedMember.getId().toString(), StandardCharsets.UTF_8.toString());
+            String memberId = URLEncoder.encode(savedMember.getId().toString(), StandardCharsets.UTF_8);
             Cookie cookie = new Cookie("memberId", memberId);
             cookie.setSecure(true);
             cookie.setHttpOnly(true);
             servletResponse.addCookie(cookie);
-            servletResponse.sendRedirect("https://iamnotalone.vercel.app/socialsignup/"+savedMember.getId().toString());
+            servletResponse.sendRedirect("https://iamnotalone.vercel.app/socialsignup/"+savedMember.getId());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -111,14 +111,11 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             cookie.setSecure(true);
             cookie.setHttpOnly(true);
             servletResponse.addCookie(cookie);
-            servletResponse.sendRedirect("https://iamnotalone.vercel.app");
+            servletResponse.sendRedirect("https://iamnotalone.vercel.app/");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-
-//        writeResponse(jsonAccessRefreshMap);
-//        writeResponse(membership.getId().toString());
         jwtService.updateRefreshToken(email, refreshToken);
 
         return new PrincipalDetails(membership, oAuth2User.getAttributes());
