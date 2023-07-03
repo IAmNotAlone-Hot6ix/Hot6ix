@@ -42,13 +42,15 @@ public class OAuthSignUpService {
         String accessToken = jwtService.createAccessToken(membership.getId(), membership.getEmail());
         String refreshToken = jwtService.createRefreshToken();
 
+
         Map<String, String> map = jwtService.sendAccessAndRefreshToken(accessToken, refreshToken);
+
+        jwtService.updateRefreshToken(membership.getEmail(),refreshToken);
 
         membership.updateMembership(form, region);
 
         return map;
     }
-
     /**
      * 닉네임 중복 검사
      */
