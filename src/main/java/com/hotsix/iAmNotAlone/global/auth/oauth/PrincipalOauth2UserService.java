@@ -42,9 +42,13 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
 
+
+        String url;
+
         String email = (String) kakaoAccount.get("email");
         String nickname = (String) properties.get("nickname");
-        String url = (String) properties.get("profile_image");
+        String imgPath = (String) properties.get("profile_image");
+        log.info(imgPath);
         String password = passwordEncoder.encode(clientId);
 
 
