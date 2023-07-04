@@ -10,6 +10,7 @@ import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.exception.business.ErrorCode;
+import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +40,8 @@ public class CommentsRegisterService {
                 .nickName(comments.getMembership().getNickname())
                 .content(comments.getContent())
                 .imgPath(comments.getMembership().getImgPath())
-                .createdAt(comments.getCreatedAt())
+                .createdAt(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                    .format(comments.getCreatedAt()))
                 .commentId(comments.getId())
                 .memberId(comments.getMembership().getId())
                 .build();

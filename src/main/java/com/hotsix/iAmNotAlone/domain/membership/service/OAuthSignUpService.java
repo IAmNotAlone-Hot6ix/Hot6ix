@@ -10,7 +10,6 @@ import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.exception.business.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,13 +41,15 @@ public class OAuthSignUpService {
         String accessToken = jwtService.createAccessToken(membership.getId(), membership.getEmail());
         String refreshToken = jwtService.createRefreshToken();
 
+
         Map<String, String> map = jwtService.sendAccessAndRefreshToken(accessToken, refreshToken);
+
+        jwtService.updateRefreshToken(membership.getEmail(),refreshToken);
 
         membership.updateMembership(form, region);
 
         return map;
     }
-
     /**
      * 닉네임 중복 검사
      */
