@@ -50,14 +50,14 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         log.info(imgPath);
         String password = passwordEncoder.encode(clientId);
 
-        url = s3UploadService.OAuthUploadFile(imgPath).getUploadFileUrl();
+//        url = s3UploadService.OAuthUploadFile(imgPath).getUploadFileUrl();
 
         Optional<Membership> memberOptional = membershipRepository.findByEmail(email);
 
         Region region = Region.builder().id(1L).build();
 
         if (!memberOptional.isPresent()) {
-            return handleNewMembership(email, password, nickname, url, region, oAuth2User);
+            return handleNewMembership(email, password, nickname, imgPath, region, oAuth2User);
         } else {
             return handleExistingMembership(memberOptional.get(), email, oAuth2User);
         }
