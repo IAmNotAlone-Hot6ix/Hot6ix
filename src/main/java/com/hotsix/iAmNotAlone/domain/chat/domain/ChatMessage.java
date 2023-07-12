@@ -1,17 +1,12 @@
 package com.hotsix.iAmNotAlone.domain.chat.domain;
 
 import com.hotsix.iAmNotAlone.domain.chat.dto.AddChatMessageFrom;
-import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,6 +37,8 @@ public class ChatMessage {
 
     private String message;
 
+    private int unRead;
+
     public static ChatMessage of(AddChatMessageFrom form) {
 
         return ChatMessage.builder()
@@ -49,6 +46,12 @@ public class ChatMessage {
             .senderId(form.getSenderId())
             .message(form.getMessage())
             .createdAt(form.getCreatedAt())
+            .unRead(form.getUnRead())
             .build();
     }
+
+    public void readCheck() {
+        this.unRead = 0;
+    }
+
 }

@@ -7,15 +7,18 @@ import com.hotsix.iAmNotAlone.domain.membership.model.dto.MembershipSummaryDto;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Builder
+@Setter
 public class ChatRoomDto {
 
     private Long chatRoomId;
     private MembershipSummaryDto partner;
     private String lastMessage;
     private LocalDateTime lastTime;
+    private Long unRead;
 
     public static ChatRoomDto from(ChatRoom chatRoom, Membership partner, ChatMessage message) {
         return ChatRoomDto.builder()

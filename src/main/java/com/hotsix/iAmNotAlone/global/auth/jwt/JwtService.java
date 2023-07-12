@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -125,6 +124,15 @@ public class JwtService {
     public Optional<String> extractUsername(String accessToken) {
         try {
             return Optional.ofNullable(JWT.require(Algorithm.HMAC512(SECRET)).build().verify(accessToken).getClaim("email").asString());
+
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Long> extractUserId(String accessToken) {
+        try {
+            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(SECRET)).build().verify(accessToken).getClaim("id").asLong());
 
         } catch (Exception e) {
             return Optional.empty();

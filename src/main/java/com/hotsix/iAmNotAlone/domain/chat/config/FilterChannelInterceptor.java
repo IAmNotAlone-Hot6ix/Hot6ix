@@ -2,7 +2,9 @@ package com.hotsix.iAmNotAlone.domain.chat.config;
 
 import static com.hotsix.iAmNotAlone.global.auth.jwt.JwtProperties.TOKEN_PREFIX;
 
+import com.hotsix.iAmNotAlone.domain.chat.service.ChatMessageService;
 import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
+import com.hotsix.iAmNotAlone.global.util.RedisUtil;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -21,6 +23,8 @@ import org.springframework.stereotype.Component;
 public class FilterChannelInterceptor implements ChannelInterceptor {
 
     private final JwtService jwtService;
+    private final RedisUtil redisUtil;
+    private final ChatMessageService chatMessageService;
 
 
     /**
@@ -31,7 +35,7 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(message);
 
         if (StompCommand.CONNECT.equals(stompHeaderAccessor.getCommand())
-                || StompCommand.SEND.equals(stompHeaderAccessor.getCommand())) {
+                ) {
             log.info("StompCommand.CONNECT");
             
             // Authorization 의 값 중 첫번째 값
@@ -66,6 +70,7 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
         StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
         String sessionId = accessor.getSessionId();
 
+
         switch (Objects.requireNonNull(accessor.getCommand())) {
             case CONNECT:
                 // 웹소켓 클라이언트가 connect()를 호출하여 연결한 경우
@@ -73,11 +78,49 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
                 log.info("sessionId: {}", sessionId);
 
                 break;
+            case SUBSCRIBE:
+                log.info("SUBSCRIBE");
+                log.info("sessionId: {}", sessionId);
+                String sRoomId = accessor.getDestination().split("/")[3];
+
+                redisUtil.setData(sessionId, sRoomId);
+                redisUtil.addConnect("chatRoomId: " + sRoomId);
+                log.info("채팅방에 들어와있는 유저수: " + redisUtil.getData("chatRoomId: " + sRoomId));
+
+                String token = accessor.getFirstNativeHeader("Authorization");
+                if (token != null && token.startsWith(TOKEN_PREFIX)) {
+                    String jwtToken = token.replace(TOKEN_PREFIX, "");
+
+                    Long membershipId = jwtService.extractUserId(jwtToken).get();
+                    Long roomId = Long.parseLong(sRoomId);
+
+                    Long unReadCount = chatMessageService.unReadCount(roomId, membershipId);
+
+                    log.info(unReadCount);
+                    if (unReadCount != 0) {
+                        chatMessageService.readCheck(roomId, membershipId);
+                    }
+
+                }
+                break;
+            case UNSUBSCRIBE:
+                log.info("UNSUBSCRIBE");
+                log.info("sessionId: {}", sessionId);
+                String dRoomId = redisUtil.getData(sessionId);
+                redisUtil.deleteConnect("chatRoomId: " + dRoomId);
+                log.info("채팅방에 들어와있는 유저수: " + redisUtil.getData("chatRoomId: " + dRoomId));
+
             case DISCONNECT:
                 // 웹소켓 클라이언트가 disconnect()를 호출하여 연결을 종료한 경우 또는 세션이 끊어진 경우
                 log.info("DISCONNECT");
                 log.info("sessionId: {}", sessionId);
 
+                break;
+            case SEND:
+                log.info("SEND");
+                log.info("sessionId: " + sessionId);
+                String sendRoomId = redisUtil.getData(sessionId);
+                log.info("채팅방에 들어와있는 유저수: " + redisUtil.getData("chatRoomId: " + sendRoomId));
                 break;
             default:
                 break;

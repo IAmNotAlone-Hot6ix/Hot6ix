@@ -18,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ChatMessageService {
 
     private final ChatMessageRepository chatMessageRepository;
-    private final ChatRoomRepository chatRoomRepository;
-    private final MembershipRepository membershipRepository;
+//    private final ChatRoomRepository chatRoomRepository;
+//    private final MembershipRepository membershipRepository;
 
     @Transactional
-    public Long addMessage(AddChatMessageFrom form) {
+    public void addMessage(AddChatMessageFrom form) {
 //        ChatRoom chatRoom = chatRoomRepository.findById(form.getChatRoomId()).orElseThrow(
 //            () -> new BusinessException(ErrorCode.NOT_FOUND_CHATROOM)
 //        );
@@ -33,7 +33,6 @@ public class ChatMessageService {
 
         ChatMessage chatMessage = chatMessageRepository.save(
             ChatMessage.of(form));
-        return chatMessage.getId();
     }
 
     public List<ChatMessageDto> getMessageList(Long roomId) {
@@ -42,5 +41,22 @@ public class ChatMessageService {
 //        );
         return chatMessageRepository.findByChatRoomIdOrderByCreatedAt(roomId).stream().map(
             ChatMessageDto::from).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void readCheck(Long roomId, Long membershipId) {
+//        chatMessageRepository.getUnReadMessage(roomId, membershipId)
+//            .forEach(ChatMessage::readCheck);
+        List<ChatMessage> unReadMessage = chatMessageRepository.getUnReadMessage(roomId,
+            membershipId);
+
+        for (ChatMessage cm : unReadMessage) {
+            cm.readCheck();
+        }
+
+    }
+
+    public Long unReadCount(Long roomId, Long membershipId) {
+        return chatMessageRepository.countUnReadMessage(roomId, membershipId);
     }
 }
