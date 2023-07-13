@@ -33,6 +33,20 @@ public class RedisUtil {
         valueOperations.set(key, value, expireDuration);
     }
 
+    // 유효 시간 없이 (key, value) 저장
+    public void setData(String key, String value) {
+        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
+        valueOperations.set(key, value);
+    }
+
+    public void addConnect(String roomId) {
+        redisTemplate.opsForValue().increment(roomId, 1);
+    }
+
+    public void deleteConnect(String roomId) {
+        redisTemplate.opsForValue().decrement(roomId, 1);
+    }
+
     // 삭제
     public void deleteData(String key) {
         redisTemplate.delete(key);

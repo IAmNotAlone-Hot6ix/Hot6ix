@@ -16,4 +16,10 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
     // 채팅방 리스트에서 마지막 채팅 기록 가져오기
     Optional<ChatMessage> findFirstByChatRoomIdOrderByCreatedAtDesc(Long id);
 
+    @Query("SELECT COUNT(cm) FROM ChatMessage cm WHERE cm.chatRoomId = :roomId and cm.senderId <> :membershipId and cm.unRead = 1")
+    Long countUnReadMessage(Long roomId, Long membershipId);
+
+    @Query("SELECT cm FROM ChatMessage  cm WHERE cm.chatRoomId = :roomId and cm.senderId <> :membershipId and cm.unRead = 1")
+    List<ChatMessage> getUnReadMessage(Long roomId, Long membershipId);
+
 }
