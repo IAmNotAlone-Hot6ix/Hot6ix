@@ -48,6 +48,16 @@ public class JwtService {
         return TOKEN_PREFIX + token;
     }
 
+    public String createExpiredAccessToken() {
+        log.info("어세스 토큰 생성");
+        String token = JWT.create()
+                .withSubject(ACCESS_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(System.currentTimeMillis()-1))
+                .sign(Algorithm.HMAC512(SECRET));
+
+        return TOKEN_PREFIX + token;
+    }
+
     public String createRefreshToken() {
         log.info("리프래시 토큰 생성");
         String token = JWT.create()

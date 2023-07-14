@@ -61,4 +61,22 @@ public class SignUpController {
         return ResponseEntity.ok(token);
     }
 
+    @PostMapping("/api/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response){
+
+        String expiredAccessToken = jwtService.createExpiredAccessToken();
+        response.setHeader("Authorization",expiredAccessToken);
+        return ResponseEntity.ok(expiredAccessToken);
+    }
+
+//    @PostMapping("/logout/{memberId}")
+//    public ResponseEntity<String> logout(HttpServletResponse response,@PathVariable Long memberId){
+//
+////        String email = jwtService.extractEmail(memberId);
+////        jwtService.destroyRefreshToken(email);
+//        String expiredAccessToken = jwtService.createExpiredAccessToken();
+//        response.setHeader("Authorization",expiredAccessToken);
+//        return ResponseEntity.ok(expiredAccessToken);
+//    }
+
 }
