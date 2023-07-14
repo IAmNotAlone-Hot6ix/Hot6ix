@@ -3,7 +3,8 @@ package com.hotsix.iAmNotAlone.domain.likes.service;
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_POST;
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_USER;
 
-import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
+import com.hotsix.iAmNotAlone.domain.likes.entity.Likes;
+import com.hotsix.iAmNotAlone.domain.likes.repository.LikesRepository;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
@@ -21,40 +22,36 @@ public class LikesRemoveService {
     private final RedisUtil redisUtil;
     private final PostRepository postRepository;
     private final MembershipRepository membershipRepository;
+    private final LikesRepository likesRepository;
+
 
 
     /**
      * 좋아요 카운트--
      */
     @Transactional
-    public boolean deleteLike(String postId, String memberId) {
+    public boolean deleteLike(Long postId, Long memberId) {
 
         // id 체크
-        if(!postRepository.existsById(Long.valueOf(postId))) {
+        if(!postRepository.existsById(postId)) {
             throw new BusinessException(NOT_FOUND_POST);
         }
 
-        Membership membership = membershipRepository.findById(Long.valueOf(memberId))
-            .orElseThrow(() -> new BusinessException(NOT_FOUND_USER));
+        if(!membershipRepository.existsById(memberId)) {
+            throw new BusinessException(NOT_FOUND_USER);
+        }
 
-        String key = getLikeKey(postId);
+        // redis 게시글의 좋아요 수 count--
+        String key = redisUtil.getLikeKey(String.valueOf(postId));
         redisUtil.removeLike(key);
 
-        // 회원 좋아요 게시글 list
-        membership.updateLikeList(postId, false);
+        // 회원이 좋아요한 게시글 삭제
+        Likes likes = likesRepository.findByMemberIdAndPostId(memberId, postId);
 
-        // 변경 사항 반영
-        membershipRepository.save(membership);
+        likesRepository.delete(likes);
 
         log.info("likes decrement");
         return false;
     }
 
-
-    /**
-     * redis key 조합
-     */
-    private String getLikeKey(String postId) {
-        return "likes:" + postId;
-    }
 }

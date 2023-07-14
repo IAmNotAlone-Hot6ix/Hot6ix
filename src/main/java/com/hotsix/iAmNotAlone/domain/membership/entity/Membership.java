@@ -7,17 +7,24 @@ import com.hotsix.iAmNotAlone.domain.membership.model.form.ModifyMembershipForm;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.global.auth.common.Role;
 import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
+import java.time.LocalDate;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.envers.AuditOverride;
-
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -45,11 +52,6 @@ public class Membership extends BaseEntity {
 
     @Column(name = "img_path")
     private String imgPath;
-
-    @Convert(converter = ListToStringConverter.class)
-    @Column(name = "likelist")
-    @Default
-    private List<String> likelist = new ArrayList<>();
 
     private String refreshToken;
 
@@ -99,15 +101,15 @@ public class Membership extends BaseEntity {
     /**
      * likelist 수정
      */
-    public void updateLikeList(String postId, boolean isLikeOperation) {
-        this.likelist.remove("");
-
-        if (isLikeOperation) {
-            this.likelist.add(String.valueOf(postId));
-        } else {
-            this.likelist.remove(String.valueOf(postId));
-        }
-    }
+//    public void updateLikeList(Long postId, boolean isLikeOperation) {
+//        this.likes.remove("");
+//
+//        if (isLikeOperation) {
+//            this.likes.add(postId);
+//        } else {
+//            this.likes.remove(String.valueOf(postId));
+//        }
+//    }
 
     public void updateMembership(AddMembershipOAuthForm form, Region region) {
         if (form.getNickname() != null) {
