@@ -93,6 +93,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         try {
             // 토큰 정보를 JSON으로 변환
+            servletResponse.sendRedirect("https://iamnotalone.vercel.app/main");
             String jsonResponse = new ObjectMapper().writeValueAsString(tokenResponseDTO);
 
             // HTTP 응답 설정
@@ -102,7 +103,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             servletResponse.setHeader("Authorization",accessToken);
             servletResponse.setHeader("oauth",accessToken);
             jwtService.updateRefreshToken(email, refreshToken);
-            servletResponse.sendRedirect("https://iamnotalone.vercel.app/main");
+            
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
