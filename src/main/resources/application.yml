@@ -25,6 +25,10 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+    session:
+      cookie:
+        same-site: none
+        secure: true
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
