@@ -40,7 +40,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             additionalInputUri = "https://iamnotalone.vercel.app/socialsignup/"+member.getId();
             getRedirectStrategy().sendRedirect(request, response, additionalInputUri);
         }else {
-            additionalInputUri = "https://iamnotalone.vercel.app/main";
+            additionalInputUri = "https://iamnotalone.vercel.app/";
             addCookie(response,"accessToken",accessToken);
             addCookie(response,"refreshToken",refreshToken);
             addCookie(response,"accountId",member.getId());
