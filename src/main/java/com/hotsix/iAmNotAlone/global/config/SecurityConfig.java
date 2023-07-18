@@ -5,6 +5,7 @@ import com.hotsix.iAmNotAlone.global.auth.jwt.JwtService;
 import com.hotsix.iAmNotAlone.global.auth.jwt.filter.JwtAuthenticationFilter;
 import com.hotsix.iAmNotAlone.global.auth.jwt.filter.JwtAuthorizationFilter;
 import com.hotsix.iAmNotAlone.global.auth.oauth.PrincipalOauth2UserService;
+import com.hotsix.iAmNotAlone.global.auth.oauth.handler.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -26,12 +27,15 @@ public class SecurityConfig {
     private final CorsConfig corsConfig;
     private final MembershipRepository membershipRepository;
     private final PrincipalOauth2UserService principalOauth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .oauth2Login()
                 .loginPage("/login")
+                .successHandler(oAuth2SuccessHandler)
+//                .failureHandler(oAuth2FailHandler)
                 .userInfoEndpoint()
                 .userService(principalOauth2UserService);
 
