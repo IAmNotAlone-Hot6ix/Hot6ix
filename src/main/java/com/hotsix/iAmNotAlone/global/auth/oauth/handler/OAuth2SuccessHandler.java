@@ -37,10 +37,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String refreshToken = jwtService.createRefreshToken();
 
         if (member.getRegion().getId()==26){
-            additionalInputUri = "http://127.0.0.1:5173/socialsignup/"+member.getId();
+            additionalInputUri = "https://iamnotalone.vercel.app/socialsignup/"+member.getId();
             getRedirectStrategy().sendRedirect(request, response, additionalInputUri);
         }else {
-            additionalInputUri = "http://127.0.0.1:5173/main";
+            additionalInputUri = "https://iamnotalone.vercel.app/main";
             addCookie(response,"accessToken",accessToken);
             addCookie(response,"refreshToken",refreshToken);
             addCookie(response,"accountId",member.getId());
