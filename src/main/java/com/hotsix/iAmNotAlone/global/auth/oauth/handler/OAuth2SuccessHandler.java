@@ -53,6 +53,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private static void addCookie(HttpServletResponse response,String name,String value,boolean httpOnly){
         value = URLEncoder.encode(value, StandardCharsets.UTF_8);
         Cookie cookie = new Cookie(name, value);
+        cookie.setDomain("");
         cookie.setHttpOnly(httpOnly);
         cookie.setPath("/");
         response.addCookie(cookie);
