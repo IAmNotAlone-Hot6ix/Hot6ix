@@ -59,9 +59,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(cookie);
     }
     private static void addCookie(HttpServletResponse response,String name,String value){
-        addCookie(response,name,value,true);
+        addCookie(response,name,value,false);
     }
     private static void addCookie(HttpServletResponse response,String name,Long value){
-        addCookie(response,name,String.valueOf(value),true);
+        addCookie(response,name,String.valueOf(value),false);
     }
 }
