@@ -1,5 +1,6 @@
 package com.hotsix.iAmNotAlone.domain.post.service;
 
+import com.hotsix.iAmNotAlone.domain.likes.service.LikesRemoveAllService;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
@@ -19,6 +20,8 @@ public class PostRemoveService {
 
     private final PostRepository postRepository;
     private final S3UploadService s3UploadService;
+    private final LikesRemoveAllService likesRemoveAllService;
+
 
     @Transactional
     public void removePost(Long id) {
@@ -32,6 +35,9 @@ public class PostRemoveService {
                 s3UploadService.deleteFile(split[1]);
             }
         }
+
+        // 좋아요 엔티티에서 데이터 삭제(작성한 게시물 기준)
+        likesRemoveAllService.deletePostLikes(id);
         postRepository.deleteById(id);
     }
 
@@ -45,6 +51,9 @@ public class PostRemoveService {
                     s3UploadService.deleteFile(split[1]);
                 }
             }
+
+            // 좋아요 엔티티에서 데이터 삭제(작성한 게시물 기준)
+            likesRemoveAllService.deletePostLikes(p.getId());
         }
         postRepository.deleteAllByMembershipId(id);
     }
