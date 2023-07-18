@@ -41,10 +41,10 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             getRedirectStrategy().sendRedirect(request, response, additionalInputUri);
         }else {
             additionalInputUri = "https://iamnotalone.vercel.app/";
-            getRedirectStrategy().sendRedirect(request, response, additionalInputUri);
             addCookie(response,"accessToken",accessToken);
             addCookie(response,"refreshToken",refreshToken);
             addCookie(response,"accountId",member.getId());
+            getRedirectStrategy().sendRedirect(request, response, additionalInputUri);
             jwtService.updateRefreshToken(email,refreshToken);
         }
 
