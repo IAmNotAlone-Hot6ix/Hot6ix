@@ -55,6 +55,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(httpOnly);
         cookie.setPath("/");
+        cookie.setDomain("https://iamnotalone.vercel.app");
         response.addCookie(cookie);
     }
     private static void addCookie(HttpServletResponse response,String name,String value){
