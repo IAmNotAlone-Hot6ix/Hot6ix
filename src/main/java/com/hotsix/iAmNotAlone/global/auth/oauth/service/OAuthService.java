@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
@@ -146,7 +145,6 @@ public class OAuthService {
         }
     }
 
-    @ResponseBody
     public ResponseEntity<LoginResponseDto> kakaoLogin(String kakaoAccessToken) {
         Membership membership = getKakaoInfo(kakaoAccessToken);
 
