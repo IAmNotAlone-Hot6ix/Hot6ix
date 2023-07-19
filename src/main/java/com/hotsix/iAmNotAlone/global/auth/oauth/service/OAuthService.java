@@ -50,7 +50,7 @@ public class OAuthService {
 //    @Value("${KAKAO_INFO_KEY}")
 //    private String kakaoInfoKey;
 
-    private String kakaoRedirectKey="https://hot-six-fe.vercel.app/login/oauth2/code/kakao";
+    private String kakaoRedirectKey="https://hot-six-fe.vercel.app";
     private String kakaoTokenKey="https://kauth.kakao.com/oauth/token";
     private String kakaoInfoKey="https://kapi.kakao.com/v2/user/me";
 
