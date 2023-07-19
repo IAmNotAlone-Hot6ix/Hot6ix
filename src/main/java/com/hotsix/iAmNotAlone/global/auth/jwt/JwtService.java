@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -52,7 +51,7 @@ public class JwtService {
         log.info("어세스 토큰 생성");
         String token = JWT.create()
                 .withSubject(ACCESS_TOKEN_SUBJECT)
-                .withExpiresAt(new Date(System.currentTimeMillis()-1))
+                .withExpiresAt(new Date(System.currentTimeMillis() - 1))
                 .sign(Algorithm.HMAC512(SECRET));
 
         return TOKEN_PREFIX + token;
@@ -103,19 +102,6 @@ public class JwtService {
         tokenMap.put(REFRESH_TOKEN_SUBJECT, refreshToken);
 
         return tokenMap;
-    }
-
-    public Map<String, String> sendURLAccessAndRefreshToken(String accessToken, String refreshToken) {
-
-        Map<String, String> tokenMap = new HashMap<>();
-
-        String encodedAccessToken = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
-        String encodedRefreshToken = URLEncoder.encode(refreshToken, StandardCharsets.UTF_8);
-        tokenMap.put(ACCESS_TOKEN_SUBJECT, encodedAccessToken);
-        tokenMap.put(REFRESH_TOKEN_SUBJECT, encodedRefreshToken);
-        return tokenMap;
-
-
     }
 
     public Map<String, String> sendAccessToken(HttpServletResponse response, String accessToken) {
