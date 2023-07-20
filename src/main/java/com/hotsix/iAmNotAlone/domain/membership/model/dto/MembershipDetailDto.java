@@ -1,11 +1,10 @@
 package com.hotsix.iAmNotAlone.domain.membership.model.dto;
 
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
+import com.hotsix.iAmNotAlone.domain.personality.entity.Personality;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
-import lombok.Data;
-
 import java.time.LocalDate;
-import java.util.List;
+import lombok.Data;
 
 @Data
 public class MembershipDetailDto {
@@ -17,7 +16,7 @@ public class MembershipDetailDto {
     private int gender;
     private LocalDate birth;
     private Region region;
-    private List<String> personality;
+    private Personality personality;
     private String introduction;
 
     public MembershipDetailDto(Membership membership) {
