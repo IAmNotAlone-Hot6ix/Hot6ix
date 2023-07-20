@@ -6,7 +6,7 @@ import com.hotsix.iAmNotAlone.global.auth.oauth.service.OAuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +17,7 @@ public class OAuthController {
 
     private final OAuthService oauthService;
 
-    @GetMapping("/login/oauth2/code/kakao")
+    @PostMapping("/login/oauth2/code/kakao")
     public ResponseEntity<LoginResponseDto> kakaoLogin(@RequestBody OAuth2CodeForm form) {
 //        String code = request.getParameter("code");
         String code = form.getCode();
