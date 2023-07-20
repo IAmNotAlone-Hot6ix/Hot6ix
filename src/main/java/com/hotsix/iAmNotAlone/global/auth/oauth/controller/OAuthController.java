@@ -20,6 +20,7 @@ public class OAuthController {
     @GetMapping("/login/oauth2/code/kakao")
     public ResponseEntity<LoginResponseDto> kakaoLogin(HttpServletRequest request) {
         String code = request.getParameter("code");
+        log.info("code==================================="+code);
         String kakaoAccessToken = oauthService.getKakaoAccessToken(code).getAccess_token();
         log.info("카카오톡 어세스 토큰 발급완료");
         return oauthService.kakaoLogin(kakaoAccessToken);
