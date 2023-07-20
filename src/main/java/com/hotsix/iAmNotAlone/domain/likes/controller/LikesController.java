@@ -26,8 +26,7 @@ public class LikesController {
     public ResponseEntity<Boolean> addLikes(@PathVariable Long postId,
         @PathVariable Long memberId) {
         return ResponseEntity.ok(
-            likesRegisterService.addLike(String.valueOf(postId),
-                String.valueOf(memberId)));
+            likesRegisterService.addLike(postId, memberId));
     }
 
     /**
@@ -37,7 +36,6 @@ public class LikesController {
     public ResponseEntity<Boolean> deleteLikes(@PathVariable Long postId,
         @PathVariable Long memberId) {
         return ResponseEntity.ok(
-            likesRemoveService.deleteLike(String.valueOf(postId),
-                String.valueOf(memberId)));
+            likesRemoveService.deleteLike(postId, memberId));
     }
 }

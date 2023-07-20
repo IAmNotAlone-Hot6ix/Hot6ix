@@ -4,23 +4,34 @@ import com.hotsix.iAmNotAlone.domain.common.BaseEntity;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipOAuthForm;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.ModifyMembershipForm;
+import com.hotsix.iAmNotAlone.domain.personality.entity.Personality;
+import com.hotsix.iAmNotAlone.domain.personality.model.form.PersonalityDto;
 import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.global.auth.common.Role;
-import com.hotsix.iAmNotAlone.global.util.ListToStringConverter;
+import java.time.LocalDate;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.envers.AuditOverride;
-
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,33 +57,32 @@ public class Membership extends BaseEntity {
     @Column(name = "img_path")
     private String imgPath;
 
-    @Convert(converter = ListToStringConverter.class)
-    @Column(name = "likelist")
-    @Default
-    private List<String> likelist = new ArrayList<>();
-
     private String refreshToken;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Convert(converter = ListToStringConverter.class)
-    private List<String> personality;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "personality_id")
+    private Personality personality;
+    @Transient
+    private PersonalityDto personalityDto;
 
 
-    public static Membership of(AddMembershipForm form, Region region, String password, String url) {
+    public static Membership of(AddMembershipForm form, Region region, String password, String url,
+        Personality personality) {
         return Membership.builder()
-                .email(form.getEmail())
-                .nickname(form.getNickname())
-                .password(password)
-                .birth(form.getBirth())
-                .gender(form.getGender())
-                .introduction(form.getIntroduction())
-                .imgPath(url)
-                .region(region)
-                .personality(form.getPersonality())
-                .role(Role.USER)
-                .build();
+            .email(form.getEmail())
+            .nickname(form.getNickname())
+            .password(password)
+            .birth(form.getBirth())
+            .gender(form.getGender())
+            .introduction(form.getIntroduction())
+            .imgPath(url)
+            .region(region)
+            .personality(personality)
+            .role(Role.USER)
+            .build();
     }
 
     public void updateRefreshToken(String refreshToken) {
@@ -83,12 +93,13 @@ public class Membership extends BaseEntity {
         this.refreshToken = null;
     }
 
-    public void updateMembership(ModifyMembershipForm form, Region region) {
+    public void updateMembership(ModifyMembershipForm form, Region region,
+        Personality personality) {
         this.nickname = form.getNickname();
         this.introduction = form.getIntroduction();
         this.imgPath = form.getImgPath();
         this.region = region;
-        this.personality = form.getPersonality();
+        this.personality = personality;
     }
 
     public void updatePassword(String password) {
@@ -96,20 +107,8 @@ public class Membership extends BaseEntity {
     }
 
 
-    /**
-     * likelist 수정
-     */
-    public void updateLikeList(String postId, boolean isLikeOperation) {
-        this.likelist.remove("");
-
-        if (isLikeOperation) {
-            this.likelist.add(String.valueOf(postId));
-        } else {
-            this.likelist.remove(String.valueOf(postId));
-        }
-    }
-
-    public void updateMembership(AddMembershipOAuthForm form, Region region) {
+    public void updateMembershipAuth(AddMembershipOAuthForm form, Region region,
+        Personality personality) {
         if (form.getNickname() != null) {
             this.nickname = form.getNickname();
         }
@@ -123,7 +122,7 @@ public class Membership extends BaseEntity {
             this.region = region;
         }
         if (form.getPersonality() != null) {
-            this.personality = form.getPersonality();
+            this.personality = personality;
         }
         if (form.getGender() != null) {
             this.gender = form.getGender();

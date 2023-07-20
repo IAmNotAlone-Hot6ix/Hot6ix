@@ -1,6 +1,6 @@
 package com.hotsix.iAmNotAlone.domain.membership.model.form;
 
-import java.util.List;
+import com.hotsix.iAmNotAlone.domain.personality.model.form.PersonalityDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,5 +14,5 @@ public class ModifyMembershipForm {
     private String introduction;
     private String imgPath;
     private Long regionId;
-    private List<String> personality;
+    private PersonalityDto personality;
 }

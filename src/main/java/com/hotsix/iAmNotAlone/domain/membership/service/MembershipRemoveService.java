@@ -2,6 +2,7 @@ package com.hotsix.iAmNotAlone.domain.membership.service;
 
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_USER;
 
+import com.hotsix.iAmNotAlone.domain.likes.service.LikesRemoveAllService;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.domain.post.service.PostRemoveService;
@@ -18,6 +19,7 @@ public class MembershipRemoveService {
     private final MembershipRepository membershipRepository;
     private final S3UploadService s3UploadService;
     private final PostRemoveService postRemoveService;
+    private final LikesRemoveAllService likesRemoveAllService;
 
     /**
      * 회원 삭제
@@ -33,6 +35,13 @@ public class MembershipRemoveService {
             s3UploadService.deleteFile(split[1]);
         }
 
+        // 유저가 좋아요한 게시글 count--
+        likesRemoveAllService.deleteLikesByMemberId(id);
+
+        //유저 성향 삭제
+
+        
+        // 유저가 작성한 게시글 삭제
         postRemoveService.removeAllPost(id);
         membershipRepository.deleteById(id);
     }

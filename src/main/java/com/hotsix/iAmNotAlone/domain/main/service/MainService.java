@@ -3,6 +3,7 @@ package com.hotsix.iAmNotAlone.domain.main.service;
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOUND_USER;
 
 import com.hotsix.iAmNotAlone.domain.comments.repository.CommentsRepository;
+import com.hotsix.iAmNotAlone.domain.likes.service.LikesGetPostId;
 import com.hotsix.iAmNotAlone.domain.main.model.dto.MainPostResponse;
 import com.hotsix.iAmNotAlone.domain.main.model.dto.MainResponse;
 import com.hotsix.iAmNotAlone.domain.main.model.dto.PostMainDto;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 public class MainService {
 
     private final MembershipGetInfoForMainService forMainService;
+    private final LikesGetPostId likesGetPostId;
 
     private final RegionRepository regionRepository;
     private final MembershipRepository membershipRepository;
@@ -69,7 +71,7 @@ public class MainService {
         log.info("Main enter");
 
         // 로그인한 회원의 게시글
-        List<Long> likesList = forMainService.getLikeList(memberId);
+        List<Long> likesList = likesGetPostId.getLikeList(memberId);
 
         // 로그인한 회원의 성별
         int gender = forMainService.getGender(memberId);

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.hotsix.iAmNotAlone.domain.personality.model.form.PersonalityDto;
 import java.time.LocalDate;
-import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,7 @@ public class AddMembershipForm {
     private int gender;
     private String introduction;
     private Long regionId;
-    private List<String> personality;
+    private PersonalityDto personality;
     private boolean verify;
 
 }

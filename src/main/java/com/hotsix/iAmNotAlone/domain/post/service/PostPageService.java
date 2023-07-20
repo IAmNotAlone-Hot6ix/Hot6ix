@@ -1,13 +1,12 @@
 package com.hotsix.iAmNotAlone.domain.post.service;
 
 import com.hotsix.iAmNotAlone.domain.comments.repository.CommentsRepository;
+import com.hotsix.iAmNotAlone.domain.likes.service.LikesGetPostId;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
-import com.hotsix.iAmNotAlone.domain.membership.service.MembershipGetInfoForMainService;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
 import com.hotsix.iAmNotAlone.domain.post.model.dto.PostResponseDto;
 import com.hotsix.iAmNotAlone.domain.post.repository.PostRepository;
-import com.hotsix.iAmNotAlone.domain.region.repository.RegionRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.exception.business.ErrorCode;
 import java.util.ArrayList;
@@ -24,15 +23,14 @@ public class PostPageService {
     private final PostRepository postRepository;
     private final MembershipRepository membershipRepository;
     private final CommentsRepository commentsRepository;
-    private final MembershipGetInfoForMainService forMainService;
-    private final RegionRepository regionRepository;
+    private final LikesGetPostId likesGetPostId;
 
     // 페이지
     public List<PostResponseDto> postPagesBy(Long lastPostId, int size, Long userId) {
         Membership membership = membershipRepository.findById(userId).orElseThrow(
                 () -> new BusinessException(ErrorCode.NOT_FOUND_USER)
         );
-        List<Long> likeList = forMainService.getLikeList(membership.getId());
+        List<Long> likeList = likesGetPostId.getLikeList(membership.getId());
         Page<Post> posts = fetchPages(lastPostId, size, userId);
         List<Post> postList = posts.getContent();
 
@@ -60,7 +58,7 @@ public class PostPageService {
                 () -> new BusinessException(ErrorCode.NOT_FOUND_USER)
         );
 
-        List<Long> likeList = forMainService.getLikeList(membership.getId());
+        List<Long> likeList = likesGetPostId.getLikeList(membership.getId());
         List<Post> postList = postRepository.findTop10ByMembershipIdOrderByIdDesc(userId);
 
         List<PostResponseDto> postResponseList = new ArrayList<>();

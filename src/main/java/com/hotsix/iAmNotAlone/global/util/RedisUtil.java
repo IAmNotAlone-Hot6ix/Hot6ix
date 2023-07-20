@@ -52,6 +52,12 @@ public class RedisUtil {
         redisTemplate.delete(key);
     }
 
+
+    // redis key 조합 (게시글 좋아요 count)
+    public String getLikeKey(String postId) {
+        return "likes:" + postId;
+    }
+
     // count increment
     public void addLike(String key) {
         redisTemplate.opsForValue().increment(key, 1);
@@ -59,7 +65,7 @@ public class RedisUtil {
 
     // count decrement
     public void removeLike(String key) {
-        redisTemplate.opsForValue().decrement(key, 1);
+        redisTemplate.opsForValue().decrement(key);
     }
 
     // findCount

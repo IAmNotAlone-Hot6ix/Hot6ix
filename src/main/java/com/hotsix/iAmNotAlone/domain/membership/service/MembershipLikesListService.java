@@ -1,6 +1,7 @@
 package com.hotsix.iAmNotAlone.domain.membership.service;
 
 import com.hotsix.iAmNotAlone.domain.comments.repository.CommentsRepository;
+import com.hotsix.iAmNotAlone.domain.likes.service.LikesGetPostId;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.LikesListDto;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.LikesListPostResponse;
 import com.hotsix.iAmNotAlone.domain.post.entity.Post;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class MembershipLikesListService {
 
-    private final MembershipGetInfoForMainService forMainService;
+    private final LikesGetPostId likesGetPostId;
 
     private final PostRepository postRepository;
     private final CommentsRepository commentsRepository;
@@ -30,7 +31,7 @@ public class MembershipLikesListService {
         log.info("member likes List enter");
 
         // 로그인한 회원 좋아요 한 게시글
-        List<Long> likesList = forMainService.getLikeList(memberId);
+        List<Long> likesList = likesGetPostId.getLikeList(memberId);
         
         // 조회해온 좋아요 게시글 리스트
         List<Post> postList =

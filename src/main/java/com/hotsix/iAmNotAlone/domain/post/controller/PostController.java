@@ -4,16 +4,27 @@ import com.hotsix.iAmNotAlone.domain.post.model.dto.PostDetailDto;
 import com.hotsix.iAmNotAlone.domain.post.model.dto.PostResponseDto;
 import com.hotsix.iAmNotAlone.domain.post.model.form.AddPostForm;
 import com.hotsix.iAmNotAlone.domain.post.model.form.ModifyPostForm;
-import com.hotsix.iAmNotAlone.domain.post.service.*;
+import com.hotsix.iAmNotAlone.domain.post.service.PostDetailService;
+import com.hotsix.iAmNotAlone.domain.post.service.PostModifyService;
+import com.hotsix.iAmNotAlone.domain.post.service.PostPageService;
+import com.hotsix.iAmNotAlone.domain.post.service.PostRegisterService;
+import com.hotsix.iAmNotAlone.domain.post.service.PostRemoveService;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,6 +36,7 @@ public class PostController {
     private final PostModifyService postModifyService;
     private final PostPageService postPageService;
     private final PostRemoveService postRemoveService;
+
 
     @PostMapping(value = "/{userId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Long> postAdd(@PathVariable(name = "userId") Long id,
@@ -62,19 +74,19 @@ public class PostController {
     public ResponseEntity<Result<List<PostResponseDto>>> getPostLowerThanId(@RequestParam Long lastPostId,
                                                                             @RequestParam int size, @PathVariable Long userId) {
         List<PostResponseDto> postResponse = postPageService.postPagesBy(lastPostId, size, userId);
-        return ResponseEntity.ok(new Result(postResponse));
+        return ResponseEntity.ok(new Result<>(postResponse));
     }
 
     // 마이페이지 게시글 세팅 api
     @GetMapping("/basic/{userId}")
     public ResponseEntity<Result<List<PostResponseDto>>> getPostInUserId(@PathVariable Long userId) {
         List<PostResponseDto> postResponse = postPageService.postBasicSetting(userId);
-        return ResponseEntity.ok(new Result(postResponse));
+        return ResponseEntity.ok(new Result<>(postResponse));
     }
 
     @Data
     @AllArgsConstructor
-    public class Result<T> {
+    public static class Result<T> {
         private T data;
     }
 

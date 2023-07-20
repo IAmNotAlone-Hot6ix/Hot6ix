@@ -29,19 +29,13 @@
 //    @DisplayName("좋아요 테스트")
 //    void addDeleteLike() throws InterruptedException {
 //
-//        final String postId = "2";  // 게시글 2
+//        final long postId = 2;  // 게시글 2
 //        ExecutorService executorService = Executors.newFixedThreadPool(50);
 //
-//        IntStream.rangeClosed(1, 25).forEach(i -> {
+//        IntStream.rangeClosed(1, 50).forEach(i -> {
 //            executorService.submit(() -> {
-//                String userId = String.valueOf(i + 7); // 로컬 DB의 유저 ID 8부터 시작하므로, i에 7을 더함
-//                likesRegisterService.addLike(postId, userId);
-//            });
-//        });
-//
-//        IntStream.rangeClosed(26, 50).forEach(i -> {
-//            executorService.submit(() -> {
-//                String userId = String.valueOf(i + 7); // 로컬 DB의 유저 ID 8부터 시작하므로, i에 7을 더함
+//                Long userId = Long.valueOf(String.valueOf(i + 7)); // 로컬 DB의 유저 ID 8부터 시작하므로, i에 7을 더함
+////                likesRegisterService.addLike(postId, userId);
 //                likesRemoveService.deleteLike(postId, userId);
 //            });
 //        });
@@ -50,7 +44,9 @@
 //        executorService.awaitTermination(1, TimeUnit.MINUTES);
 //
 //        // 검증 로직. 예를 들면, 게시글의 좋아요 수가 50/0인지, 그리고 각 유저가 해당 게시글을 좋아하는지 확인
-//        assertEquals(0, redisUtil.getLikeCount(postId));
+////        assertEquals(50, redisUtil.getLikeCount("likes:" + postId));
+//        assertEquals(0, redisUtil.getLikeCount("likes:" + postId));
+//
 //
 //    }
 //

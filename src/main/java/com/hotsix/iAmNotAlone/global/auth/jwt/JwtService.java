@@ -47,6 +47,16 @@ public class JwtService {
         return TOKEN_PREFIX + token;
     }
 
+    public String createExpiredAccessToken() {
+        log.info("어세스 토큰 생성");
+        String token = JWT.create()
+                .withSubject(ACCESS_TOKEN_SUBJECT)
+                .withExpiresAt(new Date(System.currentTimeMillis() - 1))
+                .sign(Algorithm.HMAC512(SECRET));
+
+        return TOKEN_PREFIX + token;
+    }
+
     public String createRefreshToken() {
         log.info("리프래시 토큰 생성");
         String token = JWT.create()
@@ -92,19 +102,6 @@ public class JwtService {
         tokenMap.put(REFRESH_TOKEN_SUBJECT, refreshToken);
 
         return tokenMap;
-    }
-
-    public Map<String, String> sendURLAccessAndRefreshToken(String accessToken, String refreshToken) {
-
-        Map<String, String> tokenMap = new HashMap<>();
-
-        String encodedAccessToken = URLEncoder.encode(accessToken, StandardCharsets.UTF_8);
-        String encodedRefreshToken = URLEncoder.encode(refreshToken, StandardCharsets.UTF_8);
-        tokenMap.put(ACCESS_TOKEN_SUBJECT, encodedAccessToken);
-        tokenMap.put(REFRESH_TOKEN_SUBJECT, encodedRefreshToken);
-        return tokenMap;
-
-
     }
 
     public Map<String, String> sendAccessToken(HttpServletResponse response, String accessToken) {
