@@ -127,6 +127,15 @@ public class JwtService {
         }
     }
 
+    public Optional<Long> extractUserId(String accessToken) {
+        try {
+            return Optional.ofNullable(JWT.require(Algorithm.HMAC512(SECRET)).build().verify(accessToken).getClaim("id").asLong());
+
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
     public boolean isTokenValid(String token) {
         try {
             JWT.require(Algorithm.HMAC512(SECRET)).build().verify(token);

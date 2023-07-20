@@ -27,9 +27,11 @@ public class ChatRoomListService {
         for (ChatRoom c : chatRoomRepository.findByMemberIdOrderByCreatedAtDesc(membershipId)) {
 
             if (Objects.equals(c.getSender().getId(), membershipId)) {
+
                 chatMessageRepository.findFirstByChatRoomIdOrderByCreatedAtDesc(c.getId())
                     .ifPresent(chatMessage -> chatRoomDtoList.add(
                         ChatRoomDto.from(c, c.getReceiver(), chatMessage)));
+
             } else {
                 chatMessageRepository.findFirstByChatRoomIdOrderByCreatedAtDesc(c.getId())
                     .ifPresent(chatMessage -> chatRoomDtoList.add(
@@ -37,6 +39,10 @@ public class ChatRoomListService {
             }
         }
 
+        for (ChatRoomDto chatRoomDto : chatRoomDtoList) {
+            Long unRead = chatMessageRepository.countUnReadMessage(chatRoomDto.getChatRoomId(), membershipId);
+            chatRoomDto.setUnRead(unRead);
+        }
         return chatRoomDtoList.stream()
             .sorted(Comparator.comparing(ChatRoomDto::getLastTime).reversed()).collect(
                 Collectors.toList());

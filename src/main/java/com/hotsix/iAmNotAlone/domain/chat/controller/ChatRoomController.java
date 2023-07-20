@@ -1,6 +1,5 @@
 package com.hotsix.iAmNotAlone.domain.chat.controller;
 
-import com.hotsix.iAmNotAlone.domain.chat.domain.ChatMessage;
 import com.hotsix.iAmNotAlone.domain.chat.dto.AddChatRoomForm;
 import com.hotsix.iAmNotAlone.domain.chat.dto.ChatMessageDto;
 import com.hotsix.iAmNotAlone.domain.chat.dto.ChatRoomDto;
@@ -39,4 +38,10 @@ public class ChatRoomController {
     public ResponseEntity<List<ChatMessageDto>> getChatRoomDetail(@PathVariable Long roomId) {
         return ResponseEntity.ok(chatMessageService.getMessageList(roomId));
     }
+
+//    @PutMapping("/api/chat/room/{roomId}/{membershipId}")
+//    public ResponseEntity<Void> chatMessageReadCheck(@PathVariable Long roomId, @PathVariable Long membershipId) {
+//        chatMessageService.readCheck(roomId, membershipId);
+//        return ResponseEntity.ok().build();
+//    }
 }
