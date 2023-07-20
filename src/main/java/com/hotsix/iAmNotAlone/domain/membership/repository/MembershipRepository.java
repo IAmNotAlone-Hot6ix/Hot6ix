@@ -2,6 +2,7 @@ package com.hotsix.iAmNotAlone.domain.membership.repository;
 
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import io.lettuce.core.dynamic.annotation.Param;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,5 +23,9 @@ public interface MembershipRepository extends JpaRepository<Membership, Long> {
         " join fetch m.region r" +
         " where m.id = :userId")
     Optional<Membership> findByIdMembership(@Param("userId") Long userId);
+
+
+    List<Membership> findAllByIdNotAndRegionIdAndGender(@Param("memberId") Long memberId,
+        @Param("regionId") Long regionId, @Param("gender") int gender);
 
 }
