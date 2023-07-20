@@ -37,6 +37,9 @@ public class MembershipRemoveService {
 
         // 유저가 좋아요한 게시글 count--
         likesRemoveAllService.deleteLikesByMemberId(id);
+
+        //유저 성향 삭제
+
         
         // 유저가 작성한 게시글 삭제
         postRemoveService.removeAllPost(id);

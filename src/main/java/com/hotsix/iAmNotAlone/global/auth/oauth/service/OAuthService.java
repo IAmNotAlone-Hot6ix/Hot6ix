@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
@@ -41,14 +40,18 @@ public class OAuthService {
 
     @Value("${KAKAO_REST_API_KEY}")
     private String kakaoRestApiKey;
-    @Value("${KAKAO_REDIRECT_KEY}")
-    private String kakaoRedirectKey;
     @Value("${KAKAO_SECRET_KEY}")
     private String kakaoSecretKey;
-    @Value("${KAKAO_TOKEN_KEY}")
-    private String kakaoTokenKey;
-    @Value("${KAKAO_INFO_KEY}")
-    private String kakaoInfoKey;
+//    @Value("${KAKAO_REDIRECT_KEY}")
+//    private String kakaoRedirectKey;
+//    @Value("${KAKAO_TOKEN_KEY}")
+//    private String kakaoTokenKey;
+//    @Value("${KAKAO_INFO_KEY}")
+//    private String kakaoInfoKey;
+
+    private String kakaoRedirectKey="https://iamnotalone.vercel.app/login/oauth2/code/kakao";
+    private String kakaoTokenKey="https://kauth.kakao.com/oauth/token";
+    private String kakaoInfoKey="https://kapi.kakao.com/v2/user/me";
 
     @Transactional
     public KakaoTokenDto getKakaoAccessToken(String code) {
@@ -142,7 +145,6 @@ public class OAuthService {
         }
     }
 
-    @ResponseBody
     public ResponseEntity<LoginResponseDto> kakaoLogin(String kakaoAccessToken) {
         Membership membership = getKakaoInfo(kakaoAccessToken);
 

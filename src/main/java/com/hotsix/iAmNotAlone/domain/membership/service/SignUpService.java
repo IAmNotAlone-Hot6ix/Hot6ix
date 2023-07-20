@@ -6,9 +6,11 @@ import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_FOU
 import static com.hotsix.iAmNotAlone.global.exception.business.ErrorCode.NOT_VERIFY_AUTH;
 
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
-import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.domain.membership.model.form.AddMembershipForm;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
+import com.hotsix.iAmNotAlone.domain.personality.entity.Personality;
+import com.hotsix.iAmNotAlone.domain.personality.repository.PersonalityRepository;
+import com.hotsix.iAmNotAlone.domain.region.entity.Region;
 import com.hotsix.iAmNotAlone.domain.region.repository.RegionRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import com.hotsix.iAmNotAlone.global.util.S3UploadService;
@@ -29,6 +31,8 @@ public class SignUpService {
     private final RegionRepository regionRepository;
     private final PasswordEncoder passwordEncoder;
     private final S3UploadService s3UploadService;
+    private final PersonalityRepository personalityRepository;
+
 
     @Transactional
     public Long signUp(AddMembershipForm form, MultipartFile multipartFile) {
@@ -46,8 +50,16 @@ public class SignUpService {
         }
 
         String password = passwordEncoder.encode(form.getPassword());
-        Membership membership = membershipRepository.save(Membership.of(form, region, password, url));
-        return membership.getId();
+
+        // 회원 성향 생성 (개인성향, 선호성향)
+        Personality personality = Personality.from(form.getPersonality());
+        Personality savedPersonality = personalityRepository.save(personality);
+
+        // 회원 저장 데이터
+        Membership membership = Membership.of(form, region, password, url, savedPersonality);
+        Membership savedMembership = membershipRepository.save(membership);
+
+        return savedMembership.getId();
     }
 
     /**
