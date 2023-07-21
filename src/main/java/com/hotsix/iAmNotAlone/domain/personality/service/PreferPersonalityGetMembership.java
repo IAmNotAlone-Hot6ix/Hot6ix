@@ -6,10 +6,7 @@ import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.domain.personality.model.dto.UserPersonalityDto;
 import com.hotsix.iAmNotAlone.domain.personality.model.dto.UserRecommendationDto;
-import com.hotsix.iAmNotAlone.domain.personality.type.ActiveTimeType;
 import com.hotsix.iAmNotAlone.domain.personality.type.MbtiGoodType;
-import com.hotsix.iAmNotAlone.domain.personality.type.PetsType;
-import com.hotsix.iAmNotAlone.domain.personality.type.SmokingType;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -153,9 +150,9 @@ public class PreferPersonalityGetMembership {
             .personality(UserPersonalityDto.builder()
                 .userPersonalityId(membership.getPersonality().getId())
                 .mbti(membership.getPersonality().getMbti())
-                .smoking(SmokingType.getById(membership.getPersonality().getSmoking()))
-                .activeTime(ActiveTimeType.getById(membership.getPersonality().getActiveTime()))
-                .pets(PetsType.getById(membership.getPersonality().getPets()))
+                .smoking(membership.getPersonality().getSmoking())
+                .activeTime(membership.getPersonality().getActiveTime())
+                .pets(membership.getPersonality().getPets())
                 .build())
             .build();
     }

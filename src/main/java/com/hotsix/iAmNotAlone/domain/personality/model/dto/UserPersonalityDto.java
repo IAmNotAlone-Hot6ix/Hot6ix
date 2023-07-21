@@ -9,8 +9,8 @@ public class UserPersonalityDto {
 
     private Long userPersonalityId;
     private String mbti;
-    private String smoking;
-    private String activeTime;
-    private String pets;
+    private int smoking;
+    private int activeTime;
+    private int pets;
 
 }
