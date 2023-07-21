@@ -48,6 +48,12 @@ public class PreferPersonalityGetMembership {
         List<Membership> memberships, Long size) {
 
         log.info("getRecommendedMembers enter");
+
+        if (memberships == null || memberships.isEmpty()) {
+            log.info("NullPointException enter");
+            return new ArrayList<>();
+        }
+
         // 유저별 추천 점수 계산
         List<MatchCountMembership> matchCountMemberships = new ArrayList<>();
         for (Membership m : memberships) {
@@ -104,40 +110,42 @@ public class PreferPersonalityGetMembership {
         log.info("calculateMatchCount enter");
         int count = 0;
 
-        int age = Period.between(PreperMembership.getBirth(), LocalDate.now()).getYears();
-        int preferAge = loginMembership.getPersonality().getPreferAge();
+        if(PreperMembership != null && loginMembership != null) {
+            int age = Period.between(PreperMembership.getBirth(), LocalDate.now()).getYears();
+            int preferAge = loginMembership.getPersonality().getPreferAge();
 
-        String memberMbti = loginMembership.getPersonality().getMbti();
-        List<String> goodMbti = MbtiGoodType.valueOf(memberMbti).getMatches();
+            String memberMbti = loginMembership.getPersonality().getMbti();
+            List<String> goodMbti = MbtiGoodType.valueOf(memberMbti).getMatches();
 
-        // MBTI
-        if (goodMbti.contains(PreperMembership.getPersonality().getMbti())) {
-            count++;
-        }
+            // MBTI
+            if (goodMbti.contains(PreperMembership.getPersonality().getMbti())) {
+                count++;
+            }
 
-        // 흡연여부 (선호 흡연여부가 같거나 3(상관없음) 일 경우)
-        if (loginMembership.getPersonality().getPreferSmoking()
-            == PreperMembership.getPersonality().getPreferSmoking()
-            || loginMembership.getPersonality().getPreferSmoking() == 3) {
-            count++;
-        }
+            // 흡연여부 (선호 흡연여부가 같거나 2(상관없음) 일 경우)
+            if (loginMembership.getPersonality().getPreferSmoking()
+                == PreperMembership.getPersonality().getPreferSmoking()
+                || loginMembership.getPersonality().getPreferSmoking() == 2) {
+                count++;
+            }
 
-        // 활동시간
-        if (loginMembership.getPersonality().getPreferActiveTime()
-            == PreperMembership.getPersonality().getActiveTime()) {
-            count++;
-        }
+            // 활동시간
+            if (loginMembership.getPersonality().getPreferActiveTime()
+                == PreperMembership.getPersonality().getActiveTime()) {
+                count++;
+            }
 
-        // 반려동물유무 (선호 반려동물유무가 같거나 3(상관없음) 일 경우)
-        if (loginMembership.getPersonality().getPreferPets()
-            == PreperMembership.getPersonality().getPets()
-            || loginMembership.getPersonality().getPreferPets() == 3) {
-            count++;
-        }
+            // 반려동물유무 (선호 반려동물유무가 같거나 2(상관없음) 일 경우)
+            if (loginMembership.getPersonality().getPreferPets()
+                == PreperMembership.getPersonality().getPets()
+                || loginMembership.getPersonality().getPreferPets() == 2) {
+                count++;
+            }
 
-        // 나이
-        if (age >= preferAge && age < preferAge + 10) {
-            count++;
+            // 나이
+            if (age >= preferAge && age < preferAge + 10) {
+                count++;
+            }
         }
 
         return count;
