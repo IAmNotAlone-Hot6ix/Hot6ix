@@ -88,6 +88,7 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
                 log.info("채팅방에 들어와있는 유저수: " + redisUtil.getData("chatRoomId: " + sRoomId));
 
                 String token = accessor.getFirstNativeHeader("Authorization");
+                log.info("token: {}", token);
                 if (token != null && token.startsWith(TOKEN_PREFIX)) {
                     String jwtToken = token.replace(TOKEN_PREFIX, "");
 
@@ -95,12 +96,10 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
                     Long roomId = Long.parseLong(sRoomId);
 
                     Long unReadCount = chatMessageService.unReadCount(roomId, membershipId);
-
                     log.info(unReadCount);
                     if (unReadCount != 0) {
                         chatMessageService.readCheck(roomId, membershipId);
                     }
-
                 }
                 break;
             case UNSUBSCRIBE:
@@ -108,6 +107,7 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
                 log.info("sessionId: {}", sessionId);
                 String dRoomId = redisUtil.getData(sessionId);
                 redisUtil.deleteConnect("chatRoomId: " + dRoomId);
+                redisUtil.deleteData(sessionId);
                 log.info("채팅방에 들어와있는 유저수: " + redisUtil.getData("chatRoomId: " + dRoomId));
 
             case DISCONNECT:
