@@ -109,12 +109,11 @@ public class FilterChannelInterceptor implements ChannelInterceptor {
                 redisUtil.deleteConnect("chatRoomId: " + dRoomId);
                 redisUtil.deleteData(sessionId);
                 log.info("채팅방에 들어와있는 유저수: " + redisUtil.getData("chatRoomId: " + dRoomId));
-
+                break;
             case DISCONNECT:
                 // 웹소켓 클라이언트가 disconnect()를 호출하여 연결을 종료한 경우 또는 세션이 끊어진 경우
                 log.info("DISCONNECT");
                 log.info("sessionId: {}", sessionId);
-
                 break;
             case SEND:
                 log.info("SEND");
