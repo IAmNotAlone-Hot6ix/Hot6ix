@@ -44,4 +44,5 @@ public class ChatRoomController {
 //        chatMessageService.readCheck(roomId, membershipId);
 //        return ResponseEntity.ok().build();
 //    }
+
 }
