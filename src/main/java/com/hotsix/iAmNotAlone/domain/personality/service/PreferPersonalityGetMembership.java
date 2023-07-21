@@ -6,10 +6,7 @@ import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.domain.personality.model.dto.UserPersonalityDto;
 import com.hotsix.iAmNotAlone.domain.personality.model.dto.UserRecommendationDto;
-import com.hotsix.iAmNotAlone.domain.personality.type.ActiveTimeType;
 import com.hotsix.iAmNotAlone.domain.personality.type.MbtiGoodType;
-import com.hotsix.iAmNotAlone.domain.personality.type.PetsType;
-import com.hotsix.iAmNotAlone.domain.personality.type.SmokingType;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -20,18 +17,21 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Log4j2
 public class PreferPersonalityGetMembership {
 
     private final MembershipRepository membershipRepository;
 
     public List<UserRecommendationDto> getPreferMembership(Long memberId, Long size) {
 
+        log.info("getPreferMembership enter");
         Membership membership = membershipRepository.findById(memberId)
             .orElseThrow(() -> new BusinessException(NOT_FOUND_USER));
 
@@ -47,6 +47,7 @@ public class PreferPersonalityGetMembership {
     private List<UserRecommendationDto> getRecommendedMembers(Membership membership,
         List<Membership> memberships, Long size) {
 
+        log.info("getRecommendedMembers enter");
         // 유저별 추천 점수 계산
         List<MatchCountMembership> matchCountMemberships = new ArrayList<>();
         for (Membership m : memberships) {
@@ -92,6 +93,7 @@ public class PreferPersonalityGetMembership {
             }
         }
 
+        System.out.println("recommendationDtos: " + recommendationDtos);
         return recommendationDtos;
     }
 
@@ -99,6 +101,7 @@ public class PreferPersonalityGetMembership {
      * 추천 점수 계산
      */
     private int calculateMatchCount(Membership PreperMembership, Membership loginMembership) {
+        log.info("calculateMatchCount enter");
         int count = 0;
 
         int age = Period.between(PreperMembership.getBirth(), LocalDate.now()).getYears();
@@ -144,6 +147,8 @@ public class PreferPersonalityGetMembership {
      * 반환 DTO 로 변환
      */
     private UserRecommendationDto convertToDto(Membership membership) {
+        log.info("UserRecommendationDto enter");
+
         return UserRecommendationDto.builder()
             .member_id(membership.getId())
             .nickName(membership.getNickname())
@@ -153,9 +158,9 @@ public class PreferPersonalityGetMembership {
             .personality(UserPersonalityDto.builder()
                 .userPersonalityId(membership.getPersonality().getId())
                 .mbti(membership.getPersonality().getMbti())
-                .smoking(SmokingType.getById(membership.getPersonality().getSmoking()))
-                .activeTime(ActiveTimeType.getById(membership.getPersonality().getActiveTime()))
-                .pets(PetsType.getById(membership.getPersonality().getPets()))
+                .smoking(membership.getPersonality().getSmoking())
+                .activeTime(membership.getPersonality().getActiveTime())
+                .pets(membership.getPersonality().getPets())
                 .build())
             .build();
     }
