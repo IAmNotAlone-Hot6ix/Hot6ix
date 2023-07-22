@@ -106,40 +106,43 @@ public class PreferPersonalityGetMembership {
     /**
      * 추천 점수 계산
      */
-    private int calculateMatchCount(Membership PreperMembership, Membership loginMembership) {
+    private int calculateMatchCount(Membership preperMembership, Membership loginMembership) {
         log.info("calculateMatchCount enter");
         int count = 0;
 
-        if(PreperMembership != null && loginMembership != null) {
-            int age = Period.between(PreperMembership.getBirth(), LocalDate.now()).getYears();
+        if(preperMembership != null && loginMembership != null) {
+            int age = Period.between(preperMembership.getBirth(), LocalDate.now()).getYears();
             int preferAge = loginMembership.getPersonality().getPreferAge();
+
+            log.info("age: " + age + "/" + "preferAge: " + preferAge);
 
             String memberMbti = loginMembership.getPersonality().getMbti();
             List<String> goodMbti = MbtiGoodType.valueOf(memberMbti).getMatches();
 
-            log.info(goodMbti);
+            log.info("goodMbti: " + goodMbti);
+            log.info("preperMembership_MBTI: " + preperMembership.getPersonality().getMbti());
 
             // MBTI
-            if (goodMbti.contains(PreperMembership.getPersonality().getMbti())) {
+            if (goodMbti.contains(preperMembership.getPersonality().getMbti())) {
                 count++;
             }
 
             // 흡연여부 (선호 흡연여부가 같거나 2(상관없음) 일 경우)
             if (loginMembership.getPersonality().getPreferSmoking()
-                == PreperMembership.getPersonality().getPreferSmoking()
+                == preperMembership.getPersonality().getPreferSmoking()
                 || loginMembership.getPersonality().getPreferSmoking() == 2) {
                 count++;
             }
 
             // 활동시간
             if (loginMembership.getPersonality().getPreferActiveTime()
-                == PreperMembership.getPersonality().getActiveTime()) {
+                == preperMembership.getPersonality().getActiveTime()) {
                 count++;
             }
 
             // 반려동물유무 (선호 반려동물유무가 같거나 2(상관없음) 일 경우)
             if (loginMembership.getPersonality().getPreferPets()
-                == PreperMembership.getPersonality().getPets()
+                == preperMembership.getPersonality().getPets()
                 || loginMembership.getPersonality().getPreferPets() == 2) {
                 count++;
             }
