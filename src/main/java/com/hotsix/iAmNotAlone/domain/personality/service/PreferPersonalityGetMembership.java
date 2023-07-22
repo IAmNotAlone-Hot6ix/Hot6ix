@@ -117,6 +117,8 @@ public class PreferPersonalityGetMembership {
             String memberMbti = loginMembership.getPersonality().getMbti();
             List<String> goodMbti = MbtiGoodType.valueOf(memberMbti).getMatches();
 
+            log.info(goodMbti);
+
             // MBTI
             if (goodMbti.contains(PreperMembership.getPersonality().getMbti())) {
                 count++;
