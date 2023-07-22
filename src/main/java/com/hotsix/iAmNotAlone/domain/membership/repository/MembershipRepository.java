@@ -25,7 +25,8 @@ public interface MembershipRepository extends JpaRepository<Membership, Long> {
     Optional<Membership> findByIdMembership(@Param("userId") Long userId);
 
 
-    List<Membership> findAllByIdNotAndRegionIdAndGender(@Param("memberId") Long memberId,
-        @Param("regionId") Long regionId, @Param("gender") int gender);
+    List<Membership> findAllByIdNotAndRegionIdAndGenderAndPersonalityIdNotNull(
+        @Param("memberId") Long memberId, @Param("regionId") Long regionId,
+        @Param("gender") int gender);
 
 }
