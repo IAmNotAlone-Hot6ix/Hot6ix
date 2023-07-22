@@ -37,8 +37,8 @@ public class PreferPersonalityGetMembership {
 
         // 로그인한 유저의 지역, 성별 기준 회원 전체 조회
         List<Membership> membershipList =
-            membershipRepository.findAllByIdNotAndRegionIdAndGender(membership.getId(),
-                membership.getRegion().getId(), membership.getGender());
+            membershipRepository.findAllByIdNotAndRegionIdAndGenderAndPersonalityIdNotNull(
+                membership.getId(), membership.getRegion().getId(), membership.getGender());
 
         // 리스트 필터 상위 size 명의 회원만 선택
         return getRecommendedMembers(membership, membershipList, size);
@@ -99,7 +99,7 @@ public class PreferPersonalityGetMembership {
             }
         }
 
-        System.out.println("recommendationDtos: " + recommendationDtos);
+        log.debug("recommendationDtos: " + recommendationDtos);
         return recommendationDtos;
     }
 
@@ -110,17 +110,15 @@ public class PreferPersonalityGetMembership {
         log.info("calculateMatchCount enter");
         int count = 0;
 
-        if(preperMembership != null && loginMembership != null) {
+        if (preperMembership != null && loginMembership != null) {
+            log.debug("preperMembership: " + preperMembership);
+            log.debug("loginMembership: " + loginMembership);
+
             int age = Period.between(preperMembership.getBirth(), LocalDate.now()).getYears();
             int preferAge = loginMembership.getPersonality().getPreferAge();
 
-            log.info("age: " + age + "/" + "preferAge: " + preferAge);
-
             String memberMbti = loginMembership.getPersonality().getMbti();
             List<String> goodMbti = MbtiGoodType.valueOf(memberMbti).getMatches();
-
-            log.info("goodMbti: " + goodMbti);
-            log.info("preperMembership_MBTI: " + preperMembership.getPersonality().getMbti());
 
             // MBTI
             if (goodMbti.contains(preperMembership.getPersonality().getMbti())) {
