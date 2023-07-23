@@ -8,6 +8,7 @@ import com.hotsix.iAmNotAlone.domain.chat.dto.AddChatMessageFrom;
 import com.hotsix.iAmNotAlone.domain.chat.dto.ChatMessage2Dto;
 import com.hotsix.iAmNotAlone.domain.chat.repository.ChatRoomRepository;
 import com.hotsix.iAmNotAlone.domain.chat.service.ChatMessageService;
+import com.hotsix.iAmNotAlone.domain.chat.service.ChatSenderConfrimService;
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.MembershipSummaryDto;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
@@ -30,8 +31,7 @@ public class ChatMessageController {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMessageService chatMessageService;
     private final RedisUtil redisUtil;
-    private final ChatRoomRepository chatRoomRepository;
-    private final MembershipRepository membershipRepository;
+    private final ChatSenderConfrimService chatSenderConfrimService;
 
     @MessageMapping("/chat/send")
     public void sendToMessage(AddChatMessageFrom form) {
@@ -42,22 +42,9 @@ public class ChatMessageController {
         if (!redisUtil.getData("chatRoomId: " + form.getChatRoomId()).equals("2")) {
             form.setUnRead(1);
 
-            ChatRoom chatRoom = chatRoomRepository.findById(form.getChatRoomId()).orElseThrow(
-                () -> new BusinessException(NOT_FOUND_CHATROOM)
-            );
-
-            Long receiverId;
-            Membership sender;
-            if (Objects.equals(chatRoom.getSender().getId(), form.getSenderId())) {
-                receiverId = chatRoom.getReceiver().getId();
-                sender = chatRoom.getSender();
-            } else {
-                receiverId = chatRoom.getSender().getId();
-                sender = chatRoom.getReceiver();
-            }
-
+            Membership sender = chatSenderConfrimService.getSender(form.getSenderId());
             ChatMessage2Dto alarmMessage = ChatMessage2Dto.from(form, MembershipSummaryDto.from(sender));
-            simpMessagingTemplate.convertAndSend("/sub/membership/" + receiverId, alarmMessage);
+            simpMessagingTemplate.convertAndSend("/sub/membership/" + form.getReceiverId(), alarmMessage);
         }
 
         // 채팅방으로 메세지 브로드캐스팅
