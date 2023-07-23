@@ -10,6 +10,7 @@ public class AddChatMessageFrom {
 
     private Long chatRoomId;
     private Long senderId;
+    private Long receiverId;
     private String message;
     private LocalDateTime createdAt;
     private int unRead;
