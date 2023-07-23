@@ -2,6 +2,7 @@ package com.hotsix.iAmNotAlone.domain.membership.service;
 
 import com.hotsix.iAmNotAlone.domain.membership.entity.Membership;
 import com.hotsix.iAmNotAlone.domain.membership.model.dto.MembershipDetailDto;
+import com.hotsix.iAmNotAlone.domain.membership.model.dto.MembershipSummaryDto;
 import com.hotsix.iAmNotAlone.domain.membership.repository.MembershipRepository;
 import com.hotsix.iAmNotAlone.global.exception.business.BusinessException;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,12 @@ public class MembershipDetailService {
                 () -> new BusinessException(NOT_FOUND_USER)
         );
         return new MembershipDetailDto(membership);
+    }
+
+    public MembershipSummaryDto findSender(Long senderId) {
+        return MembershipSummaryDto.from(membershipRepository.findById(senderId).orElseThrow(
+            () -> new BusinessException(NOT_FOUND_USER)
+        ));
     }
 
 }
