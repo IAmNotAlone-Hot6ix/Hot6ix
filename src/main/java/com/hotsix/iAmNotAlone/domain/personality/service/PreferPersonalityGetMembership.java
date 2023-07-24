@@ -37,8 +37,8 @@ public class PreferPersonalityGetMembership {
 
         // 로그인한 유저의 지역, 성별 기준 회원 전체 조회
         List<Membership> membershipList =
-            membershipRepository.findAllByIdNotAndRegionIdAndGenderAndPersonalityIdNotNull(
-                membership.getId(), membership.getRegion().getId(), membership.getGender());
+            membershipRepository.findAllByIdNotAndGenderAndPersonalityIdNotNull(
+                membership.getId(), membership.getGender());
 
         // 리스트 필터 상위 size 명의 회원만 선택
         return getRecommendedMembers(membership, membershipList, size);
@@ -161,9 +161,9 @@ public class PreferPersonalityGetMembership {
         log.info("UserRecommendationDto enter");
 
         return UserRecommendationDto.builder()
-            .member_id(membership.getId())
+            .memberId(membership.getId())
             .nickName(membership.getNickname())
-            .user_image(membership.getImgPath())
+            .userImage(membership.getImgPath())
             .age(Period.between(membership.getBirth(), LocalDate.now()).getYears())
             .region(membership.getRegion().getSido() + " " + membership.getRegion().getSigg())
             .personality(UserPersonalityDto.builder()
