@@ -7,9 +7,9 @@ import lombok.Getter;
 @Builder
 public class UserRecommendationDto {
 
-    private Long member_id;
+    private Long memberId;
     private String nickName;
-    private String user_image;
+    private String userImage;
     private int age;
     private String region;
     private UserPersonalityDto personality;
