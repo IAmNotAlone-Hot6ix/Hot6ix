@@ -56,9 +56,15 @@ public class MembershipModifyService {
         // 1. 새로 업로드 하는 파일이 있다
         if (multipartFiles.get(0).getSize() != 0) {
             // 1-2. 기존에 파일이 있다. -> 기존 파일 s3 버킷에서 삭제
+
             if (member.getImgPath().length() != 0) {
-                String[] split = member.getImgPath().split("com/");
-                s3UploadService.deleteFile(split[1]);
+                String[] sp = member.getImgPath().split("\\.");
+
+                // 카카오에서 가져온 이미지가 아니면 s3
+                if (!sp[1].equals("kakaocdn")) {
+                    String[] split = member.getImgPath().split("com/");
+                    s3UploadService.deleteFile(split[1]);
+                }
             }
             // 1-1. 기존에 파일이 없다. -> 삭제 없이 s3 버킷에 업로드
             List<S3FileDto> s3FileDtos = s3UploadService.uploadFiles(multipartFiles);
