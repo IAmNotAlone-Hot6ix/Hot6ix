@@ -43,10 +43,12 @@
 |소셜로그인|룸메 추천|
 |:--------------:|:--------------:|
 | <img src="https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/122556674/eb31c835-dedd-4688-9c89-5d2415a29e2c" alt="소셜로그인" width="350"> | <img src="" alt="룸메이트 추천" width="350"> |
+
 |메인페이지|게시글 작성|
 |:--------------:|:--------------:|
 | <img src="https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/122556674/1550991b-b866-4072-b382-30f88becf17f" alt="메인페이지" width="350"> | <img src="https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/122556674/5e292538-3405-4365-90a0-643cf55fe313" alt="게시글 작성" width="350" > |
-|좋아요|일대일 채팅|
+
+|좋아요/관심목록|일대일 채팅|
 |:--------------:|:--------------:|
 | <img src="https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/122556674/713d4ef3-a266-4999-8819-987b2aad6655" alt="좋아요" width="350"> | <img src="https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/122556674/0db5f670-4a43-44eb-8d6c-4136f8024f56" alt="일대일 채팅" width="350" > |
 
