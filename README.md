@@ -42,7 +42,7 @@
 ## 🔗 주요기능
 |소셜로그인|룸메 추천|
 |:--------------:|:--------------:|
-| <img src="https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/122556674/eb31c835-dedd-4688-9c89-5d2415a29e2c" alt="소셜로그인" width="350"> | <img src="" alt="룸메이트 추천" width="350"> |
+| <img src="https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/122556674/eb31c835-dedd-4688-9c89-5d2415a29e2c" alt="소셜로그인" width="350"> | <img src="https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/32833969/74691bc5-473c-4377-ace8-a9e3c87ff885" alt="룸메이트 추천" width="350"> |
 
 |메인페이지|게시글 작성|
 |:--------------:|:--------------:|
