@@ -53,7 +53,8 @@
 | <img src="https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/122556674/713d4ef3-a266-4999-8819-987b2aad6655" alt="좋아요" width="350"> | <img src="https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/122556674/0db5f670-4a43-44eb-8d6c-4136f8024f56" alt="일대일 채팅" width="350" > |
 
 ## ERD
-![erd3](https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/122556674/22fefe3b-db25-46fe-bee6-82e838eb8769)
+![ERD_final](https://github.com/IAmNotAlone-Hot6ix/Hot6ix/assets/32833969/64c7bfd1-b2e7-43b8-9a87-ada0afe44178)
+
 
 ## 팀원 소개
 
