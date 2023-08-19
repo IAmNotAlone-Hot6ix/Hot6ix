@@ -59,12 +59,14 @@ public class RedisUtil {
     }
 
     // count increment
-    public void addLike(String key) {
+    public void addLike(String postId) {
+        String key = getLikeKey(String.valueOf(postId));
         redisTemplate.opsForValue().increment(key, 1);
     }
 
     // count decrement
-    public void removeLike(String key) {
+    public void removeLike(String postId) {
+        String key = getLikeKey(String.valueOf(postId));
         redisTemplate.opsForValue().decrement(key);
     }
 

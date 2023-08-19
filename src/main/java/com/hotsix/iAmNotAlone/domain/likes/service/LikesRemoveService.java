@@ -42,15 +42,14 @@ public class LikesRemoveService {
         }
 
         // redis 게시글의 좋아요 수 count--
-        String key = redisUtil.getLikeKey(String.valueOf(postId));
-        redisUtil.removeLike(key);
+        redisUtil.removeLike(String.valueOf(postId));
 
         // 회원이 좋아요한 게시글 삭제
         Likes likes = likesRepository.findByMemberIdAndPostId(memberId, postId);
 
         likesRepository.delete(likes);
 
-        log.info("likes decrement");
+        log.info("Successfully removed like for post: {} by member: {}", postId, memberId);
         return false;
     }
 
